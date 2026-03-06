@@ -21,6 +21,13 @@ func initialize_inventory():
 	inventory.resize(15)
 	inventory.fill(null)
 
+func get_selected_item():
+	if inventory[inv_selected]:
+		print("Current item: " + inventory[inv_selected].item_name)
+	return inventory[inv_selected]
+	
+func remove_inv_item(index:int=inv_selected):
+	inventory[index] = null
 func is_inventory_full():
 	for i in inventory:
 		if i == null:
@@ -31,7 +38,6 @@ func try_place_inventory(item:Item):
 	for i in inventory.size():
 		if inventory[i] == null:
 			inventory[i] = item
-			print("inv empty")
+			print("Placed in inv: " + inventory[i].item_name)
 			return true;
-	print("inv full")
 	return false

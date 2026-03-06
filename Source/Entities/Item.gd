@@ -9,7 +9,7 @@ var item_desc:String = "This shouldn't exist."
 
 static func new_item(id:int) -> Item:
 	item_id = id
-	match id:
+	match item_id:
 		ItemID.Metal: return Metal.new()
 		ItemID.Wires: return Wires.new()
 		ItemID.Battery: return Battery.new()
@@ -18,4 +18,5 @@ static func new_item(id:int) -> Item:
 ##Called when an item is picked up as a Pickup.
 func on_pickup():
 	Main.main.resources.try_place_inventory(self)
+	print("Picked up: " + item_name + "\n")
 	pass

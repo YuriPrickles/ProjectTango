@@ -3,6 +3,7 @@ class_name Player
 
 const SPEED = 100.0
 var direction:Vector2
+var facing: Vector2
 var spr_index = 0
 var sneaking:bool = false
 var running:bool = false
@@ -23,6 +24,7 @@ func _physics_process(delta: float) -> void:
 	running = Input.is_action_pressed("run")
 	sneaking = sneaking && !running
 	if direction:
+		facing = direction
 		queue_redraw()
 		velocity = direction * SPEED * (1.4 if running and not sneaking else (1.0 if not sneaking else 0.4))
 	else:
@@ -37,17 +39,23 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("inventory"):
 		Main.main.inventory_open = not Main.main.inventory_open
 		pass
-		
-	if Main.main.inventory_open and event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right"):
-		var input = Input.get_axis("inv_left","inv_right")
-		if Main.main.resources.inv_selected + int(input) <= -1 and input == -1:
-			Main.main.resources.inv_selected = 14
-		else: Main.main.resources.inv_selected += int(input)
-	if Main.main.inventory_open and event.is_action_pressed("inv_up") or event.is_action_pressed("inv_down"):
-		var input = Input.get_axis("inv_up","inv_down")
-		if Main.main.resources.inv_selected + int(input) * 5 <= -1 and input == -1:
-			Main.main.resources.inv_selected += 10
-		else: Main.main.resources.inv_selected += int(input) * 5
+	if Main.main.inventory_open:
+		if event.is_action_pressed("throw") and Main.main.resources.get_selected_item():
+			var item = Main.main.resources.get_selected_item()
+			var pickup = Pickup.new(item.item_id,position,false,true)
+			Main.main.current_level.items.add_child(pickup)
+			Main.main.resources.remove_inv_item()
+			return
+		if event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right"):
+			var input = Input.get_axis("inv_left","inv_right")
+			if Main.main.resources.inv_selected + int(input) <= -1 and input == -1:
+				Main.main.resources.inv_selected = 14
+			else: Main.main.resources.inv_selected += int(input)
+		if event.is_action_pressed("inv_up") or event.is_action_pressed("inv_down"):
+			var input = Input.get_axis("inv_up","inv_down")
+			if Main.main.resources.inv_selected + int(input) * 5 <= -1 and input == -1:
+				Main.main.resources.inv_selected += 10
+			else: Main.main.resources.inv_selected += int(input) * 5
 
 func _draw() -> void:
 	#Main.main.draw_text_centered(self,"hi pearlings", (Vector2(0,-32)))

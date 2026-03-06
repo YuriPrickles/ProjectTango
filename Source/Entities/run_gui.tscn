@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ba5pqsgvk6vr7"]
+
+[ext_resource type="Script" uid="uid://6mahb5nksdax" path="res://Source/Entities/run_gui.gd" id="1_3b88u"]
+[ext_resource type="Script" uid="uid://ci7rfolmrgemo" path="res://Source/Entities/gui_drawificator.gd" id="2_kr7y1"]
+
+[node name="RunGUI" type="CanvasLayer" unique_id=1175354946]
+script = ExtResource("1_3b88u")
+
+[node name="GUIDrawificator" type="Node2D" parent="." unique_id=836240478]
+script = ExtResource("2_kr7y1")

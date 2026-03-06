@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dtvwjoeaguaik"]
+
+[ext_resource type="Script" uid="uid://bjr0lj13utkk0" path="res://Source/Entities/Level.gd" id="1_2y2gb"]
+[ext_resource type="TileSet" uid="uid://c36ol6x6f6t67" path="res://Graphics/Tiles.tres" id="2_2y2gb"]
+
+[node name="Level" type="Node2D" unique_id=2088028645]
+z_as_relative = false
+script = ExtResource("1_2y2gb")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=280689227]
+z_as_relative = false
+tile_set = ExtResource("2_2y2gb")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=686143727]
+color = Color(0.48963153, 0.55144083, 0.4565472, 1)
+
+[node name="Items" type="Node2D" parent="." unique_id=1896694085]

@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://d1vmim1p7ujl5"]
+
+[ext_resource type="Script" uid="uid://caw6y5ihdko0x" path="res://Source/Entities/player.gd" id="1_7x6ql"]
+[ext_resource type="Texture2D" uid="uid://c3h6olkq1osys" path="res://Graphics/Atlases/Misc/pointlight.png" id="2_7x6ql"]
+[ext_resource type="Shader" uid="uid://bi7a6ltqmy3f7" path="res://Graphics/Shaders/pixelate.gdshader" id="2_dy60o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dy60o"]
+size = Vector2(4, 3)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dy60o"]
+shader = ExtResource("2_dy60o")
+shader_parameter/pixel_size = Vector2(32, 32)
+
+[node name="Player" type="CharacterBody2D" unique_id=1987243598]
+z_index = 1
+collision_mask = 14
+motion_mode = 1
+script = ExtResource("1_7x6ql")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1005379322]
+ignore_rotation = false
+zoom = Vector2(0.5, 0.5)
+limit_left = 0
+limit_top = 0
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2131081055]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_dy60o")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=912261531]
+z_index = 1
+z_as_relative = false
+material = SubResource("ShaderMaterial_dy60o")
+position = Vector2(0, 1)
+shadow_enabled = true
+texture = ExtResource("2_7x6ql")
+texture_scale = 0.4
+height = 8.0

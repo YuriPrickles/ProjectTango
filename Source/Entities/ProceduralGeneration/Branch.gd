@@ -2,6 +2,7 @@ extends Node
 class_name Branch
 
 var left_child: Branch
+var guaranteed_path:Dictionary
 var right_child: Branch
 var position: Vector2i
 var size: Vector2i
@@ -43,19 +44,19 @@ func split(remaining, paths:Array):
 			Vector2i(size.x - left_width, size.y)
 		)
 	
-	for i in range(15):
-		var path:Dictionary = {'left': left_child.get_center() + 2 * rand_path_range(-6,6,rng),
-								'right': right_child.get_center() + 2 * rand_path_range(-6,6,rng)}
-		if (path.get("left").x <= 0 and path.get("left").x >= 0 and 
-			path.get("right").x <= 0 and path.get("right").x >= 0):
+	if randi_range(0,100) <= 5:
+		var path:Dictionary = {'left': left_child.get_center() + 4 * rand_path_range(-4,4,rng),
+								'right': right_child.get_center() + 4 * rand_path_range(-4,4,rng)}
+		if ((path.get("left").x < 1 or path.get("left").x > 1) and 
+			(path.get("right").x < 1 or path.get("right").x > 1)):
 				if not paths.has(path):
 					paths.push_back(path)
 				else:
 					print("duplicate!")
-	paths.push_back({'left': left_child.get_center(), 'right': right_child.get_center()})
-	
+	guaranteed_path = {'left': left_child.get_center(),
+						'right': right_child.get_center()}
+	paths.push_back(guaranteed_path)
 	
 	if(remaining > 0):
 		left_child.split(remaining - 1, paths)
 		right_child.split(remaining - 1, paths)
-	pass

@@ -1,6 +1,6 @@
 class_name Wires
 extends Item
-func _init() -> void:
-	spr_index = 17
+func _init(id:int) -> void:
+	super._init(id)
 	item_name = "Wires"
 	item_desc = "Slightly Chewed"

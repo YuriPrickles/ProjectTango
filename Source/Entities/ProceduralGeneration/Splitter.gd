@@ -6,21 +6,16 @@ var tilemap:TileMapLayer
 var paths: Array = []
 var floor_size = Vector2i(120, 80)
 var rooms:Array
+var guaranteed_paths:Array[Dictionary]
 var artifact_rooms:Array[Branch]
 var splitiness = 6
 
 func _ready():
-	root_node  = Branch.new(Vector2i(0, 0), floor_size) # 60 tiles wide and 30 tall
+	root_node  = Branch.new(Vector2i(0, 0), floor_size)
 	root_node.split(splitiness, paths)
 	rooms = root_node.get_leaves()
-	
 	var artifact_room_index = randi_range((int)((pow(2,splitiness + 1)) * 0.75),pow(2,splitiness + 1)) - 1
-	print(artifact_room_index)
-	artifact_rooms.append(rooms[artifact_room_index])
-	#for leaf:Branch in rooms:
-		#if rooms.find(leaf) == rooms.size() - 1:
-			#print(leaf.position)
-			#artifact_rooms.append(leaf)
+	artifact_rooms.append(rooms[min(artifact_room_index, rooms.size()-1)])
 	queue_redraw()
 
 
@@ -55,12 +50,15 @@ func _draw():
 					solid_cells.append(tilepos)
 					tilemap.set_cell(tilepos, 1, Vector2i(0, 5))
 	for path in paths:
+		var tile:Vector2 = Vector2i(1, 7)
+		if guaranteed_paths.size() > 2:
+			tile = Vector2(1, 9)
 		for i in range(path['right'].x - path['left'].x):
 			solid_cells.erase(path['left']+Vector2i(i,0))
-			tilemap.set_cell(Vector2i(path['left'].x+i,path['left'].y), 1, Vector2i(1, 7))
+			tilemap.set_cell(Vector2i(path['left'].x+i,path['left'].y), 1, tile)
 		for i in range(path['right'].y - path['left'].y):
 			solid_cells.erase(path['left']+Vector2i(0,i))
-			tilemap.set_cell(Vector2i(path['left'].x,path['left'].y+i), 1, Vector2i(1, 7))
+			tilemap.set_cell(Vector2i(path['left'].x,path['left'].y+i), 1, tile)
 	for x in range(-1, floor_size.x + 1):
 		for y in range(-1, floor_size.y + 1):
 			if (x < 0 or x > floor_size.x - 1) or (y < 0 or y > floor_size.y - 1):

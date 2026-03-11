@@ -1,6 +1,9 @@
 extends Node2D
 class_name Level
 @onready var items = $Items
+@onready var enemies: Node2D = $Enemies
+@onready var traps: Node2D = $Traps
+
 enum TilemapLayers{
 	Floor,
 	Walls,
@@ -30,16 +33,47 @@ func _process(delta: float) -> void:
 	queue_redraw()
 	if !spawned:
 		artifact_positions.append(dungeon_layout.artifact_rooms[0].get_center() * 8)
-		player = spawn_player(dungeon_layout.root_node.get_center())
+		player = spawn_player(dungeon_layout.rooms[0].get_center() * 8)
 		spawn_scrap()
+		spawn_enemies()
+		print("Rooms: %s" % dungeon_layout.rooms.size())
+		print("Pathways: %s" % dungeon_layout.paths.size())
+		print("Scrap: %s" % items.get_child_count())
 		spawned = true
 
+func spawn_enemies():
+	for room:Branch in dungeon_layout.rooms:
+		if dungeon_layout.rooms.find(room) < 15: continue
+		var base_snitchweed_chance = 20
+		var base_snail_chance = 15
+		var initial_pos = room.get_center()+ Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2
+
+		if randi_range(0,100) <= base_snitchweed_chance:
+			for i in range(randi_range(4,6)):
+				var direction_array=[1,-1,0]
+				#for k in range(randi_range(1,3)):
+				for j in range(0,2):
+					var shuffled_dir=direction_array.duplicate()
+					shuffled_dir.shuffle()
+					var randpos = (initial_pos + Vector2i(shuffled_dir[j],shuffled_dir[(j + randi_range(0,2))%3]) * i) * dungeon_layout.tile_size
+					for t:Trap in traps.get_children():
+						if t is Snitchweed and t.int_position == randpos:
+							print("Occupied")
+							continue
+					if dungeon_layout.solid_cells.has(randpos / dungeon_layout.tile_size):
+						continue
+					traps.add_child(Snitchweed.new(randpos))
+		if randi_range(0,100) <= base_snail_chance:
+			var spawn_offset = Vector2i(0,0)
+			while dungeon_layout.solid_cells.has((initial_pos + spawn_offset) / dungeon_layout.tile_size):
+				spawn_offset += Vector2i(1,1)
+			enemies.add_child(Gastropoke.new((initial_pos + spawn_offset)* dungeon_layout.tile_size))
 func spawn_scrap():
 	for room:Branch in dungeon_layout.rooms:
-		var base_scrap_chance = 100
+		var base_scrap_chance = 5
 		for i in range(4):
 			if randi_range(0,100) <= base_scrap_chance:
-				base_scrap_chance += 30
+				base_scrap_chance += 15
 				var randpos = (room.get_center() + Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2) * dungeon_layout.tile_size
 				if not Splitter.is_inside_padding(randpos.x,randpos.y,room,Splitter.padding):
 					continue
@@ -58,8 +92,8 @@ func get_compass_vector():
 ##Eventually, this is where the level layers are drawn.[br]
 ##Each level layer will have will have its own drunction (draw function) so that the order can be rearranged easily.
 func _draw():
-	for room:Branch in dungeon_layout.rooms:
-		Main.main.draw_text(dungeon_layout,str(dungeon_layout.rooms.find(room)),room.get_center() * 8)
+	#for room:Branch in dungeon_layout.rooms:
+		#Main.main.draw_text(dungeon_layout,str(dungeon_layout.rooms.find(room)),room.get_center() * 8)
 	draw_rect(Rect2(
 		position - Vector2(dungeon_layout.floor_size * dungeon_layout.floor_size),
 		(dungeon_layout.floor_size * dungeon_layout.floor_size* dungeon_layout.floor_size* dungeon_layout.floor_size) ),

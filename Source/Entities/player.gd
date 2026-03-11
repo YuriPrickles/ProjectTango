@@ -1,35 +1,52 @@
 extends Actor
 class_name Player
 
-const SPEED = 100.0
+const SPEED = 65.0
 var direction:Vector2
 var facing: Vector2
 var spr_index = 0
 var sneaking:bool = false
 var running:bool = false
+var health:int=10
+var max_health:int = 10
+const IFRAMES = 0.2
+var iframe_timer:float = 0
+var kb_override = false
+var kb_override_vector:Vector2
 @onready var camera:Camera2D = $Camera2D
 
 func _ready() -> void:
+	z_index = Main.Depths.Player
+	kb_override = false
 	width = 8
 	height = 8
 	pass
 func _process(delta: float) -> void:
+	Main.main.get_current_room()
+	if iframe_timer > 0:
+		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)
 	queue_redraw()
 	
 func _physics_process(delta: float) -> void:
 	#camera.rotation = get_angle_to(position + direction)
 	camera.zoom = Vector2(1,1) if not Main.main.debugmode else Vector2(0.125,0.125)
-	direction = Input.get_vector("left", "right","up","down")
+	direction = Input.get_vector("left", "right", "up", "down")
 	sneaking = Input.is_action_pressed("sneak")
 	running = Input.is_action_pressed("run")
 	sneaking = sneaking && !running
-	if direction:
-		facing = direction
-		queue_redraw()
-		velocity = direction * SPEED * (1.4 if running and not sneaking else (1.0 if not sneaking else 0.4))
+	if kb_override_vector.length() <= 0:
+		if direction:
+			facing = direction
+			queue_redraw()
+			velocity = direction * SPEED * (1.4 if running and not sneaking else (1.0 if not sneaking else 0.4))
+		else:
+			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
 	else:
-		velocity = velocity.move_toward(Vector2.ZERO, SPEED)
-
+		kb_override_vector = kb_override_vector.move_toward(Vector2.ZERO, SPEED * .25)
+		velocity = kb_override_vector
+		if kb_override_vector.length() <= 0:
+			kb_override_vector = Vector2.ZERO
+			kb_override = false
 	move_and_slide()
 
 func _input(event: InputEvent) -> void:
@@ -63,4 +80,15 @@ func _draw() -> void:
 	#Main.main.draw_text(self,"uncentered text", (Vector2(0,-16)))
 	if direction:
 		spr_index = (1 if direction.x > 0 else 2) if direction.x != 0 else (3 if direction.y < 0 else 0)
-	Main.main.spr(get_canvas_item(),size/-2,spr_index)
+	Main.spr(Main.GameAtlas,self,size/-2,spr_index)
+
+func hurt(value):
+	if iframe_timer > 0: return
+	iframe_timer = IFRAMES
+	health -= value
+	if health == 0:
+		Main.main.trigger_game_over.call_deferred()
+func knockback(vector:Vector2,power:float):
+	kb_override = true
+	kb_override_vector = vector * power
+	velocity = kb_override_vector

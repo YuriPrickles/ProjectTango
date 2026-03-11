@@ -1,4 +1,4 @@
-extends Area2D
+extends Entity
 class_name Pickup
 
 var item:Item
@@ -14,21 +14,10 @@ func _init(id:int, pos:Vector2, alwaysfollow=false, throw:bool=false) -> void:
 	thrown = throw
 	item = Item.new_item(id)
 	always_follow = alwaysfollow
-	var area = Area2D.new()
-	area.set_collision_layer_value(3,true)
-	area.set_collision_mask_value(1,true)
-	var colmask = CollisionShape2D.new()
-	var shape = RectangleShape2D.new()
-	shape.size = Vector2(4,4)
-	colmask.shape = shape
-	area.connect("body_entered",_on_body_entered)
-	area.position = Vector2(4,4)
-	area.add_child(colmask)
-	add_child(area)
+	Utils.attach_collision_shape(self, Vector2(4,4), _on_body_entered)
 	position = pos
 	draw_offset = Vector2.ZERO
 	if thrown:
-		print("Thrown: " + item.item_name)
 		vel = plr.facing
 		draw_offset = Vector2(0,-4)
 func _ready() -> void:
@@ -61,7 +50,7 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	Main.main.spr(get_canvas_item(),draw_offset,item.spr_index)
+	Main.spr(Main.ItemAtlas,self,draw_offset,item.spr_index)
 
 func pickup():
 	item.on_pickup()

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://y0wx1esvjx1a"]
+
+[ext_resource type="Script" uid="uid://buuwlq8nt0a0g" path="res://Source/Entities/game_over.gd" id="1_rvtuj"]
+
+[node name="GameOver" type="Node2D" unique_id=2026976670]
+script = ExtResource("1_rvtuj")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1251870870]
+limit_left = 0
+limit_top = 0

@@ -15,3 +15,7 @@ tile_set = ExtResource("2_2y2gb")
 color = Color(0.48963153, 0.55144083, 0.4565472, 1)
 
 [node name="Items" type="Node2D" parent="." unique_id=1896694085]
+
+[node name="Enemies" type="Node2D" parent="." unique_id=957493013]
+
+[node name="Traps" type="Node2D" parent="." unique_id=1808434440]

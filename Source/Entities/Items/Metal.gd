@@ -1,6 +1,6 @@
 class_name Metal
 extends Item
-func _init() -> void:
-	spr_index = 16
+func _init(id:int) -> void:
+	super._init(id)
 	item_name = "Metal"
 	item_desc = "Sturdy material for building things."

@@ -1,8 +1,15 @@
 class_name Item
 extends Node
-
+enum Value{
+	Junk = 5,
+	Scraps = 6,
+	Normal = 7,
+	Artifact = 9,
+	Special = 12
+}
 var item_id = -1
 var spr_index:int = 16
+var value:Value = Value.Normal
 var item_name:String = "Nothing"
 var item_desc:String = "This shouldn't exist."
 
@@ -16,6 +23,7 @@ static func new_item(id:int) -> Item:
 		ItemID.Metal: return Metal.new(id)
 		ItemID.Wires: return Wires.new(id)
 		ItemID.Battery: return Battery.new(id)
+		ItemID.GoldenToad: return GoldenToad.new(id)
 	return null
 
 ##Called when an item is picked up as a Pickup.

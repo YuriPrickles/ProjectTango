@@ -14,7 +14,7 @@ func _init(id:int, pos:Vector2, alwaysfollow=false, throw:bool=false) -> void:
 	thrown = throw
 	item = Item.new_item(id)
 	always_follow = alwaysfollow
-	Utils.attach_collision_shape(self, Vector2(4,4), _on_body_entered)
+	Utils.attach_collision_shape(self, Rect2(0,0,4,4), _on_body_entered,null)
 	position = pos
 	draw_offset = Vector2.ZERO
 	if thrown:

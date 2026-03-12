@@ -19,3 +19,5 @@ color = Color(0.48963153, 0.55144083, 0.4565472, 1)
 [node name="Enemies" type="Node2D" parent="." unique_id=957493013]
 
 [node name="Traps" type="Node2D" parent="." unique_id=1808434440]
+
+[node name="OtherThings" type="Node2D" parent="." unique_id=626437170]

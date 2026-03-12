@@ -5,7 +5,7 @@ extends Node
 enum Depths{
 	Level = 0,
 	Items = 1,
-	Enemies = 2,
+	BelowPlayer = 2,
 	Player = 3,
 	AbovePlayer = 4,
 }
@@ -34,7 +34,7 @@ static var ItemAtlasTexture:Texture2D
 static var GameAtlas:Atlas
 static var GameAtlasTexture:Texture2D
 static var FontAtlasTexture:Texture2D
-static var fontmap:String = "abcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+-=?:.\"\';, "
+static var fontmap:String = "abcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+-=?:.\"\';,[] "
 var FONTCHARS:int
 const FONTCHAR_SIZE=Vector2i(4,6)
 var SPR_COLS:int
@@ -42,6 +42,9 @@ var SPR_ROWS:int
 const SPR_SIZE = 8
 static var main:Main = self
 static var game_over = false
+static var escaped = false
+static var game_finished:
+	get: return game_over or escaped
 
 var current_level:Level
 var resources:ResourceManager
@@ -66,7 +69,10 @@ func _ready() -> void:
 
 func trigger_game_over():
 	Main.game_over = true
-	get_tree().change_scene_to_packed(preload("res://Source/Entities/GameOver.tscn"))
+	run_gui.gui_drawificator.queue_redraw()
+	for ch in _2DLayer.get_children():
+		_2DLayer.remove_child(ch)
+	add_child(preload("res://Source/Entities/GameOver.tscn").instantiate())
 
 func get_current_room():
 	var plr:Player = get_player()

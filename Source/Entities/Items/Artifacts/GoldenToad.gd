@@ -3,6 +3,6 @@ extends Item
 
 func _init(id:int) -> void:
 	super._init(id)
-	spr_index = 19
+	value = Value.Artifact
 	item_name = "Golden Toad"
 	item_desc = "Sold for big money. No known effects."

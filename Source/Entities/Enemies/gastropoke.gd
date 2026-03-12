@@ -5,7 +5,7 @@ var current_agent_position: Vector2
 var next_path_position: Vector2
 var kb_dir:Vector2
 var chasing = false
-var spr_dict:Dictionary={
+var spr_dict:Dictionary[int,Vector2]={
 	36:Vector2(0,0),
 	37:Vector2(1,0),
 	52:Vector2(0,1),
@@ -78,7 +78,6 @@ func _draw() -> void:
 			spr_index_offset = 4
 		Vector2.UP:
 			spr_index_offset = 6
-	for index in spr_dict.keys():
-		Main.spr(Main.GameAtlas,self,(Vector2(-8,-14)) + (spr_dict.get(index)) * (Main.SPR_SIZE),spr_index_offset + index)
+	draw_from_dict(spr_dict,Vector2(-8,-14),spr_index_offset)
 	if chasing:
 		Main.draw_text_centered(self,"!", Vector2(0,-20),Main.colors[8])

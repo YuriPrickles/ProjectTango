@@ -3,6 +3,7 @@ class_name Level
 @onready var items = $Items
 @onready var enemies: Node2D = $Enemies
 @onready var traps: Node2D = $Traps
+@onready var other_things: Node2D = $OtherThings
 
 enum TilemapLayers{
 	Floor,
@@ -21,9 +22,16 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 
-func spawn_player(pos:Vector2):
+func spawn_player():
 	var plr:Player = preload("res://Source/Entities/player.tscn").instantiate()
-	plr.position = pos
+	var player_pos:Vector2i = dungeon_layout.rooms[0].get_center() * 8
+	for room:Branch in dungeon_layout.rooms:
+		if room.size.x > 7 and room.size.y > 6:
+			player_pos = room.get_center() * 8
+			print(room.size)
+			break
+	plr.position = player_pos
+	other_things.add_child(Exit.new(player_pos + Vector2i(0,-8)))
 	add_child(plr)
 	return plr
 
@@ -33,9 +41,10 @@ func _process(delta: float) -> void:
 	queue_redraw()
 	if !spawned:
 		artifact_positions.append(dungeon_layout.artifact_rooms[0].get_center() * 8)
-		player = spawn_player(dungeon_layout.rooms[0].get_center() * 8)
+		player = spawn_player()
 		spawn_scrap()
 		spawn_enemies()
+		spawn_treasures()
 		print("Rooms: %s" % dungeon_layout.rooms.size())
 		print("Pathways: %s" % dungeon_layout.paths.size())
 		print("Scrap: %s" % items.get_child_count())
@@ -58,7 +67,6 @@ func spawn_enemies():
 					var randpos = (initial_pos + Vector2i(shuffled_dir[j],shuffled_dir[(j + randi_range(0,2))%3]) * i) * dungeon_layout.tile_size
 					for t:Trap in traps.get_children():
 						if t is Snitchweed and t.int_position == randpos:
-							print("Occupied")
 							continue
 					if dungeon_layout.solid_cells.has(randpos / dungeon_layout.tile_size):
 						continue
@@ -84,7 +92,10 @@ func spawn_scrap():
 						items.add_child(Pickup.new(ItemID.Wires, randpos))
 					2:
 						items.add_child(Pickup.new(ItemID.Battery, randpos))
-	pass
+func spawn_treasures():
+	for room:Branch in dungeon_layout.artifact_rooms:
+		items.add_child(Pickup.new(ItemID.GoldenToad, room.get_center() * dungeon_layout.tile_size))
+	
 
 func get_compass_vector():
 	return player.position.direction_to(artifact_positions[0]) * 5

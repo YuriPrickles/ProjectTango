@@ -15,6 +15,7 @@ var backpack_arr={
 	}
 
 func _draw() -> void:
+	if Main.game_finished: return
 	Main.draw_text(self,str(Engine.get_frames_per_second()) + "FPS",Vector2(viewport.x * 0.80, margin))
 	#region Instability and Unreality
 	var inst_text = "INST: %s" % Main.main.resources.instability
@@ -36,7 +37,7 @@ func _draw() -> void:
 	#endregion
 	#region Inventory
 	if Main.main.inventory_open:
-		draw_rect(Rect2(Vector2.ZERO,viewport),Color.BLACK * 0.8)
+		draw_rect(Rect2(Vector2.ZERO,viewport),Color.BLACK * 0.5)
 	for index in backpack_arr.keys():
 		Main.spr(Main.GameAtlas,self,backpack_pos + backpack_arr.get(index) * Main.SPR_SIZE,index if not Main.main.inventory_open else index + 2)
 	if Main.main.inventory_open:

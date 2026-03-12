@@ -22,7 +22,6 @@ func _ready() -> void:
 	height = 8
 	pass
 func _process(delta: float) -> void:
-	Main.main.get_current_room()
 	if iframe_timer > 0:
 		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)
 	queue_redraw()

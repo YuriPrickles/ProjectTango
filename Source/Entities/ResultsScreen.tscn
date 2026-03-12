@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dbjob8t7i625e"]
+
+[ext_resource type="Script" uid="uid://iqpty3rgbgj" path="res://Source/Entities/results_screen.gd" id="1_4cn04"]
+
+[node name="ResultsScreen" type="Node2D" unique_id=2026976670]
+script = ExtResource("1_4cn04")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1251870870]
+limit_left = 0
+limit_top = 0

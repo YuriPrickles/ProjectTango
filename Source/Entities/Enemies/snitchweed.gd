@@ -3,18 +3,14 @@ extends Trap
 var asleep:bool = true
 var force_awake:bool = false
 func _init(pos) -> void:
-	super._init(pos, Rect2(0,4,4,2))
+	super._init(pos, Rect2(0,6,4,2))
 	var detection_range:Area2D = Area2D.new()
 	Utils.attach_round_collision_shape(detection_range,16,on_detect,Vector2(4,5))
 	detection_range.connect("body_exited",leave_detect)
 	add_child(detection_range)
 
-func _ready() -> void:
-	offset = Vector2(4,4)
-
 func _process(delta: float) -> void:
 	super._process(delta)
-	var plr:Player = Main.main.get_player()
 	
 
 func _draw() -> void:

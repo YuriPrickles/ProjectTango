@@ -3,7 +3,8 @@ extends Trap
 var asleep:bool = true
 var force_awake:bool = false
 func _init(pos) -> void:
-	super._init(pos, Rect2(0,6,4,2))
+	name_file = "res://Source/Names/snitchweed.txt"
+	super._init(pos, Rect2(-2,2,6,4))
 	var detection_range:Area2D = Area2D.new()
 	Utils.attach_round_collision_shape(detection_range,16,on_detect,Vector2(4,5))
 	detection_range.connect("body_exited",leave_detect)
@@ -14,7 +15,7 @@ func _process(delta: float) -> void:
 	
 
 func _draw() -> void:
-	Main.spr(Main.GameAtlas,self,offset,35 if asleep else 51)
+	Main.spr(Main.GameAtlas,self,Vector2.ZERO,35 if asleep else 51)
 
 
 
@@ -54,4 +55,4 @@ func leave_detect(body: Node2D) -> void:
 func on_touch_player(body):
 	if body is Player:
 		print("touch")
-		body.hurt(1 if not asleep else 0)
+		body.hurt(1 if not asleep else 0,self)

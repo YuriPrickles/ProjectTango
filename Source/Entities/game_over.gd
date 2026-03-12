@@ -39,7 +39,7 @@ func cutscene():
 	await get_tree().create_timer(0.05).timeout
 	string_array.append("-------------------")
 	await get_tree().create_timer(1).timeout
-	string_array.append("defeated by an enemy")
+	string_array.append("defeated by: %s" % Main.main.killed_by)
 	await get_tree().create_timer(1).timeout
 	string_array.append("press [ENTER] to return")
 	allow_input = true
@@ -49,6 +49,7 @@ func _input(event: InputEvent) -> void:
 		Main.main._ready()
 		queue_free()
 		Main.game_over = false
+		Main.escaped = false
 
 func _draw() -> void:
 	draw_rect(Rect2(0,0,320,180),Main.colors[0])

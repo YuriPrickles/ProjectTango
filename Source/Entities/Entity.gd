@@ -10,8 +10,14 @@ var Center:
 	get: return position + (Vector2(width,height) / 2)
 var int_position: Vector2i:
 	get: return Vector2i(position)
+var dmg_source_name:String="The Nameless"
+var name_file:String="res://Source/Names/snitchweed.txt"
 
 func _init(pos,collision:Rect2) -> void:
+	var file = FileAccess.open(name_file, FileAccess.READ)
+	var name_arr:PackedStringArray = file.get_as_text().split("\n")
+	dmg_source_name = name_arr[randi() % name_arr.size() - 1]
+	print(dmg_source_name)
 	Utils.attach_collision_shape(self,collision,on_touch_player,on_untouch_player)
 	position = pos
 	offset = collision.size

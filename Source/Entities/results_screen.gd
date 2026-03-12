@@ -27,7 +27,7 @@ func _process(delta: float) -> void:
 	pass
 
 func cutscene():
-	string_array.append("escaped")
+	string_array.append("successfully escaped")
 	await get_tree().create_timer(1).timeout
 	string_array.append("removing self from dungeon: ")
 	await get_tree().create_timer(1).timeout
@@ -50,14 +50,17 @@ func cutscene():
 	await get_tree().create_timer(0.05).timeout
 	string_array.append("-------------------")
 	await get_tree().create_timer(1).timeout
-	string_array.append("items obtained:")
+	string_array.append("items obtained:" if not inv_string_dict.is_empty() else "nothing obtained")
 	start_and_stop_value_color[0] = string_array.size() - 1
 	start_and_stop_value_color[1] = start_and_stop_value_color[0] + inv_string_dict.size() + 1
 	await get_tree().create_timer(1).timeout
-	for item in inv_string_dict.keys():
-		string_array.append(item)
-		queue_redraw()
-		await get_tree().create_timer(0.2).timeout
+	if not inv_string_dict.is_empty():
+		for item in inv_string_dict.keys():
+			string_array.append(item)
+			queue_redraw()
+			await get_tree().create_timer(0.2).timeout
+	else:
+		string_array.append("the princess is disappointed")
 	await get_tree().create_timer(1).timeout
 	string_array.append("press [ENTER] to return")
 	allow_input = true
@@ -67,6 +70,7 @@ func _input(event: InputEvent) -> void:
 		Main.main._ready()
 		queue_free()
 		Main.escaped = false
+		Main.game_over = false
 
 func _draw() -> void:
 	draw_rect(Rect2(0,0,320,180),Main.colors[0])

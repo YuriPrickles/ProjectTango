@@ -3,7 +3,8 @@ extends Entity
 
 ##For collision, the Rect2's x and y represent offset, while the size is the size.
 func _init(pos,collision:Rect2) -> void:
-	Utils.attach_collision_shape(self,collision,on_touch_player,on_untouch_player)
+	super._init(pos,collision)
+	#Utils.attach_collision_shape(self,collision,on_touch_player,on_untouch_player)
 	position = pos
 func _ready() -> void:
 	pass

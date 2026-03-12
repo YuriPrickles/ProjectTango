@@ -1,7 +1,6 @@
 class_name Enemy
 extends Entity
 
-var enemy_name="The Nameless"
 var Health:int
 var MaxHealth:int
 var navigator:NavigationAgent2D

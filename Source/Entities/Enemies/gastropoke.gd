@@ -13,6 +13,7 @@ var spr_dict:Dictionary[int,Vector2]={
 }
 var facing = Vector2(0,0)
 func _init(pos) -> void:
+	name_file = "res://Source/Names/gastropoke.txt"
 	super._init(pos,Rect2(-12,-4,12,4))
 	offset = Vector2(-8,-14)
 	navigator = NavigationAgent2D.new()
@@ -57,7 +58,7 @@ func _physics_process(delta):
 func on_touch_player(body):
 	if body is Player:
 		body.knockback(kb_dir, 200)
-		body.hurt(2)
+		body.hurt(2,self)
 func on_detect(body: Node2D) -> void:
 	if body is Player:
 		chasing = true

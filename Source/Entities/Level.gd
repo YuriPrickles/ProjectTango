@@ -25,13 +25,21 @@ func _ready() -> void:
 func spawn_player():
 	var plr:Player = preload("res://Source/Entities/player.tscn").instantiate()
 	var player_pos:Vector2i = dungeon_layout.rooms[0].get_center() * 8
+	var exit_pos:Vector2i
 	for room:Branch in dungeon_layout.rooms:
 		if room.size.x > 7 and room.size.y > 6:
 			player_pos = room.get_center() * 8
+			var exit_room:Branch = dungeon_layout.rooms[dungeon_layout.rooms.find(room) + 1]
+			if exit_room.size.x > 7 and exit_room.size.y > 6:
+				for rm in dungeon_layout.rooms:
+					if rm.size.x > 7 and rm.size.y > 6 and rm != room:
+						exit_room = room
+						break
+			exit_pos = exit_room.get_center() * 8
 			print(room.size)
 			break
 	plr.position = player_pos
-	other_things.add_child(Exit.new(player_pos + Vector2i(0,-8)))
+	other_things.add_child(Exit.new(exit_pos ))
 	add_child(plr)
 	return plr
 

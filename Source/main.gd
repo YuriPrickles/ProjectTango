@@ -50,6 +50,7 @@ var current_level:Level
 var resources:ResourceManager
 var run_gui:RunGUI
 var inventory_open:bool
+var killed_by:String="The Nameless"
 
 func _ready() -> void:
 	FontAtlasTexture = preload("res://Graphics/Atlases/Fonts/font.png")
@@ -69,7 +70,8 @@ func _ready() -> void:
 
 func trigger_game_over():
 	Main.game_over = true
-	run_gui.gui_drawificator.queue_redraw()
+	Main.escaped = false
+	run_gui.queue_free()
 	for ch in _2DLayer.get_children():
 		_2DLayer.remove_child(ch)
 	add_child(preload("res://Source/Entities/GameOver.tscn").instantiate())

@@ -1,6 +1,8 @@
 extends Actor
 class_name Player
 
+var Center:
+	get: return position + (Vector2(width,height) / 2) + Vector2(0,2)
 const SPEED = 65.0
 var direction:Vector2
 var facing: Vector2
@@ -60,7 +62,7 @@ func _input(event: InputEvent) -> void:
 		get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS if Main.main.debugmode else Window.CONTENT_SCALE_MODE_VIEWPORT
 	if no_control:
 		return
-	if event.is_action_pressed("inventory"):
+	if event.is_action_pressed("inventory") and Main.main.current_level.id != LevelID.Above:
 		Main.main.inventory_open = not Main.main.inventory_open
 		pass
 	if Main.main.inventory_open:
@@ -92,7 +94,7 @@ func _draw() -> void:
 		Main.spr(Main.GameAtlas,self,size/-2,spr_index)
 
 func hurt(value, hurter:Entity):
-	if iframe_timer > 0 or no_control: return
+	if iframe_timer > 0 or no_control or value == 0: return
 	iframe_timer = IFRAMES
 	health -= value
 	if health <= 0:

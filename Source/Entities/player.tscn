@@ -13,7 +13,7 @@ shader_parameter/pixel_size = Vector2(32, 32)
 
 [node name="Player" type="CharacterBody2D" unique_id=1987243598]
 z_index = 1
-collision_mask = 14
+collision_mask = 62
 motion_mode = 1
 script = ExtResource("1_7x6ql")
 

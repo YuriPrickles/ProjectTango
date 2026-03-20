@@ -42,9 +42,9 @@ func awoken_coroutine(source_pos:Vector2):
 	await get_tree().create_timer(0.1).timeout
 	asleep = false
 	queue_redraw()
-	await get_tree().create_timer(45).timeout
+	await get_tree().create_timer(20).timeout
 	force_awake = false
-	asleep = true	
+	asleep = true
 	queue_redraw()
 
 func leave_detect(body: Node2D) -> void:
@@ -54,5 +54,4 @@ func leave_detect(body: Node2D) -> void:
 
 func on_touch_player(body):
 	if body is Player:
-		print("touch")
 		body.hurt(1 if not asleep else 0,self)

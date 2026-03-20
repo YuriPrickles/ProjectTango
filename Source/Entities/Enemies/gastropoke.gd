@@ -53,7 +53,7 @@ func _physics_process(delta):
 		facing = Vector2(0,1) * sign(final_vel.y)
 		queue_redraw()
 	if chasing:
-		position += delta * final_vel * snail_speed
+		position += delta * final_vel * (snail_speed * (1 + float(Main.main.get_unreality())/Main.MAX_UNR))
 
 func on_touch_player(body):
 	if body is Player:

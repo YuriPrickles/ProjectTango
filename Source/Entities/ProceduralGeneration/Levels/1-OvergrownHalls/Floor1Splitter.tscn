@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bp6bqhl5f5edp"]
+
+[ext_resource type="PackedScene" uid="uid://cre0egjr12lkg" path="res://Source/Entities/Splitter.tscn" id="1_v7vuh"]
+[ext_resource type="Script" uid="uid://bti5s0eg36au" path="res://Source/Entities/ProceduralGeneration/Levels/1-OvergrownHalls/Floor1Splitter.gd" id="2_x447a"]
+
+[node name="Floor1Splitter" unique_id=410778698 instance=ExtResource("1_v7vuh")]
+script = ExtResource("2_x447a")

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bjaus56mplkte"]
+
+[ext_resource type="PackedScene" uid="uid://dtvwjoeaguaik" path="res://Source/Entities/level.tscn" id="1_kco88"]
+[ext_resource type="Script" uid="uid://cifny0mugpvp2" path="res://Source/Entities/ProceduralGeneration/Levels/1-OvergrownHalls/OvergrownHalls.gd" id="1_qdtcm"]
+
+[node name="Level" unique_id=2088028645 instance=ExtResource("1_kco88")]
+script = ExtResource("1_qdtcm")

@@ -1,8 +1,11 @@
 class_name Utils
 extends Node
 
+static func thing_is_null(thing):
+	return thing == null
+
 ##Quickly add a Rectangle collider to a collidable 2D object.
-static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch:Callable,on_untouch):
+static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch=null,on_untouch=null):
 	if thing is Pickup:
 		thing.set_collision_layer_value(3,true)
 		thing.set_collision_mask_value(1,true)
@@ -12,13 +15,23 @@ static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch:C
 	if thing is Enemy:
 		thing.set_collision_layer_value(5,true)
 		thing.set_collision_mask_value(1,true)
+	if thing is Projectile:
+		thing.set_collision_layer_value(5,true)
+		thing.set_collision_layer_value(6,true)
+		thing.set_collision_mask_value(1,true)
+		thing.set_collision_mask_value(2,true)
+	if thing is StaticBody2D:
+		thing.set_collision_layer_value(2,true)
+		thing.set_collision_mask_value(1,true)
+		thing.set_collision_mask_value(2,true)
 	var colmask = CollisionShape2D.new()
 	var shape = RectangleShape2D.new()
 	shape.size = size.size
 	colmask.position = size.size + size.position
 	colmask.shape = shape
 	if thing is Area2D:
-		thing.connect("body_entered",on_touch)
+		if on_touch != null:
+			thing.connect("body_entered",on_touch)
 		if on_untouch != null:
 			thing.connect("body_exited",on_untouch)
 	thing.add_child(colmask.duplicate())

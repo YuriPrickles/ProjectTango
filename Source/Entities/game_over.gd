@@ -48,6 +48,7 @@ func _input(event: InputEvent) -> void:
 	if allow_input and event.is_action_pressed("accept"):
 		Main.main._ready()
 		queue_free()
+		Main.main.reset_run()
 		Main.game_over = false
 		Main.escaped = false
 
@@ -55,4 +56,4 @@ func _draw() -> void:
 	draw_rect(Rect2(0,0,320,180),Main.colors[0])
 	if string_array.size() < 1: return
 	for i in range(string_array.size()):
-		Main.draw_text(self,string_array[i],Vector2(1,90 - (8 * (string_array.size()-i + 1))))
+		Main.draw_text(self,string_array[i],Vector2(1,180 - (8 * (string_array.size()-i + 1))))

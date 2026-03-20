@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dqw8kxy2sart"]
+
+[ext_resource type="Script" uid="uid://o3pi8f1ff2la" path="res://Source/Entities/transitioner.gd" id="1_v67tq"]
+
+[node name="Transitioner" type="Node2D" unique_id=817232785]
+z_index = 99
+script = ExtResource("1_v67tq")

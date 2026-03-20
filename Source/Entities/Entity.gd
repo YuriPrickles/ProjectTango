@@ -10,21 +10,30 @@ var Center:
 	get: return position + (Vector2(width,height) / 2)
 var int_position: Vector2i:
 	get: return Vector2i(position)
-var dmg_source_name:String="The Nameless"
+var dmg_source_name:String=""
 var name_file:String="res://Source/Names/snitchweed.txt"
+var instability_affection_thresholds:Array[int]=[]
+var unreality_affection_thresholds:Array[int]=[]
+var y_sort_offset:int = 0
+var solid = false
 
-func _init(pos,collision:Rect2) -> void:
+func _init(pos,collision:Rect2,_solid=false) -> void:
 	var file = FileAccess.open(name_file, FileAccess.READ)
 	var name_arr:PackedStringArray = file.get_as_text().split("\n")
-	dmg_source_name = name_arr[randi() % name_arr.size() - 1]
-	print(dmg_source_name)
+	while dmg_source_name.is_empty():
+		dmg_source_name = name_arr[randi() % name_arr.size() - 1]
+	if _solid:
+		solid = true
+		var static_body = StaticBody2D.new()
+		Utils.attach_collision_shape(static_body,collision,on_touch_player,on_untouch_player)
 	Utils.attach_collision_shape(self,collision,on_touch_player,on_untouch_player)
 	position = pos
 	offset = collision.size
-	
+	queue_redraw()
+
 func _process(delta: float) -> void:
 	var plr:Player = Main.main.get_player()
-	if plr.position.y > position.y:
+	if plr.position.y > position.y + y_sort_offset:
 		z_index = Main.Depths.BelowPlayer
 	else:
 		z_index = Main.Depths.AbovePlayer

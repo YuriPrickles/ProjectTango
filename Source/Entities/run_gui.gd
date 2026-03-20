@@ -3,6 +3,7 @@ extends CanvasLayer
 
 var resources:ResourceManager
 @onready var gui_drawificator:Node2D = $GUIDrawificator
+static var draw_me = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	resources = Main.main.resources

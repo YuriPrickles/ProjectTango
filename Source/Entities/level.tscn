@@ -7,7 +7,11 @@
 z_as_relative = false
 script = ExtResource("1_2y2gb")
 
-[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=280689227]
+[node name="Floor" type="TileMapLayer" parent="." unique_id=1197865555]
+z_as_relative = false
+tile_set = ExtResource("2_2y2gb")
+
+[node name="Walls" type="TileMapLayer" parent="." unique_id=280689227]
 z_as_relative = false
 tile_set = ExtResource("2_2y2gb")
 
@@ -21,3 +25,5 @@ color = Color(0.48963153, 0.55144083, 0.4565472, 1)
 [node name="Traps" type="Node2D" parent="." unique_id=1808434440]
 
 [node name="OtherThings" type="Node2D" parent="." unique_id=626437170]
+
+[node name="Projectiles" type="Node2D" parent="." unique_id=1288945030]

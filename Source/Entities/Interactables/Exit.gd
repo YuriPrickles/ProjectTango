@@ -12,6 +12,7 @@ var spr_dict:Dictionary[int, Vector2]={
 
 func _init(pos:Vector2) -> void:
 	super._init(pos,Rect2(-16,-2,16,4))
+	y_sort_offset = 2
 
 func on_touch_player(body):
 	if body is Player:
@@ -37,6 +38,11 @@ func _input(event: InputEvent) -> void:
 		closed = true
 		queue_redraw()
 		await get_tree().create_timer(1).timeout
+		plr.no_control = false
+		plr.no_draw = false
+		starting_to_close = false
+		closed = false
+		Main.main.save_level()
 		Main.main.add_child(preload("res://Source/Entities/ResultsScreen.tscn").instantiate())
 		Main.escaped = true
 		Main.main.run_gui.queue_free()

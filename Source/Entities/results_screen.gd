@@ -67,7 +67,7 @@ func cutscene():
 
 func _input(event: InputEvent) -> void:
 	if allow_input and event.is_action_pressed("accept"):
-		Main.main._ready()
+		Main.main.load_level(LevelID.Above)
 		queue_free()
 		Main.escaped = false
 		Main.game_over = false
@@ -79,5 +79,5 @@ func _draw() -> void:
 		Main.draw_text(
 			self,
 			string_array[i],
-			Vector2(1,90 - (8 * (string_array.size()-i + 1))),
+			Vector2(1,180 - (8 * (string_array.size()-i + 1))),
 			Main.colors[int(inv_string_dict.get(string_array[i]))] if start_and_stop_value_color[0] < i and start_and_stop_value_color[1] > i else Main.colors[7])

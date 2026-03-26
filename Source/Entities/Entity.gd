@@ -12,7 +12,7 @@ var int_position: Vector2i:
 	get: return Vector2i(position)
 var dmg_source_name:String=""
 var name_file:String="res://Source/Names/snitchweed.txt"
-var instability_affection_thresholds:Array[int]=[]
+var peril_affection_thresholds:Array[int]=[]
 var unreality_affection_thresholds:Array[int]=[]
 var y_sort_offset:int = 0
 var solid = false

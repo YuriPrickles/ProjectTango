@@ -12,7 +12,6 @@ func _init(pos) -> void:
 
 func _process(delta: float) -> void:
 	super._process(delta)
-	
 
 func _draw() -> void:
 	Main.spr(Main.GameAtlas,self,Vector2.ZERO,35 if asleep else 51)
@@ -29,7 +28,7 @@ func on_detect(body: Node2D) -> void:
 
 func wake_up_nearby():
 	var lvl:Level = Main.main.get_level()
-	Main.main.add_instability(1)
+	Main.main.add_peril(1)
 	for trap:Trap in lvl.traps.get_children():
 		if trap != self and trap is Snitchweed and trap.int_position.distance_to(int_position) < 64:
 			trap.force_awake = true
@@ -42,7 +41,7 @@ func awoken_coroutine(source_pos:Vector2):
 	await get_tree().create_timer(0.1).timeout
 	asleep = false
 	queue_redraw()
-	await get_tree().create_timer(20).timeout
+	await get_tree().create_timer(1 * (1 + (0.03 * Main.main.resources.peril))).timeout
 	force_awake = false
 	asleep = true
 	queue_redraw()

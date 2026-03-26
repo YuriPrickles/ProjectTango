@@ -30,6 +30,11 @@ func on_untouch_player(body):
 		touching = false
 		queue_redraw()
 
+func _input(event: InputEvent) -> void:
+	if touching and event.is_action_pressed("accept") and not Main.main.loaded_fullscreen:
+		var plr = Main.main.get_player()
+		plr.no_control = true
+		Main.main.change_fullscreen(Scrapnest.new())
 func _draw() -> void:
 	draw_from_dict(spr_dict,-offset/2,0)
 	if touching:

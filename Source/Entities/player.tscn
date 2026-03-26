@@ -37,4 +37,3 @@ position = Vector2(0, 1)
 shadow_enabled = true
 texture = ExtResource("2_7x6ql")
 texture_scale = 0.4
-height = 8.0

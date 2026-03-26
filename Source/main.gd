@@ -2,6 +2,7 @@ class_name Main
 extends Node
 
 @onready var _2DLayer = $"2DLayer"
+@onready var other_ui: CanvasLayer = $OtherUI
 @onready var transitioner: Node2D = $Transitioner
 
 enum Depths{
@@ -10,6 +11,7 @@ enum Depths{
 	BelowPlayer = 2,
 	Player = 3,
 	AbovePlayer = 4,
+	Fullscreens = 100,
 }
 const colors:Array[Color] = [
 	Color("000000"),
@@ -36,7 +38,7 @@ static var ItemAtlasTexture:Texture2D
 static var GameAtlas:Atlas
 static var GameAtlasTexture:Texture2D
 static var FontAtlasTexture:Texture2D
-static var fontmap:String = "abcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+-=?:.\"\';,[] "
+static var fontmap:String = "abcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+-=?:.\"\';,[]>< "
 var FONTCHARS:int
 const FONTCHAR_SIZE=Vector2i(4,6)
 var SPR_COLS:int
@@ -48,15 +50,16 @@ static var escaped = false
 static var game_finished:
 	get: return game_over or escaped
 
+var loaded_fullscreen:Node = null
 var current_level:Level
 var saved_levels:Array[Level]
 var resources:ResourceManager
+static var disc_manager:DiscManager
 var run_gui:RunGUI
 var inventory_open:bool
 var killed_by:String="The Nameless"
 
-const MAX_INST = 100
-const MAX_UNR = 100
+const MAX_PRL = 100
 
 func _ready() -> void:
 	FontAtlasTexture = preload("res://Graphics/Atlases/Fonts/font.png")
@@ -65,10 +68,20 @@ func _ready() -> void:
 	ItemAtlas = Atlas.new(ItemAtlasTexture)
 	GameAtlas = Atlas.new(GameAtlasTexture)
 	FONTCHARS = FontAtlasTexture.get_width() / FONTCHAR_SIZE.x
+	if disc_manager: disc_manager.queue_free()
+	disc_manager = DiscManager.new()
+	add_child(disc_manager)
 	main = self
 	reset_run()
 	load_level(LevelID.Above)
 	print("thing initialized")
+
+func change_fullscreen(scene):
+	loaded_fullscreen = scene
+	other_ui.add_child(loaded_fullscreen)
+
+func remove_fullscreen():
+	loaded_fullscreen.queue_free()
 
 func reset_run():
 	RunGUI.draw_me = false
@@ -83,6 +96,9 @@ func save_level():
 func load_level(id:int):
 	run_gui =  preload("res://Source/Entities/run_gui.tscn").instantiate()
 	add_child(run_gui)
+	if id != LevelID.Above:
+		RunGUI.draw_me = true
+		disc_manager.start_cd_player()
 	if saved_levels[id]:
 		print("Saved level found for Floor %s" % str(id + 1))
 		current_level = saved_levels[id]
@@ -95,7 +111,7 @@ func load_level(id:int):
 			level_to_load = preload("res://Source/Entities/ProceduralGeneration/Levels/0-Above/Above.tscn")
 		LevelID.Floor1:
 			level_to_load = preload("res://Source/Entities/ProceduralGeneration/Levels/1-OvergrownHalls/OvergrownHalls.tscn")
-	if id != LevelID.Above: RunGUI.draw_me = true
+
 	current_level = level_to_load.instantiate()
 	_2DLayer.add_child(current_level)
 
@@ -123,23 +139,24 @@ func get_player() -> Player:
 func get_level() -> Level:
 	return current_level
 
-func add_instability(value:int):
-	resources.instability += value
-func add_unreality(value:int):
-	resources.unreality += value
-func get_instability():
-	return resources.instability
-func get_unreality():
-	return resources.unreality
+func add_peril(value:int):
+	if value <= 0:
+		resources.peril += value
+		return
+	resources.peril += max(0,value - resources.peril_block )
+	resources.peril_block = max(0,resources.peril_block - value)
+func add_peril_block(value:int):
+	resources.peril_block += value
+func get_peril():
+	return resources.peril
+func get_peril_block():
+	return resources.peril_block
+	
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("DEBUG_ADD_INST"):
-		add_instability(1)
-	if event.is_action_pressed("DEBUG_DEL_INST"):
-		add_instability(-1)
-	if event.is_action_pressed("DEBUG_ADD_UNR"):
-		add_unreality(1)
-	if event.is_action_pressed("DEBUG_DEL_UNR"):
-		add_unreality(-1)
+	if event.is_action_pressed("DEBUG_ADD_PRL"):
+		add_peril(1)
+	if event.is_action_pressed("DEBUG_DEL_PRL"):
+		add_peril(-1)
 ##Usually you'll want to put Vector2(width,height)/-2 as the offset.
 ##Just fuck around with the offset if you need to, you can do this
 static func spr(atlas:Atlas,item:CanvasItem, offset:Vector2,index:int):

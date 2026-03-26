@@ -1,15 +1,10 @@
 class_name ResourceManager
 extends Resource
 
-enum Scraps {
-	METAL,
-	WIRES,
-	BATTERY,
-	NONE
-}
-
-var instability:int = 0
-var unreality:int = 0
+static var scrap_sells=[0,0,0]
+var money:int = 0
+var peril:int = 0
+var peril_block:int = 0
 
 var inventory:Array[Item]
 var inv_selected:
@@ -17,10 +12,18 @@ var inv_selected:
 	set(value): inv_selected = (value % 15)
 
 func initialize_inventory():
+	for i in range(3):
+		scrap_sells[i] = RandomNumberGenerator.new().randi_range(2,7)
+	money = 999
 	inv_selected = 0
 	inventory.resize(15)
 	inventory.fill(null)
 
+func add_money(value):
+	money += value
+
+func spend_money(value):
+	money -= value
 func get_selected_item():
 	return inventory[inv_selected]
 	

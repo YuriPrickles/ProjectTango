@@ -34,10 +34,11 @@ func _draw():
 		for x in range(leaf.size.x):
 			for y in range(leaf.size.y):
 				var tilepos = Vector2i(x + leaf.position.x,y + leaf.position.y)
-				floor.set_cell(tilepos, 1, get_floor_tile(Vector2i(1, 7)))
 				if is_inside_padding(x,y, leaf, padding):
 					solid_cells.append(tilepos)
 					walls.set_cell(tilepos, 1, Vector2i(0, 5))
+				else:
+					floor.set_cell(tilepos, 1, get_floor_tile(Vector2i(1, 7)))
 	for path in paths:
 		var tile:Vector2 = Vector2i(1, 7)
 		if guaranteed_paths.size() > 2:

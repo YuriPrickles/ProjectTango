@@ -3,7 +3,7 @@ class_name Player
 
 var Center:
 	get: return position + (Vector2(width,height) / 2) + Vector2(0,2)
-const SPEED = 65.0
+const SPEED = 45.0
 var direction:Vector2
 var facing: Vector2
 var spr_index = 0
@@ -18,6 +18,8 @@ var kb_override_vector:Vector2
 var no_control = false
 var no_draw = false
 @onready var camera:Camera2D = $Camera2D
+@onready var point_light_2d: PointLight2D = $PointLight2D
+
 
 func _ready() -> void:
 	z_index = Main.Depths.Player
@@ -26,6 +28,7 @@ func _ready() -> void:
 	height = 8
 	pass
 func _process(delta: float) -> void:
+	point_light_2d.enabled = Main.main.current_level.id != LevelID.Above
 	if iframe_timer > 0:
 		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)
 	if no_draw: return
@@ -43,7 +46,7 @@ func _physics_process(delta: float) -> void:
 			facing = direction
 			if no_draw: return
 			queue_redraw()
-			velocity = direction * SPEED * (1.4 if running and not sneaking else (1.0 if not sneaking else 0.4))
+			velocity = direction * SPEED * (1.9 if running and not sneaking else (1.0 if not sneaking else 0.4))
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
 	else:
@@ -64,7 +67,6 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("inventory") and Main.main.current_level.id != LevelID.Above:
 		Main.main.inventory_open = not Main.main.inventory_open
-		pass
 	if Main.main.inventory_open:
 		if event.is_action_pressed("throw") and Main.main.resources.get_selected_item():
 			var item = Main.main.resources.get_selected_item()
@@ -86,7 +88,7 @@ func _input(event: InputEvent) -> void:
 func _draw() -> void:
 	#Main.main.draw_text_centered(self,"hi pearlings", (Vector2(0,-32)))
 	#Main.main.draw_text_centered(self,"centered text", (Vector2(0,-24)))
-	#Main.main.draw_text(self,"uncentered text", (Vector2(0,-16)))
+	#Main.main.draw_text("uncentered text", (Vector2(0,-16)))
 	if no_draw: return
 	if facing:
 		spr_index = (1 if facing.x > 0 else 2) if facing.x != 0 else (3 if facing.y < 0 else 0)

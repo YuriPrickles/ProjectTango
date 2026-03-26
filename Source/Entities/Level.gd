@@ -20,7 +20,7 @@ var spawned = false
 
 func spawn_enemies(): pass
 
-func spawn_scrap(): pass
+func spawn_scrap(amount:int) -> void: pass
 
 func spawn_treasures(): pass
 

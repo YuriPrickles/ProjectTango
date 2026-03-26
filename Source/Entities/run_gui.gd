@@ -2,7 +2,7 @@ class_name RunGUI
 extends CanvasLayer
 
 var resources:ResourceManager
-@onready var gui_drawificator:Node2D = $GUIDrawificator
+@onready var gui_drawificator:GUIDrawificator = $GUIDrawificator
 static var draw_me = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

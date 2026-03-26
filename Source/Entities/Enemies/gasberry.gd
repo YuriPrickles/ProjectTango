@@ -12,19 +12,21 @@ var ripe: bool:
 var shoot_delay = 1.4
 const DELAY_VALUE = 1.4
 var room_assigned:int
-var poison_delay = 1
-const POISON_VALUE = 1
+var poison_delay = 1.5
+const POISON_VALUE = 1.5
 const POISON_TICK_VALUE = 0.7
 
 func _init(pos,room_ass) -> void:
 	name_file = "res://Source/Names/gasberry.txt"
 	super._init(pos,Rect2(-2,-2,6,4))
+	Health = 40
+	MaxHealth = 40
 	room_assigned = room_ass
-	instability_affection_thresholds.append(randi_range(20,80))
+	peril_affection_thresholds.append(randi_range(20,80))
 
 func _process(delta: float) -> void:
 	super._process(delta)
-	if not ripe and Main.main.get_instability() >= instability_affection_thresholds[0]:
+	if not ripe and Main.main.get_peril() >= peril_affection_thresholds[0]:
 		ripe = true
 	var plr:Player = Main.main.get_player()
 	if plr.position.distance_to(position) <= 320:
@@ -34,7 +36,7 @@ func _process(delta: float) -> void:
 			shoot_delay -= delta
 			if shoot_delay <= 0:
 				shoot_seed(plr.position)
-				shoot_delay = DELAY_VALUE - float(Main.main.get_unreality()) / Main.MAX_UNR
+				shoot_delay = DELAY_VALUE - float(Main.main.get_peril()) / Main.MAX_PRL
 		else:
 			poison_delay -= delta
 			if poison_delay <= 0:
@@ -54,8 +56,8 @@ func shoot_seed(target:Vector2):
 func _draw() -> void:
 	var lvl:Level = Main.main.get_level()
 	var proper_room:Branch = lvl.dungeon_layout.rooms[room_assigned]
-	if instability_affection_thresholds[0]:
-		Main.draw_text(self, str(instability_affection_thresholds[0]),Vector2(0,8))
+	#if peril_affection_thresholds[0]:
+		#Main.draw_text( str(peril_affection_thresholds[0]),Vector2(0,8))
 	if ripe:
 		draw_rect(Rect2(Vector2i(0,-7) - Vector2i(position) + (proper_room.position * 8),proper_room.size * 8),Main.colors[11] * max(0.2,abs(1-(poison_delay/POISON_VALUE))),true,-1,true)
 	draw_from_dict(spr_dict,Vector2(0,-4),0 if not ripe else 1)

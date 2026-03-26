@@ -8,4 +8,7 @@ script = ExtResource("1_8snqp")
 
 [node name="2DLayer" type="Node2D" parent="." unique_id=1825774269]
 
+[node name="OtherUI" type="CanvasLayer" parent="." unique_id=1672047431]
+layer = 2
+
 [node name="Transitioner" parent="." unique_id=817232785 instance=ExtResource("2_pt1rw")]

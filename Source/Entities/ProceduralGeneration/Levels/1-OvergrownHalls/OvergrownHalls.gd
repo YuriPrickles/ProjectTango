@@ -39,7 +39,6 @@ func _process(delta: float) -> void:
 	if !spawned:
 		artifact_positions.append(dungeon_layout.artifact_rooms[0].get_center() * 8)
 		player = spawn_player()
-		spawn_scrap()
 		spawn_enemies()
 		spawn_treasures()
 		print("Rooms: %s" % dungeon_layout.rooms.size())
@@ -79,22 +78,20 @@ func spawn_enemies():
 			var spawn_offset = Vector2i(randi_range(-2,2),randi_range(-2,2))
 			var final_spawn = (room.get_center())
 			enemies.add_child(Gasberry.new((final_spawn + spawn_offset) * 8,dungeon_layout.rooms.find(room)))
-func spawn_scrap():
-	for room:Branch in dungeon_layout.rooms:
-		var base_scrap_chance = 5
-		for i in range(4):
-			if randi_range(0,100) <= base_scrap_chance:
-				base_scrap_chance += 15
-				var randpos = (room.get_center() + Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2) * dungeon_layout.tile_size
-				if not Splitter.is_inside_padding(randpos.x,randpos.y,room,padding):
-					continue
-				match randi_range(0,2):
-					0:
-						items.add_child(Pickup.new(ItemID.Metal, randpos))
-					1:
-						items.add_child(Pickup.new(ItemID.Wires, randpos))
-					2:
-						items.add_child(Pickup.new(ItemID.Battery, randpos))
+
+func spawn_scrap(amount:int) -> void:
+	for i in range(amount):
+		var room:Branch = dungeon_layout.rooms.pick_random()
+		var randpos = (room.get_center() + Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2) * dungeon_layout.tile_size
+		if not Splitter.is_inside_padding(randpos.x,randpos.y,room,padding):
+			return
+		match randi_range(0,2):
+			0:
+				items.add_child(Pickup.new(ItemID.Metal, randpos))
+			1:
+				items.add_child(Pickup.new(ItemID.Wires, randpos))
+			2:
+				items.add_child(Pickup.new(ItemID.Battery, randpos))
 func spawn_treasures():
 	for room:Branch in dungeon_layout.artifact_rooms:
 		items.add_child(Pickup.new(ItemID.GoldenToad, room.get_center() * dungeon_layout.tile_size))
@@ -103,8 +100,6 @@ func spawn_treasures():
 func get_compass_vector():
 	return player.position.direction_to(artifact_positions[0]) * 5
 
-##Eventually, this is where the level layers are drawn.[br]
-##Each level layer will have will have its own drunction (draw function) so that the order can be rearranged easily.
 func _draw():
 	#for room:Branch in dungeon_layout.rooms:
 		#Main.main.draw_text(dungeon_layout,str(dungeon_layout.rooms.find(room)),room.get_center() * 8)

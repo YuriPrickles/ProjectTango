@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cuag6eiicap7u"
-path="res://.godot/imported/shop_backgrounds.png-fd8f7a9e2f2252d42769735b05f3e751.ctex"
+uid="uid://c2ojl6geglvld"
+path="res://.godot/imported/scrapnest_bg.png-6a7953ac0499124a15f4b3af8f9d48cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Graphics/Fullscreens/shop_backgrounds.png"
-dest_files=["res://.godot/imported/shop_backgrounds.png-fd8f7a9e2f2252d42769735b05f3e751.ctex"]
+source_file="res://Graphics/Fullscreens/scrapnest_bg.png"
+dest_files=["res://.godot/imported/scrapnest_bg.png-6a7953ac0499124a15f4b3af8f9d48cc.ctex"]
 
 [params]
 

@@ -18,6 +18,7 @@ func _init(id:int, pos:Vector2, alwaysfollow=false, throw:bool=false) -> void:
 	position = pos
 	draw_offset = Vector2.ZERO
 	if thrown:
+		item.has_picked_up_before = true
 		vel = plr.facing
 		draw_offset = Vector2(0,-4)
 func _ready() -> void:

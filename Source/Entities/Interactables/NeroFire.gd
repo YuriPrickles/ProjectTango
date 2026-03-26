@@ -1,0 +1,41 @@
+extends Entity
+class_name NeroFire
+var spr_dict:Dictionary[int, Vector2]={
+	91: Vector2(0,0),
+	92: Vector2(1,0),
+	
+}
+var touching = false
+func _init(pos) -> void:
+	super._init(pos,Rect2(-28,-18,24,16))
+	y_sort_offset = -4
+	touching = false
+	queue_redraw()
+
+var blinkdelay = 58
+func _process(delta: float) -> void:
+	super._process(delta)
+	queue_redraw()
+
+func on_touch_player(body):
+	if body is Player:
+		touching = true
+		queue_redraw()
+func on_untouch_player(body):
+	if body is Player:
+		touching = false
+		queue_redraw()
+
+func _input(event: InputEvent) -> void:
+	if touching and event.is_action_pressed("accept") and not Main.main.loaded_fullscreen:
+		var plr = Main.main.get_player()
+		plr.no_control = true
+		Main.main.change_fullscreen(NeroScreen.new())
+func _draw() -> void:
+	draw_from_dict(spr_dict,-offset/2,0)
+	var sprite = (75 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 76)
+	Main.spr(Main.GameAtlas,self,Vector2(-8,-11),sprite)
+	if touching:
+		Main.draw_text_centered(self, "[enter]", Vector2(0,-40),Main.colors[7],Main.colors[0])
+		Main.draw_text_centered(self, "nero the fire spirit", Vector2(0,-34),Main.colors[7],Main.colors[0])
+		Main.draw_text_centered(self, "burns hymns onto cd", Vector2(0,-28),Main.colors[5],Main.colors[0])

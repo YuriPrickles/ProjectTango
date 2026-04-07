@@ -15,11 +15,13 @@ static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch=n
 	if thing is Enemy:
 		thing.set_collision_layer_value(5,true)
 		thing.set_collision_mask_value(1,true)
+		thing.set_collision_mask_value(6,true)
 	if thing is Projectile:
 		thing.set_collision_layer_value(5,true)
 		thing.set_collision_layer_value(6,true)
 		thing.set_collision_mask_value(1,true)
 		thing.set_collision_mask_value(2,true)
+		thing.set_collision_mask_value(6,true)
 	if thing is StaticBody2D:
 		thing.set_collision_layer_value(2,true)
 		thing.set_collision_mask_value(1,true)
@@ -30,9 +32,9 @@ static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch=n
 	colmask.position = size.size + size.position
 	colmask.shape = shape
 	if thing is Area2D:
-		if on_touch != null:
+		if on_touch != null and not thing.is_connected("body_entered",on_touch):
 			thing.connect("body_entered",on_touch)
-		if on_untouch != null:
+		if on_untouch != null and not thing.is_connected("body_exited",on_touch):
 			thing.connect("body_exited",on_untouch)
 	thing.add_child(colmask.duplicate())
 
@@ -49,6 +51,6 @@ static func attach_round_collision_shape(thing:CollisionObject2D,radius:float,on
 	shape.radius = radius
 	colmask.position = extra_offset
 	colmask.shape = shape
-	if on_touch:
+	if on_touch and not thing.is_connected("body_entered",on_touch):
 		thing.connect("body_entered",on_touch)
 	thing.add_child(colmask.duplicate())

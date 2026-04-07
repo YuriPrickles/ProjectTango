@@ -1,15 +1,14 @@
 extends Entity
 class_name NeroFire
-var spr_dict:Dictionary[int, Vector2]={
-	91: Vector2(0,0),
-	92: Vector2(1,0),
-	
-}
 var touching = false
 func _init(pos) -> void:
 	super._init(pos,Rect2(-28,-18,24,16))
 	y_sort_offset = -4
 	touching = false
+	spr_dict={
+		91: Vector2(0,0),
+		92: Vector2(1,0),
+	}
 	queue_redraw()
 
 var blinkdelay = 58

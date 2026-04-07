@@ -35,9 +35,10 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	if Main.game_finished or not Main.main.current_level or not RunGUI.draw_me: return
 	Main.draw_text(self,str(Engine.get_frames_per_second()) + "FPS",Vector2(viewport.x * 0.80, margin))
+	var plr = Main.main.get_player()
 	#region Main Game Region
 	if mode == Mode.MainUI:
-		#region peril and Unreality
+		#region Peril
 		var inst_text = "PERIL: %s" % Main.main.resources.peril
 		Main.draw_text(self,inst_text,Vector2(margin, margin + 16))
 		#endregion
@@ -54,28 +55,33 @@ func _draw() -> void:
 				draw_circle(compass_center,2,Main.colors[1])
 		#endregion
 		#region Inventory
+		#if Main.main.inventory_open:
+			#draw_rect(Rect2(Vector2.ZERO,viewport),Color.BLACK * 0.5)
+		#for index in backpack_arr.keys():
+			#Main.spr(Main.GameAtlas,self,backpack_pos + backpack_arr.get(index) * Main.SPR_SIZE,index if not Main.main.inventory_open else index + 2)
 		if Main.main.inventory_open:
-			draw_rect(Rect2(Vector2.ZERO,viewport),Color.BLACK * 0.5)
-		for index in backpack_arr.keys():
-			Main.spr(Main.GameAtlas,self,backpack_pos + backpack_arr.get(index) * Main.SPR_SIZE,index if not Main.main.inventory_open else index + 2)
-		if Main.main.inventory_open:
+			var inv_grid_offset:Vector2 = Vector2(0,-18)
 			for i in range(15):
 				var blinkdelay = 12
 				var spr_to_draw = 10 + abs((1 + (1 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 0)) if i == Main.main.resources.inv_selected else 0)
-				var inv_grid_offset:Vector2 = Vector2(2,-24)
+				
 				var row_offset = 8 * ((i - i % 5)/5)
 				Main.spr(Main.GameAtlas,self,backpack_pos + inv_grid_offset + Vector2((i * 8) % 40, row_offset),spr_to_draw)
 				var item = Main.main.resources.inventory[i]
 				if item:
 					Main.spr(Main.ItemAtlas,self,backpack_pos + inv_grid_offset + Vector2((i * 8) % 40, row_offset),item.spr_index if not Main.main.inventory_open else item.spr_index)
-						
+			if Main.main.resources.get_selected_item():
+				var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-12) 
+				var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-6) 
+				var item = Main.main.resources.get_selected_item()
+				Main.draw_text(self,item.item_name,name_pos,Main.colors[item.value],Main.colors[0])
+				Main.draw_text(self,item.item_desc,desc_pos,Main.colors[7],Main.colors[0])
 		#endregion
 		
 		#region Playerhealth
-		var plr:Player = Main.main.get_player()
 		if plr:
 			for i in range(1,plr.max_health + 1):
-				Main.spr(Main.GameAtlas,self,Vector2(10 + margin + (i * 6),viewport.y * 0.95 + margin),26 if i > plr.health else 27)
+				Main.spr(Main.GameAtlas,self,Vector2(-8 + margin + (i * 6),viewport.y * 0.95 + margin),26 if i > plr.health else 27)
 		#endregion
 	#endregion
 

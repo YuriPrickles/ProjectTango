@@ -5,16 +5,16 @@ var current_agent_position: Vector2
 var next_path_position: Vector2
 var kb_dir:Vector2
 var chasing = false
-var spr_dict:Dictionary[int,Vector2]={
-	36:Vector2(0,0),
-	37:Vector2(1,0),
-	52:Vector2(0,1),
-	53:Vector2(1,1)
-}
 var facing = Vector2(0,0)
 func _init(pos) -> void:
 	name_file = "res://Source/Names/gastropoke.txt"
 	super._init(pos,Rect2(-12,-4,12,4))
+	spr_dict={
+		36:Vector2(0,0),
+		37:Vector2(1,0),
+		52:Vector2(0,1),
+		53:Vector2(1,1)
+	}
 	Health = 30
 	MaxHealth = 30
 	offset = Vector2(-8,-14)

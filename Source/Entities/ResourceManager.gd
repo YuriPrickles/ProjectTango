@@ -18,13 +18,14 @@ func initialize_inventory():
 	inv_selected = 0
 	inventory.resize(15)
 	inventory.fill(null)
+	inventory[0] = Item.new_item(ItemID.Squallita)
 
 func add_money(value):
 	money += value
 
 func spend_money(value):
 	money -= value
-func get_selected_item():
+func get_selected_item() -> Item:
 	return inventory[inv_selected]
 	
 func remove_inv_item(index:int=inv_selected):

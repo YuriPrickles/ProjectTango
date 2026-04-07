@@ -23,20 +23,25 @@ func _init(p_owner,pos,collision:Rect2,id:int,_velocity:Vector2,_hostile:bool,_d
 	position = pos
 	offset = collision.size
 	queue_redraw()
+
+func clear_collisions():
+	disconnect("body_entered",on_touch_player)
+	disconnect("body_exited",on_untouch_player)
+	for col in get_children():
+		if col is CollisionShape2D:
+			col.queue_free()
+
 ##Projectile hostility is not specified here.
 static func new_projectile(p_owner:Entity,id:int,_position:Vector2,_velocity:Vector2,_damage:int) -> Projectile:
 	var created_proj:Projectile = null
 	match id:
 		ProjectileID.BerrySeed: created_proj = BerrySeed.new(p_owner,id,_position,_velocity,_damage)
-	
+		ProjectileID.SquallitaShockwave: created_proj = SquallitaShockwave.new(p_owner,id,_position,_velocity,_damage)
+
 	Main.main.get_level().projectiles.add_child(created_proj)
 	return created_proj
 func _process(delta: float) -> void:
-	var plr:Player = Main.main.get_player()
-	if plr.position.y > position.y:
-		z_index = Main.Depths.BelowPlayer
-	else:
-		z_index = Main.Depths.AbovePlayer
+	super._process(delta)
 	lifetime -= delta
 	if lifetime <= 0:
 		queue_free()
@@ -48,6 +53,8 @@ func movement():
 func on_touch_player(body):
 	if body is TileMapLayer and lifetime < max_lifetime * 0.8:
 		queue_free()
+	if not hostile and body is Enemy:
+		body.hurt(damage)
 	if hostile and body is Player:
 		body.hurt(damage,proj_owner)
 		hits -= 1

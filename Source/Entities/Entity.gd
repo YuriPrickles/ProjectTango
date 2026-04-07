@@ -16,6 +16,7 @@ var peril_affection_thresholds:Array[int]=[]
 var unreality_affection_thresholds:Array[int]=[]
 var y_sort_offset:int = 0
 var solid = false
+var spr_dict:Dictionary[int,Vector2]
 
 func _init(pos,collision:Rect2,_solid=false) -> void:
 	var file = FileAccess.open(name_file, FileAccess.READ)
@@ -37,7 +38,6 @@ func _process(delta: float) -> void:
 		z_index = Main.Depths.BelowPlayer
 	else:
 		z_index = Main.Depths.AbovePlayer
-	pass
 ##Override this function for behavior when the player collides with the enemy.
 func on_touch_player(body):
 	pass

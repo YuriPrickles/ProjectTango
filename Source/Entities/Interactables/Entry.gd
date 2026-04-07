@@ -7,16 +7,16 @@ var starting_to_close = false
 var destination:int
 var super_special_entry=false
 
-var spr_dict:Dictionary[int, Vector2]={
-	67: Vector2(0,0),
-	68: Vector2(1,0)
-}
-
 func _init(pos:Vector2,dest:int,special:bool = false) -> void:
 	super._init(pos,Rect2(-16,-2,16,4))
 	y_sort_offset = 2
 	destination = dest
 	super_special_entry = special
+	spr_dict={
+		67: Vector2(0,0),
+		68: Vector2(1,0)
+	}
+
 
 func on_touch_player(body):
 	if body is Player:

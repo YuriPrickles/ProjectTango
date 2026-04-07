@@ -1,10 +1,6 @@
 class_name Gasberry
 extends Enemy
 
-var spr_dict:Dictionary[int,Vector2]={
-	44:Vector2(0,-1),
-	60:Vector2(0,0)
-}
 
 var ripe: bool:
 	get: return ripe
@@ -19,9 +15,14 @@ const POISON_TICK_VALUE = 0.7
 func _init(pos,room_ass) -> void:
 	name_file = "res://Source/Names/gasberry.txt"
 	super._init(pos,Rect2(-2,-2,6,4))
+	spr_dict={
+		44:Vector2(0,-1),
+		60:Vector2(0,0)
+	}
 	Health = 40
 	MaxHealth = 40
 	room_assigned = room_ass
+	peril_penalty = 8
 	peril_affection_thresholds.append(randi_range(20,80))
 
 func _process(delta: float) -> void:

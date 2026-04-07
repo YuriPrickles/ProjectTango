@@ -1,13 +1,5 @@
 extends Entity
 class_name ScrapShop
-var spr_dict:Dictionary[int, Vector2]={
-	104: Vector2(0,0),
-	105: Vector2(1,0),
-	106: Vector2(2,0),
-	120: Vector2(0,1),
-	121: Vector2(1,1),
-	122: Vector2(2,1),
-}
 var touching = false
 func _init(pos) -> void:
 	super._init(pos,Rect2(-24,8,24,8))
@@ -16,6 +8,14 @@ func _init(pos) -> void:
 	add_child(static_body)
 	y_sort_offset = 8
 	touching = false
+	spr_dict={
+		104: Vector2(0,0),
+		105: Vector2(1,0),
+		106: Vector2(2,0),
+		120: Vector2(0,1),
+		121: Vector2(1,1),
+		122: Vector2(2,1),
+	}
 	queue_redraw()
 
 func _process(delta: float) -> void:

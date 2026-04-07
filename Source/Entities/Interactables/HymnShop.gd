@@ -1,17 +1,5 @@
 extends Entity
 class_name HymnShop
-var spr_dict:Dictionary[int, Vector2]={
-	136: Vector2(0,0),
-	137: Vector2(1,0),
-	138: Vector2(2,0),
-	139: Vector2(3,0),
-	140: Vector2(4,0),
-	152: Vector2(0,1),
-	153: Vector2(1,1),
-	154: Vector2(2,1),
-	155: Vector2(3,1),
-	156: Vector2(4,1),
-}
 var touching = false
 func _init(pos) -> void:
 	super._init(pos,Rect2(-40,8,40,8))
@@ -20,6 +8,18 @@ func _init(pos) -> void:
 	add_child(static_body)
 	y_sort_offset = 8
 	touching = false
+	spr_dict={
+		136: Vector2(0,0),
+		137: Vector2(1,0),
+		138: Vector2(2,0),
+		139: Vector2(3,0),
+		140: Vector2(4,0),
+		152: Vector2(0,1),
+		153: Vector2(1,1),
+		154: Vector2(2,1),
+		155: Vector2(3,1),
+		156: Vector2(4,1),
+	}
 	queue_redraw()
 
 func _process(delta: float) -> void:

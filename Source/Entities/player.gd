@@ -2,7 +2,7 @@ extends Actor
 class_name Player
 
 var Center:
-	get: return position + (Vector2(width,height) / 2) + Vector2(0,2)
+	get: return position - (Vector2(width,height) / 2) + Vector2(0,2)
 const SPEED = 45.0
 var direction:Vector2
 var facing: Vector2
@@ -19,7 +19,7 @@ var no_control = false
 var no_draw = false
 @onready var camera:Camera2D = $Camera2D
 @onready var point_light_2d: PointLight2D = $PointLight2D
-
+var throwmode:bool = false
 
 func _ready() -> void:
 	z_index = Main.Depths.Player
@@ -33,8 +33,9 @@ func _process(delta: float) -> void:
 		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)
 	if no_draw: return
 	queue_redraw()
-	
+var snap_pos
 func _physics_process(delta: float) -> void:
+	snap_pos = Vector2(int(position.x) % 8 * 8,int(position.y) % 8 * 8)
 	#camera.rotation = get_angle_to(position + direction)
 	camera.zoom = Vector2(1,1) if not Main.main.debugmode else Vector2(0.125,0.125)
 	direction = Input.get_vector("left", "right", "up", "down")
@@ -55,7 +56,7 @@ func _physics_process(delta: float) -> void:
 		if kb_override_vector.length() <= 0:
 			kb_override_vector = Vector2.ZERO
 			kb_override = false
-	if no_control:
+	if no_control or throwmode:
 		velocity = Vector2.ZERO
 	move_and_slide()
 
@@ -65,15 +66,16 @@ func _input(event: InputEvent) -> void:
 		get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS if Main.main.debugmode else Window.CONTENT_SCALE_MODE_VIEWPORT
 	if no_control:
 		return
-	if event.is_action_pressed("inventory") and Main.main.current_level.id != LevelID.Above:
+	if not throwmode and event.is_action_pressed("inventory") and Main.main.current_level.id != LevelID.Above:
 		Main.main.inventory_open = not Main.main.inventory_open
 	if Main.main.inventory_open:
-		if event.is_action_pressed("throw") and Main.main.resources.get_selected_item():
-			var item = Main.main.resources.get_selected_item()
-			var pickup = Pickup.new(item.item_id,position,false,true)
-			Main.main.current_level.items.add_child(pickup)
-			Main.main.resources.remove_inv_item()
-			return
+		var item := Main.main.resources.get_selected_item()
+		if item:
+			if not throwmode and event.is_action_pressed("throw"):
+				throw()
+			elif event.is_action_pressed("accept"):
+				item.on_use()
+			
 		if event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right"):
 			var input = Input.get_axis("inv_left","inv_right")
 			if Main.main.resources.inv_selected + int(input) <= -1 and input == -1:
@@ -91,7 +93,7 @@ func _draw() -> void:
 	#Main.main.draw_text("uncentered text", (Vector2(0,-16)))
 	if no_draw: return
 	if facing:
-		spr_index = (1 if facing.x > 0 else 2) if facing.x != 0 else (3 if facing.y < 0 else 0)
+		spr_index = (1 if facing.x > 0 else 3) if facing.x != 0 else (2 if facing.y < 0 else 0)
 	if floori(iframe_timer * 100.0) % 4 == 0 and iframe_timer < IFRAMES:
 		Main.spr(Main.GameAtlas,self,size/-2,spr_index)
 
@@ -103,6 +105,13 @@ func hurt(value, hurter:Entity):
 		Main.main.killed_by = hurter.dmg_source_name
 		Main.main.trigger_game_over.call_deferred()
 func knockback(vector:Vector2,power:float):
+	if no_control: return
 	kb_override = true
 	kb_override_vector = vector * power
 	velocity = kb_override_vector
+func throw():
+	if throwmode: return
+	throwmode = true
+	var item = Main.main.resources.get_selected_item()
+	var throw_target = ThrowTarget.new(position - size/2,item)
+	Main.main.current_level.add_child(throw_target)

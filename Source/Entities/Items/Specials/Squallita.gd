@@ -1,8 +1,7 @@
 class_name Squallita
 extends Item
 
-func _init(id:int) -> void:
-	super._init(id)
+func _init() -> void:
 	weapon_type = WeaponType.Thrown
 	spr_index = 4
 	value = Value.Special

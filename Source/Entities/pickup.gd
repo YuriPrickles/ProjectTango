@@ -12,14 +12,14 @@ var target_destination:Vector2
 var starting_point:Vector2
 var is_custom_pickup:bool = false
 var landed:bool = false
-static func new_pickup(id:int, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> Pickup:
-	var i = Item.new_item(id)
+static func new_pickup(item_scr:GDScript, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> Pickup:
+	var i:Item = item_scr.new()
 	if i.custom_pickup != null:
-		return i.custom_pickup.new(id,pos,alwaysfollow,throw)
+		return i.custom_pickup.new(item_scr,pos,alwaysfollow,throw)
 	else:
-		return new(id,pos,alwaysfollow,throw)
-func _init(id:int, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> void:
-	item = Item.new_item(id)
+		return new(item_scr,pos,alwaysfollow,throw)
+func _init(item_scr:GDScript, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> void:
+	item = item_scr.new()
 	starting_point = pos
 	y_sort_offset = -4
 	var plr:Player = Main.main.get_player()

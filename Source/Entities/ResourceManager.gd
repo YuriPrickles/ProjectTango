@@ -18,9 +18,9 @@ func initialize_inventory():
 	inv_selected = 0
 	inventory.resize(15)
 	inventory.fill(null)
-	inventory[0] = Item.new_item(ItemID.Squallita)
-	inventory[1] = Item.new_item(ItemID.ScreamingVoidAxe)
-	inventory[2] = Item.new_item(ItemID.RedBerries)
+	inventory[0] = Squallita.new()
+	inventory[1] = ScreamingVoidAxe.new()
+	inventory[2] = RedBerries.new()
 
 
 func add_money(value):
@@ -39,9 +39,9 @@ func is_inventory_full():
 			return false
 	return true
 
-func try_place_inventory(item:Item):
+func try_place_inventory(item:GDScript):
 	for i in inventory.size():
 		if inventory[i] == null:
-			inventory[i] = Item.new_item(item.item_id)
+			inventory[i] = item.new()
 			return true;
 	return false

@@ -17,7 +17,6 @@ enum WeaponType {
 }
 var weapon_type:WeaponType = WeaponType.Unusable
 var has_picked_up_before = false
-var item_id = -1
 var spr_index:int = 16
 var value:Value = Value.Normal
 var item_name:String = "Nothing"
@@ -29,28 +28,11 @@ var item_damage = 0
 var item_usedelay = 0
 var item_timer = 0
 
-func _init(id:int) -> void:
-	item_id = id
-	spr_index = id
-
-static func new_item(id:int) -> Item:
-	match id:
-		ItemID.Metal: return Metal.new(id)
-		ItemID.Wires: return Wires.new(id)
-		ItemID.Battery: return Battery.new(id)
-		ItemID.RedBerries: return RedBerries.new(id)
-		ItemID.Squallita: return Squallita.new(id)
-		ItemID.ScreamingVoidAxe: return ScreamingVoidAxe.new(id)
-	return null
-
-static func new_new_item(item:GDScript) -> Item:
-	return item.new()
-
 ##Called when an item is picked up as a Pickup.
 func on_pickup():
 	if not has_picked_up_before and value == Value.Artifact:
 		Main.main.add_peril(5)
-	Main.main.resources.try_place_inventory(self)
+	Main.main.resources.try_place_inventory(self.get_script())
 	pass
 
 func _process(delta: float) -> void:

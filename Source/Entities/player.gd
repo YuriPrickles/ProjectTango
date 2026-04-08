@@ -130,7 +130,7 @@ func add_effect(effect_id:int):
 		if effect.effect_id == effect_id:
 			effects[effect] += 1
 			return
-	effects[Effect.new_effect(effect_id)] = 1
+	#effects[Effect.new_effect(effect_id)] = 1
 
 func has_effect(effect_id:int):
 	return effects.has(effect_id)

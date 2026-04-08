@@ -3,8 +3,8 @@ extends Pickup
 
 var return_timer:Timer = Timer.new()
 
-func _init(id:int, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> void:
-	super._init(id,pos,alwaysfollow,throw)
+func _init(item_scr:GDScript, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> void:
+	super._init(item_scr,pos,alwaysfollow,throw)
 	arc_height = 180
 	arc_mult = 0.2
 
@@ -18,7 +18,7 @@ func on_land():
 	return_timer.timeout.connect(start_returning)
 	return_timer.one_shot = true
 	var plr = Main.main.get_player()
-	Projectile.new_projectile(self,ProjectileID.SquallitaShockwave,position,Vector2.ZERO,plr.get_damage(4))
+	SquallitaShockwave.new(self,position,Vector2.ZERO,plr.get_damage(4))
 
 func start_returning():
 	locked_in = true

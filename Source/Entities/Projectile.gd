@@ -3,7 +3,6 @@ extends Entity
 
 var proj_owner:Entity
 var hostile:bool = true
-var projectile_id:int
 var damage:int:
 	get: return damage
 var hits = 1
@@ -12,8 +11,7 @@ var lifetime:float = 1
 var max_lifetime:float
 var lifetime_percent:float:
 	get: return lifetime/max_lifetime
-func _init(p_owner,pos,collision:Rect2,id:int,_velocity:Vector2,_hostile:bool,_damage:int,_hits:int,_lifetime:float) -> void:
-	projectile_id = id
+func _init(p_owner,pos,collision:Rect2,_velocity:Vector2,_hostile:bool,_damage:int,_hits:int,_lifetime:float) -> void:
 	velocity = _velocity
 	hostile = _hostile
 	hits = _hits
@@ -25,6 +23,7 @@ func _init(p_owner,pos,collision:Rect2,id:int,_velocity:Vector2,_hostile:bool,_d
 	Utils.attach_collision_shape(self,collision,on_touch_player,on_untouch_player)
 	position = pos
 	offset = collision.size
+	Main.main.get_level().projectiles.add_child(self)
 	queue_redraw()
 
 func clear_collisions():
@@ -34,16 +33,6 @@ func clear_collisions():
 		if col is CollisionShape2D:
 			col.queue_free()
 
-##Projectile hostility is not specified here.
-static func new_projectile(p_owner:Entity,id:int,_position:Vector2,_velocity:Vector2,_damage:int) -> Projectile:
-	var created_proj:Projectile = null
-	match id:
-		ProjectileID.BerrySeed: created_proj = BerrySeed.new(p_owner,id,_position,_velocity,_damage)
-		ProjectileID.SquallitaShockwave: created_proj = SquallitaShockwave.new(p_owner,id,_position,_velocity,_damage)
-		ProjectileID.AxeBlast: created_proj = AxeBlast.new(p_owner,id,_position,_velocity,_damage)
-
-	Main.main.get_level().projectiles.add_child(created_proj)
-	return created_proj
 func _process(delta: float) -> void:
 	super._process(delta)
 	lifetime -= delta

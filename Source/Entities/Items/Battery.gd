@@ -1,7 +1,7 @@
 class_name Battery
 extends Item
-func _init(id:int) -> void:
-	super._init(id)
+func _init() -> void:
+	spr_index = 2
 	sell_value = ResourceManager.scrap_sells[2]
 	value = Value.Scraps
 	item_name = "Battery"

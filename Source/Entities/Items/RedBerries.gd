@@ -1,8 +1,8 @@
 class_name RedBerries
 extends Item
 
-func _init(id:int) -> void:
-	super._init(id)
+func _init() -> void:
+	spr_index = 3
 	value = Value.Normal
 	item_name = "Red Berries"
 	item_desc = "heal 2"

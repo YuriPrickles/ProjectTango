@@ -88,14 +88,14 @@ func spawn_scrap(amount:int) -> void:
 			return
 		match randi_range(0,2):
 			0:
-				items.add_child(Pickup.new(ItemID.Metal, randpos))
+				items.add_child(Pickup.new(Metal, randpos))
 			1:
-				items.add_child(Pickup.new(ItemID.Wires, randpos))
+				items.add_child(Pickup.new(Wires, randpos))
 			2:
-				items.add_child(Pickup.new(ItemID.Battery, randpos))
+				items.add_child(Pickup.new(Battery, randpos))
 func spawn_treasures():
 	for room:Branch in dungeon_layout.artifact_rooms:
-		items.add_child(Pickup.new(ItemID.ScreamingVoidAxe, room.get_center() * dungeon_layout.tile_size))
+		items.add_child(Pickup.new(ScreamingVoidAxe, room.get_center() * dungeon_layout.tile_size))
 	
 
 func get_compass_vector():

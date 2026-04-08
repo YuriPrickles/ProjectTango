@@ -1,8 +1,8 @@
 class_name SquallitaShockwave
 extends Projectile
 var radius = 0
-func _init(p_owner:Entity,id,pos:Vector2,_velocity:Vector2,_damage:int) -> void:
-	super._init(p_owner,pos,Rect2(0,0,0,0),id,_velocity,false,_damage,1,9)
+func _init(p_owner:Entity,pos:Vector2,_velocity:Vector2,_damage:int) -> void:
+	super._init(p_owner,pos,Rect2(0,0,0,0),_velocity,false,_damage,1,9)
 	z_index = Main.Depths.Level
 	spr_dict = {
 		107: Vector2(0,0),

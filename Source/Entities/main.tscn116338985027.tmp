@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dfh1jf8jx4gye"]
+
+[ext_resource type="Script" uid="uid://cs5qcsnold252" path="res://Source/main.gd" id="1_8snqp"]
+[ext_resource type="PackedScene" uid="uid://dqw8kxy2sart" path="res://Source/Entities/transitioner.tscn" id="2_pt1rw"]
+
+[node name="Main" type="Node" unique_id=1891540210]
+script = ExtResource("1_8snqp")
+
+[node name="2DLayer" type="Node2D" parent="." unique_id=1825774269]
+
+[node name="OtherUI" type="CanvasLayer" parent="." unique_id=1672047431]
+layer = 2
+
+[node name="Transitioner" parent="." unique_id=817232785 instance=ExtResource("2_pt1rw")]

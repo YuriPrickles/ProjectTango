@@ -1,8 +1,8 @@
 class_name ScreamingVoidAxe
 extends Item
 
-func _init(id:int) -> void:
-	super._init(id)
+func _init() -> void:
+	spr_index = 5
 	weapon_type = WeaponType.Regular
 	value = Value.Artifact
 	item_name = "Axe of the Screaming Void"
@@ -17,9 +17,8 @@ func _process(delta: float) -> void:
 func on_use() -> bool:
 	if not super.on_use(): return false
 	var plr:Player = Main.main.get_player()
-	Projectile.new_projectile(
+	AxeBlast.new(
 		null,
-		ProjectileID.AxeBlast,
 		plr.Center + (plr.facing * 8),
 		plr.facing * 2,
 		plr.get_damage(item_damage)

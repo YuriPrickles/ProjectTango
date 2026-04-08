@@ -1,6 +1,8 @@
 class_name SquallitaPickup
 extends Pickup
 
+var return_timer:Timer = Timer.new()
+
 func _init(id:int, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> void:
 	super._init(id,pos,alwaysfollow,throw)
 	arc_height = 180
@@ -11,8 +13,18 @@ func _process(delta: float) -> void:
 	super._process(delta)
 
 func on_land():
+	add_child(return_timer)
+	return_timer.start(5)
+	return_timer.timeout.connect(start_returning)
+	return_timer.one_shot = true
 	var plr = Main.main.get_player()
-	Projectile.new_projectile(self,ProjectileID.SquallitaShockwave,position,Vector2.ZERO,4)
+	Projectile.new_projectile(self,ProjectileID.SquallitaShockwave,position,Vector2.ZERO,plr.get_damage(4))
+
+func start_returning():
+	locked_in = true
+	always_follow = true
+	speed = 190
+	return_timer.queue_free()
 
 func _draw() -> void:
 	if Engine.get_frames_drawn() % 8 == 0:

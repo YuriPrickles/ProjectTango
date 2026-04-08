@@ -1,5 +1,6 @@
 class_name ProjectileID
 
 @warning_ignore("shadowed_global_identifier")
-static var BerrySeed = 0
-static var SquallitaShockwave = 1
+const BerrySeed = 0
+const SquallitaShockwave = 1
+const AxeBlast = 2

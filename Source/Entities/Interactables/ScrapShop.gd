@@ -1,6 +1,5 @@
-extends Entity
+extends Interactable
 class_name ScrapShop
-var touching = false
 func _init(pos) -> void:
 	super._init(pos,Rect2(-24,8,24,8))
 	var static_body:StaticBody2D = StaticBody2D.new()
@@ -21,15 +20,6 @@ func _init(pos) -> void:
 func _process(delta: float) -> void:
 	super._process(delta)
 
-func on_touch_player(body):
-	if body is Player:
-		touching = true
-		queue_redraw()
-func on_untouch_player(body):
-	if body is Player:
-		touching = false
-		queue_redraw()
-
 func _input(event: InputEvent) -> void:
 	if touching and event.is_action_pressed("accept") and not Main.main.loaded_fullscreen:
 		var plr = Main.main.get_player()
@@ -38,6 +28,5 @@ func _input(event: InputEvent) -> void:
 func _draw() -> void:
 	draw_from_dict(spr_dict,-offset/2,0)
 	if touching:
-		Main.draw_text_centered(self, "[enter]", Vector2(0,-24),Main.colors[7],Main.colors[0])
-		Main.draw_text_centered(self, "enter scrapnest", Vector2(0,-18),Main.colors[7],Main.colors[0])
+		Main.draw_text_centered(self, "[enter]\nenter scrapnest", Vector2(0,-24),Main.colors[7],Main.colors[0])
 		Main.draw_text_centered(self, "sell scraps!", Vector2(0,-12),Main.colors[5],Main.colors[0])

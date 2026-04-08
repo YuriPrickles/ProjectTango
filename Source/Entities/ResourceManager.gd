@@ -19,6 +19,9 @@ func initialize_inventory():
 	inventory.resize(15)
 	inventory.fill(null)
 	inventory[0] = Item.new_item(ItemID.Squallita)
+	inventory[1] = Item.new_item(ItemID.ScreamingVoidAxe)
+	inventory[2] = Item.new_item(ItemID.RedBerries)
+
 
 func add_money(value):
 	money += value

@@ -118,6 +118,7 @@ func load_level(id:int):
 func trigger_game_over():
 	Main.game_over = true
 	Main.escaped = false
+	disc_manager.stop_cd_player()
 	run_gui.queue_free()
 	for ch in _2DLayer.get_children():
 		_2DLayer.remove_child(ch)
@@ -151,7 +152,12 @@ func get_peril():
 	return resources.peril
 func get_peril_block():
 	return resources.peril_block
-	
+
+func _process(delta: float) -> void:
+	for item:Item in resources.inventory:
+		if item:
+			item._process(delta)
+
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("DEBUG_ADD_PRL"):
 		add_peril(1)
@@ -162,35 +168,37 @@ func _input(event: InputEvent) -> void:
 static func spr(atlas:Atlas,item:CanvasItem, offset:Vector2,index:int):
 	atlas.draw_from_atlas(item.get_canvas_item(),offset,index)
 
+static func pal():
+	pass
 static func draw_text(canvas_item:CanvasItem,string:String, pos:Vector2, color:Color=Color.WHITE,bg_color:Color=Color.TRANSPARENT):
 	var offsetx = 0
 	var offsety = 0
-	var line_chunks:PackedStringArray
+	var line_chunks := string.split("\n")
+	if bg_color != Color.TRANSPARENT:
+		for line in line_chunks:
+			var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * line.length(),FONTCHAR_SIZE.y)
+			canvas_item.draw_rect(Rect2(pos + Vector2(offsetx,line_chunks.find(line) * 6),rect_size),bg_color)
 	for s in string.to_lower():
 		var index = fontmap.find(s)
 		if s == "\n":
 			offsety += 6
 			offsetx = 0
 			continue
-		if bg_color != Color.TRANSPARENT:
-			line_chunks = string.split("\n")
-			for line in line_chunks:
-				var rect_size : Vector2= Vector2(FONTCHAR_SIZE.x * line.length(),FONTCHAR_SIZE.y)
-				canvas_item.draw_rect(Rect2(pos + Vector2(offsetx,offsety),rect_size),bg_color)
 		FontAtlasTexture.draw_rect_region(canvas_item.get_canvas_item(),Rect2(pos + Vector2(offsetx,offsety),FONTCHAR_SIZE),Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),color)
 		offsetx += 4
 
 static func draw_text_centered(canvas_item:CanvasItem,string:String, pos:Vector2, color:Color=Color.WHITE,bg_color:Color=Color.TRANSPARENT):
 	var offsetx = 0
 	var offsety = 0
-	if bg_color != Color.TRANSPARENT:
-		var rect_size : Vector2= Vector2(FONTCHAR_SIZE.x * string.length(),FONTCHAR_SIZE.y)
-		canvas_item.draw_rect(Rect2(pos + Vector2(offsetx - string.length() * 2,offsety) ,rect_size),bg_color)
-	for s in string:
+	var line_chunks := string.split("\n")
+	for line in line_chunks:
+		var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * line.length(),FONTCHAR_SIZE.y)
+		canvas_item.draw_rect(Rect2(pos + Vector2(offsetx - line.length() * 2,line_chunks.find(line) * 6),rect_size),bg_color)
+	for s in string.to_lower():
 		var index = fontmap.find(s)
 		if s == "\n":
 			offsety += 6
 			offsetx = 0
 			continue
-		FontAtlasTexture.draw_rect_region(canvas_item.get_canvas_item(),Rect2(pos + Vector2(offsetx - string.length() * 2,0) ,FONTCHAR_SIZE),Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),color)
+		FontAtlasTexture.draw_rect_region(canvas_item.get_canvas_item(),Rect2(pos + Vector2(offsetx - line_chunks[offsety/6].length() * 2,offsety),FONTCHAR_SIZE),Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),color)
 		offsetx += 4

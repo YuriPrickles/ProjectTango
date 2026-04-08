@@ -38,17 +38,22 @@ func _draw():
 					solid_cells.append(tilepos)
 					walls.set_cell(tilepos, 1, Vector2i(0, 5))
 				else:
-					floor.set_cell(tilepos, 1, get_floor_tile(Vector2i(1, 7)))
+					if not floor.get_cell_tile_data(tilepos * 8):
+						floor.set_cell(tilepos, 1, get_floor_tile(Vector2i(1, 7)))
 	for path in paths:
 		var tile:Vector2 = Vector2i(1, 7)
 		if guaranteed_paths.size() > 2:
 			tile = Vector2(1, 9)
 		for i in range(path['right'].x - path['left'].x):
-			solid_cells.erase(path['left']+Vector2i(i,0))
-			walls.set_cell(Vector2i(path['left'].x+i,path['left'].y), 1, tile)
+			var tilepos = Vector2i(path['left'].x+i,path['left'].y)
+			solid_cells.erase(tilepos)
+			walls.erase_cell(tilepos)
+			floor.set_cell(tilepos, 1, tile)
 		for i in range(path['right'].y - path['left'].y):
-			solid_cells.erase(path['left']+Vector2i(0,i))
-			walls.set_cell(Vector2i(path['left'].x,path['left'].y+i), 1, tile)
+			var tilepos = Vector2i(path['left'].x,path['left'].y+i)
+			solid_cells.erase(tilepos)
+			walls.erase_cell(tilepos)
+			floor.set_cell(tilepos, 1, tile)
 	for x in range(-1, floor_size.x + 1):
 		for y in range(-1, floor_size.y + 1):
 			if (x < 0 or x > floor_size.x - 1) or (y < 0 or y > floor_size.y - 1):

@@ -9,8 +9,8 @@ var facing: Vector2
 var spr_index = 0
 var sneaking:bool = false
 var running:bool = false
-var health:int=10
-var max_health:int = 10
+var health:int=100
+var max_health:int = 100
 const IFRAMES = 0.2
 var iframe_timer:float = 0
 var kb_override = false
@@ -20,6 +20,10 @@ var no_draw = false
 @onready var camera:Camera2D = $Camera2D
 @onready var point_light_2d: PointLight2D = $PointLight2D
 var throwmode:bool = false
+var might_interact = false
+
+var effects:Dictionary[Effect,int]
+var damage_mult = 1
 
 func _ready() -> void:
 	z_index = Main.Depths.Player
@@ -70,7 +74,7 @@ func _input(event: InputEvent) -> void:
 		Main.main.inventory_open = not Main.main.inventory_open
 	if Main.main.inventory_open:
 		var item := Main.main.resources.get_selected_item()
-		if item:
+		if item and not might_interact:
 			if not throwmode and event.is_action_pressed("throw"):
 				throw()
 			elif event.is_action_pressed("accept"):
@@ -104,6 +108,8 @@ func hurt(value, hurter:Entity):
 	if health <= 0:
 		Main.main.killed_by = hurter.dmg_source_name
 		Main.main.trigger_game_over.call_deferred()
+func heal(value):
+	health = clamp(health + max(value,0),0,max_health)
 func knockback(vector:Vector2,power:float):
 	if no_control: return
 	kb_override = true
@@ -115,3 +121,16 @@ func throw():
 	var item = Main.main.resources.get_selected_item()
 	var throw_target = ThrowTarget.new(position - size/2,item)
 	Main.main.current_level.add_child(throw_target)
+
+func get_damage(base):
+	return base * damage_mult
+
+func add_effect(effect_id:int):
+	for effect:Effect in effects.keys():
+		if effect.effect_id == effect_id:
+			effects[effect] += 1
+			return
+	effects[Effect.new_effect(effect_id)] = 1
+
+func has_effect(effect_id:int):
+	return effects.has(effect_id)

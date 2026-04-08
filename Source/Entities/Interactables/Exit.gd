@@ -1,7 +1,6 @@
 class_name Exit
-extends Entity
+extends Interactable
 
-var touching = false
 var closed = false
 var starting_to_close = false
 
@@ -13,15 +12,6 @@ func _init(pos:Vector2) -> void:
 		67: Vector2(0,0),
 		68: Vector2(1,0)
 	}
-
-func on_touch_player(body):
-	if body is Player:
-		touching = true
-		queue_redraw()
-func on_untouch_player(body):
-	if body is Player:
-		touching = false
-		queue_redraw()
 
 func _input(event: InputEvent) -> void:
 	if touching and event.is_action_pressed("accept") and not starting_to_close:

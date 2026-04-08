@@ -54,3 +54,6 @@ static func attach_round_collision_shape(thing:CollisionObject2D,radius:float,on
 	if on_touch and not thing.is_connected("body_entered",on_touch):
 		thing.connect("body_entered",on_touch)
 	thing.add_child(colmask.duplicate())
+
+static func blink(value1,value2,blinkdelay):
+	return value1 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else value2

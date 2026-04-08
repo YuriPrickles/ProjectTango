@@ -52,7 +52,7 @@ func on_touch_player(body):
 		position += position.direction_to(Main.main.get_level().dungeon_layout.rooms[room_assigned].get_center())
 func shoot_seed(target:Vector2):
 	var origin:Vector2 = position + Vector2(2,-8)
-	Projectile.new_projectile(self,0,origin,origin.direction_to(target) * 0.3,1)
+	Projectile.new_projectile(self,0,origin,origin.direction_to(target) * 0.3,10)
 	
 func _draw() -> void:
 	var lvl:Level = Main.main.get_level()

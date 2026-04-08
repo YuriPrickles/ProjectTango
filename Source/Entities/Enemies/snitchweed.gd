@@ -53,4 +53,4 @@ func leave_detect(body: Node2D) -> void:
 
 func on_touch_player(body):
 	if body is Player:
-		body.hurt(1 if not asleep else 0,self)
+		body.hurt(10 if not asleep else 0,self)

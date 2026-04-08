@@ -1,6 +1,5 @@
-extends Entity
+extends Interactable
 class_name HymnShop
-var touching = false
 func _init(pos) -> void:
 	super._init(pos,Rect2(-40,8,40,8))
 	var static_body:StaticBody2D = StaticBody2D.new()
@@ -24,15 +23,6 @@ func _init(pos) -> void:
 
 func _process(delta: float) -> void:
 	super._process(delta)
-
-func on_touch_player(body):
-	if body is Player:
-		touching = true
-		queue_redraw()
-func on_untouch_player(body):
-	if body is Player:
-		touching = false
-		queue_redraw()
 
 func _input(event: InputEvent) -> void:
 	if touching and event.is_action_pressed("accept") and not Main.main.loaded_fullscreen:

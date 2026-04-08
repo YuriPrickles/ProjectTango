@@ -60,10 +60,9 @@ func _draw() -> void:
 		#for index in backpack_arr.keys():
 			#Main.spr(Main.GameAtlas,self,backpack_pos + backpack_arr.get(index) * Main.SPR_SIZE,index if not Main.main.inventory_open else index + 2)
 		if Main.main.inventory_open:
-			var inv_grid_offset:Vector2 = Vector2(0,-18)
+			var inv_grid_offset:Vector2 = Vector2(0,-12)
 			for i in range(15):
-				var blinkdelay = 12
-				var spr_to_draw = 10 + abs((1 + (1 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 0)) if i == Main.main.resources.inv_selected else 0)
+				var spr_to_draw = 10 + abs((1 + (Utils.blink(1,0,12)) if i == Main.main.resources.inv_selected else 0))
 				
 				var row_offset = 8 * ((i - i % 5)/5)
 				Main.spr(Main.GameAtlas,self,backpack_pos + inv_grid_offset + Vector2((i * 8) % 40, row_offset),spr_to_draw)
@@ -71,8 +70,8 @@ func _draw() -> void:
 				if item:
 					Main.spr(Main.ItemAtlas,self,backpack_pos + inv_grid_offset + Vector2((i * 8) % 40, row_offset),item.spr_index if not Main.main.inventory_open else item.spr_index)
 			if Main.main.resources.get_selected_item():
-				var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-12) 
-				var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-6) 
+				var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-18)
+				var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-12) 
 				var item = Main.main.resources.get_selected_item()
 				Main.draw_text(self,item.item_name,name_pos,Main.colors[item.value],Main.colors[0])
 				Main.draw_text(self,item.item_desc,desc_pos,Main.colors[7],Main.colors[0])
@@ -80,8 +79,16 @@ func _draw() -> void:
 		
 		#region Playerhealth
 		if plr:
-			for i in range(1,plr.max_health + 1):
-				Main.spr(Main.GameAtlas,self,Vector2(-8 + margin + (i * 6),viewport.y * 0.95 + margin),26 if i > plr.health else 27)
+			var health_pos = Vector2(0 + margin,viewport.y * 0.95 + margin + 1)
+			var health_border_size = Vector2(plr.health, 4)
+			var lost_health_pos = health_pos + Vector2(plr.health,0)
+			var lost_health_border_size = Vector2(plr.max_health - plr.health, 4)
+			if plr.health < plr.max_health:
+				draw_rect(Rect2(lost_health_pos, lost_health_border_size),Main.colors[1],true)
+				draw_rect(Rect2(lost_health_pos + Vector2(1,1), lost_health_border_size - Vector2(2,2)),Main.colors[0],true)
+
+			draw_rect(Rect2(health_pos, health_border_size),Main.colors[8],true)
+			draw_rect(Rect2(health_pos + Vector2(1,1), health_border_size - Vector2(2,2)),Main.colors[2],true)
 		#endregion
 	#endregion
 

@@ -4,11 +4,14 @@ extends Entity
 var proj_owner:Entity
 var hostile:bool = true
 var projectile_id:int
-var damage = 0
+var damage:int:
+	get: return damage
 var hits = 1
 var velocity:Vector2
 var lifetime:float = 1
 var max_lifetime:float
+var lifetime_percent:float:
+	get: return lifetime/max_lifetime
 func _init(p_owner,pos,collision:Rect2,id:int,_velocity:Vector2,_hostile:bool,_damage:int,_hits:int,_lifetime:float) -> void:
 	projectile_id = id
 	velocity = _velocity
@@ -16,7 +19,7 @@ func _init(p_owner,pos,collision:Rect2,id:int,_velocity:Vector2,_hostile:bool,_d
 	hits = _hits
 	damage = _damage
 	proj_owner = p_owner
-	dmg_source_name = proj_owner.dmg_source_name
+	dmg_source_name = proj_owner.dmg_source_name if proj_owner else "Ownerless"
 	lifetime = _lifetime
 	max_lifetime = lifetime
 	Utils.attach_collision_shape(self,collision,on_touch_player,on_untouch_player)
@@ -37,6 +40,7 @@ static func new_projectile(p_owner:Entity,id:int,_position:Vector2,_velocity:Vec
 	match id:
 		ProjectileID.BerrySeed: created_proj = BerrySeed.new(p_owner,id,_position,_velocity,_damage)
 		ProjectileID.SquallitaShockwave: created_proj = SquallitaShockwave.new(p_owner,id,_position,_velocity,_damage)
+		ProjectileID.AxeBlast: created_proj = AxeBlast.new(p_owner,id,_position,_velocity,_damage)
 
 	Main.main.get_level().projectiles.add_child(created_proj)
 	return created_proj

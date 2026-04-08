@@ -1,8 +1,9 @@
 class_name ItemID
 
-static var Nothing = -1
-static var Metal = 0
-static var Wires = 1
-static var Battery = 2
-static var GoldenToad = 3
-static var Squallita = 4
+const Nothing = -1
+const Metal = 0
+const Wires = 1
+const Battery = 2
+const RedBerries = 3
+const Squallita = 4
+const ScreamingVoidAxe = 5

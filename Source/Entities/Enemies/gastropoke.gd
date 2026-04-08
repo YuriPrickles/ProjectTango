@@ -60,7 +60,7 @@ func _physics_process(delta):
 func on_touch_player(body):
 	if body is Player:
 		body.knockback(kb_dir, 200)
-		body.hurt(2,self)
+		body.hurt(20,self)
 func on_detect(body: Node2D) -> void:
 	if body is Player:
 		chasing = true

@@ -57,7 +57,7 @@ func _physics_process(delta):
 	if chasing:
 		position += delta * final_vel * (snail_speed * (1 + float(Main.main.get_peril())/Main.MAX_PRL))
 
-func on_touch_player(body):
+func on_touch_thing(body):
 	if body is Player:
 		body.knockback(kb_dir, 200)
 		body.hurt(20,self)

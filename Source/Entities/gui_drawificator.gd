@@ -59,8 +59,9 @@ func _draw() -> void:
 			#draw_rect(Rect2(Vector2.ZERO,viewport),Color.BLACK * 0.5)
 		#for index in backpack_arr.keys():
 			#Main.spr(Main.GameAtlas,self,backpack_pos + backpack_arr.get(index) * Main.SPR_SIZE,index if not Main.main.inventory_open else index + 2)
+		var inv_grid_offset:Vector2 = Vector2(0,20)
 		if Main.main.inventory_open:
-			var inv_grid_offset:Vector2 = Vector2(0,-12)
+			inv_grid_offset = Vector2(0,-16)
 			for i in range(15):
 				var spr_to_draw = 10 + abs((1 + (Utils.blink(1,0,12)) if i == Main.main.resources.inv_selected else 0))
 				
@@ -69,12 +70,14 @@ func _draw() -> void:
 				var item = Main.main.resources.inventory[i]
 				if item:
 					Main.spr(Main.ItemAtlas,self,backpack_pos + inv_grid_offset + Vector2((i * 8) % 40, row_offset),item.spr_index if not Main.main.inventory_open else item.spr_index)
-			if Main.main.resources.get_selected_item():
-				var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-18)
-				var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-12) 
-				var item = Main.main.resources.get_selected_item()
-				Main.draw_text(self,item.item_name,name_pos,Main.colors[item.value],Main.colors[0])
-				Main.draw_text(self,item.item_desc,desc_pos,Main.colors[7],Main.colors[0])
+		if Main.main.resources.get_selected_item():
+			var item = Main.main.resources.get_selected_item()
+			var extra_offset = -6 * item.item_desc.count("\n") if Main.main.inventory_open else -6
+			var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-12 + extra_offset)
+			var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-6 + extra_offset) 
+			
+			Main.draw_text(self,"¬7held:¬¬ %s" % item.item_name,name_pos,Main.colors[item.value],Main.colors[0])
+			if Main.main.inventory_open: Main.draw_text(self,item.get_desc(),desc_pos,Main.colors[6],Main.colors[0])
 		#endregion
 		
 		#region Playerhealth

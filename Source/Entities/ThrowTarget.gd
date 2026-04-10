@@ -28,6 +28,8 @@ func begin_throw(pos):
 	if prepare_to_remove: return
 	if pos.distance_to(plr.Center) < 16:
 		pos = plr.Center + (plr.facing * 32)
+	var item = Main.main.resources.get_selected_item()
+	if item: item.on_throw()
 	Main.main.resources.remove_inv_item()
 	var pickup = Pickup.new_pickup(item_to_summon.get_script(),plr.Center,false,pos)
 	Main.main.current_level.items.add_child(pickup)

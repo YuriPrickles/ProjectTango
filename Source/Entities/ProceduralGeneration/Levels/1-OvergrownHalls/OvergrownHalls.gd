@@ -39,7 +39,6 @@ func _process(delta: float) -> void:
 	if !spawned:
 		artifact_positions.append(dungeon_layout.artifact_rooms[0].get_center() * 8)
 		player = spawn_player()
-		spawn_scrap(25)
 		spawn_enemies()
 		spawn_treasures()
 		print("Rooms: %s" % dungeon_layout.rooms.size())

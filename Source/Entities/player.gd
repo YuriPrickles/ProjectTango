@@ -2,7 +2,7 @@ extends Actor
 class_name Player
 
 var Center:
-	get: return position - (Vector2(width,height) / 2) + Vector2(0,2)
+	get: return position - (size / 2) + Vector2(0,2)
 const SPEED = 45.0
 var direction:Vector2
 var facing: Vector2
@@ -72,24 +72,29 @@ func _input(event: InputEvent) -> void:
 		return
 	if not throwmode and event.is_action_pressed("inventory") and Main.main.current_level.id != LevelID.Above:
 		Main.main.inventory_open = not Main.main.inventory_open
-	if Main.main.inventory_open:
-		var item := Main.main.resources.get_selected_item()
-		if item and not might_interact:
-			if not throwmode and event.is_action_pressed("throw"):
-				throw()
-			elif event.is_action_pressed("accept"):
-				item.on_use()
-			
-		if event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right"):
-			var input = Input.get_axis("inv_left","inv_right")
-			if Main.main.resources.inv_selected + int(input) <= -1 and input == -1:
-				Main.main.resources.inv_selected = 14
-			else: Main.main.resources.inv_selected += int(input)
-		if event.is_action_pressed("inv_up") or event.is_action_pressed("inv_down"):
-			var input = Input.get_axis("inv_up","inv_down")
-			if Main.main.resources.inv_selected + int(input) * 5 <= -1 and input == -1:
-				Main.main.resources.inv_selected += 10
-			else: Main.main.resources.inv_selected += int(input) * 5
+	var item := Main.main.resources.get_selected_item()
+	if item and not might_interact:
+		if Main.main.inventory_open and not throwmode and event.is_action_pressed("throw"):
+			throw()
+		elif event.is_action_pressed("accept"):
+			item.on_use()
+		
+	if event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right"):
+		var input = Input.get_axis("inv_left","inv_right")
+		if Main.main.resources.inv_selected + int(input) <= -1 and input == -1:
+			Main.main.resources.inv_selected = 14
+			while not Main.main.resources.get_selected_item():
+				Main.main.resources.inv_selected += int(input)
+		else:
+			Main.main.resources.inv_selected += int(input)
+			if not Main.main.inventory_open:
+				while not Main.main.resources.get_selected_item():
+					Main.main.resources.inv_selected += int(input)
+	if Main.main.inventory_open and event.is_action_pressed("inv_up") or event.is_action_pressed("inv_down"):
+		var input = Input.get_axis("inv_up","inv_down")
+		if Main.main.resources.inv_selected + int(input) * 5 <= -1 and input == -1:
+			Main.main.resources.inv_selected += 10
+		else: Main.main.resources.inv_selected += int(input) * 5
 
 func _draw() -> void:
 	#Main.main.draw_text_centered(self,"hi pearlings", (Vector2(0,-32)))
@@ -102,14 +107,16 @@ func _draw() -> void:
 		Main.spr(Main.GameAtlas,self,size/-2,spr_index)
 
 func hurt(value, hurter:Entity):
+	var devent:DamageEvent = DamageEvent.new(value,self,hurter)
 	if iframe_timer > 0 or no_control or value == 0: return
 	iframe_timer = IFRAMES
-	health -= value
+	health -= devent.damage
 	if health <= 0:
 		Main.main.killed_by = hurter.dmg_source_name
 		Main.main.trigger_game_over.call_deferred()
 func heal(value):
 	health = clamp(health + max(value,0),0,max_health)
+	print("healed for %s" % value)
 func knockback(vector:Vector2,power:float):
 	if no_control: return
 	kb_override = true

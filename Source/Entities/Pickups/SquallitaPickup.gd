@@ -2,11 +2,14 @@ class_name SquallitaPickup
 extends Pickup
 
 var return_timer:Timer = Timer.new()
+var proj_startpos:Vector2
 
 func _init(item_scr:GDScript, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> void:
 	super._init(item_scr,pos,alwaysfollow,throw)
 	arc_height = 180
 	arc_mult = 0.2
+	var plr = Main.main.get_player()
+	proj_startpos = plr.Center
 
 func _process(delta: float) -> void:
 	z_index = Main.Depths.Player
@@ -18,7 +21,9 @@ func on_land():
 	return_timer.timeout.connect(start_returning)
 	return_timer.one_shot = true
 	var plr = Main.main.get_player()
-	SquallitaShockwave.new(self,position,Vector2.ZERO,plr.get_damage(4))
+	var proj = SquallitaShockwave.new(self,position,Vector2.ZERO,plr.get_damage(4))
+	proj.starting_pos = proj_startpos
+	proj.ending_pos = proj.position
 
 func start_returning():
 	locked_in = true

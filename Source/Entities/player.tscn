@@ -34,6 +34,7 @@ z_index = 1
 z_as_relative = false
 material = SubResource("ShaderMaterial_dy60o")
 position = Vector2(0, 1)
+energy = 0.7
 shadow_enabled = true
 texture = ExtResource("2_7x6ql")
 texture_scale = 0.4

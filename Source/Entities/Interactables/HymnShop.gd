@@ -3,7 +3,7 @@ class_name HymnShop
 func _init(pos) -> void:
 	super._init(pos,Rect2(-40,8,40,8))
 	var static_body:StaticBody2D = StaticBody2D.new()
-	Utils.attach_collision_shape(static_body,Rect2(-40,6,40,4),on_touch_player,null)
+	Utils.attach_collision_shape(static_body,Rect2(-40,6,40,4),on_touch_thing,null)
 	add_child(static_body)
 	y_sort_offset = 8
 	touching = false

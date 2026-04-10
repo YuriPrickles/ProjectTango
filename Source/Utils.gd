@@ -21,6 +21,7 @@ static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch=n
 		thing.set_collision_layer_value(6,true)
 		thing.set_collision_mask_value(1,true)
 		thing.set_collision_mask_value(2,true)
+		thing.set_collision_mask_value(5,true)
 		thing.set_collision_mask_value(6,true)
 	if thing is StaticBody2D:
 		thing.set_collision_layer_value(2,true)
@@ -33,8 +34,10 @@ static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch=n
 	colmask.shape = shape
 	if thing is Area2D:
 		if on_touch != null and not thing.is_connected("body_entered",on_touch):
+			thing.connect("area_entered",on_touch)
 			thing.connect("body_entered",on_touch)
 		if on_untouch != null and not thing.is_connected("body_exited",on_touch):
+			thing.connect("area_exited",on_untouch)
 			thing.connect("body_exited",on_untouch)
 	thing.add_child(colmask.duplicate())
 

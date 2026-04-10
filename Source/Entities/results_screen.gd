@@ -5,16 +5,15 @@ var started_cutscene = false
 var allow_input = false
 var inventory_result:Array
 var inv_string_dict:Dictionary[String,Item.Value]
-var item_ids_checked:Array[int]=[]
 var start_and_stop_value_color:Array[int] = [0,0]
 
 func _ready() -> void:
 	inventory_result = Main.main.resources.inventory.duplicate().filter(func(item:Item): return item != null)
 	for item:Item in inventory_result:
-		if not item or item_ids_checked.has(item.item_id): continue
-		item_ids_checked.append(item.item_id)
+		if not item: continue
+		
 		inv_string_dict.get_or_add("%s x%d" % [item.item_name,
-		inventory_result.filter(func(i:Item): return item.item_id == i.item_id).size()],item.value)
+		inventory_result.filter(func(i:Item): return item.get_script() == i.get_script()).size()],item.value)
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

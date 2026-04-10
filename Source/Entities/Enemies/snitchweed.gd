@@ -51,6 +51,7 @@ func leave_detect(body: Node2D) -> void:
 		queue_redraw()
 		asleep = true
 
-func on_touch_player(body):
+func on_touch_thing(body):
 	if body is Player:
+		var devent = DamageEvent.new(10,body as Player,self)
 		body.hurt(10 if not asleep else 0,self)

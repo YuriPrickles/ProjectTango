@@ -173,18 +173,44 @@ static func pal():
 static func draw_text(canvas_item:CanvasItem,string:String, pos:Vector2, color:Color=Color.WHITE,bg_color:Color=Color.TRANSPARENT):
 	var offsetx = 0
 	var offsety = 0
+	var extr_length:int = 0
 	var line_chunks := string.split("\n")
 	if bg_color != Color.TRANSPARENT:
-		for line in line_chunks:
-			var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * line.length(),FONTCHAR_SIZE.y)
+		for line:String in line_chunks:
+			extr_length = 0
+			for s in "0123456789ABCDEF¬":
+				var colortag = "¬%s" % s
+				extr_length += line.count(colortag) * 2
+			extr_length += line.count("\n")
+			var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * (line.length()-extr_length),FONTCHAR_SIZE.y)
 			canvas_item.draw_rect(Rect2(pos + Vector2(offsetx,line_chunks.find(line) * 6),rect_size),bg_color)
-	for s in string.to_lower():
-		var index = fontmap.find(s)
-		if s == "\n":
+	var skip_next = false
+	var current_color = Color(color)
+	string = string.to_lower()
+	for s in range(string.length()):
+		if skip_next:
+			skip_next = false
+			continue
+		var index = fontmap.find(string[s])
+		
+		if string[s] == "¬":
+			var next_char = string[s + 1]
+			if s + 1 < string.length():
+				var color_char = next_char
+				if color_char.is_valid_hex_number() and color_char.hex_to_int() < 16:
+
+					current_color = Main.colors[color_char.hex_to_int()]
+					skip_next = true
+				elif next_char == "¬":
+					current_color = color
+					#print("%s - %s %s" % [s,color_char,current_color.to_html()])
+					skip_next = true
+				continue
+		if string[s] == "\n":
 			offsety += 6
 			offsetx = 0
 			continue
-		FontAtlasTexture.draw_rect_region(canvas_item.get_canvas_item(),Rect2(pos + Vector2(offsetx,offsety),FONTCHAR_SIZE),Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),color)
+		FontAtlasTexture.draw_rect_region(canvas_item.get_canvas_item(),Rect2(pos + Vector2(offsetx,offsety),FONTCHAR_SIZE),Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),current_color)
 		offsetx += 4
 
 static func draw_text_centered(canvas_item:CanvasItem,string:String, pos:Vector2, color:Color=Color.WHITE,bg_color:Color=Color.TRANSPARENT):

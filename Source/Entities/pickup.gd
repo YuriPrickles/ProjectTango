@@ -81,5 +81,5 @@ func on_land():
 	pass
 
 func _on_body_entered(body: Node2D) -> void:
-	if not Main.main.resources.is_inventory_full() and not thrown:
+	if body is Player and not Main.main.resources.is_inventory_full() and not thrown:
 		pickup()

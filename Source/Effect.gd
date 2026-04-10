@@ -6,9 +6,5 @@ var effect_desc = "Something"
 var unremovable = false
 var time = 1
 
-
-func effect_on_player(player:Player):
-	pass
-	
-func effect_on_enemy(enemy:Enemy):
+func process_event(event:Event):
 	pass

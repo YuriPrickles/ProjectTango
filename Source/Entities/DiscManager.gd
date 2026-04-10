@@ -15,6 +15,7 @@ var destroyed_hymns:Dictionary[Disc,int]
 var hymn_delay = 30
 var amount_til_evilcard = 4
 const EVILCARD_WAIT_COUNT = 4
+const MAX_HYMNS = 70
 
 func start_cd_player():
 	load_disc()

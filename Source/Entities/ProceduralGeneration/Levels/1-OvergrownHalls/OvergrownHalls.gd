@@ -35,6 +35,7 @@ func spawn_player():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	super._process(delta)
 	queue_redraw()
 	if !spawned:
 		artifact_positions.append(dungeon_layout.artifact_rooms[0].get_center() * 8)
@@ -92,9 +93,10 @@ func spawn_scrap(amount:int) -> void:
 				items.add_child(Pickup.new(Wires, randpos))
 			2:
 				items.add_child(Pickup.new(Battery, randpos))
+
 func spawn_treasures():
 	for room:Branch in dungeon_layout.artifact_rooms:
-		items.add_child(Pickup.new(ScreamingVoidAxe, room.get_center() * dungeon_layout.tile_size))
+		items.add_child(Pickup.new(Item.artifacts_floor1.pick_random(), room.get_center() * dungeon_layout.tile_size))
 	
 
 func get_compass_vector():

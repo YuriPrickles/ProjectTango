@@ -30,18 +30,20 @@ func set_track_text(value:String):
 func set_track_color(color:Color):
 	infohud.track_color = color
 
+var money_opacity:float = 0
+
 func _process(delta: float) -> void:
+	if money_opacity > 0: money_opacity -= delta * 0.25
 	if infohud and Engine.get_frames_drawn() % 3 == 0: infohud.queue_redraw()
 func _draw() -> void:
 	if Main.game_finished or not Main.main.current_level or not RunGUI.draw_me: return
-	Main.draw_text(self,str(Engine.get_frames_per_second()) + "FPS",Vector2(viewport.x * 0.80, margin))
+	Main.draw_text(self,str(Engine.get_frames_per_second()) + "FPS",Vector2(viewport.x * 0.90, margin))
 	var plr = Main.main.get_player()
 	#region Main Game Region
 	if mode == Mode.MainUI:
-		#region Peril
-		var inst_text = "PERIL: %s" % Main.main.resources.peril
-		Main.draw_text(self,inst_text,Vector2(margin, margin + 16))
-		#endregion
+		var money_pos = Vector2(margin, 16 + margin)
+		Main.spr(Main.GameAtlas,self,money_pos ,28,Main.colors[7] * money_opacity)
+		Main.draw_text(self,str(Main.main.resources.money),Vector2(8,0) + money_pos,Main.colors[Utils.blink(7,10,12)] * money_opacity)
 		#region Compass
 		var compass_pos = Vector2(margin,margin)
 		var backpack_pos = Vector2(margin,viewport.y - 16 - margin)
@@ -77,7 +79,7 @@ func _draw() -> void:
 			var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-6 + extra_offset) 
 			
 			Main.draw_text(self,"¬7held:¬¬ %s" % item.item_name,name_pos,Main.colors[item.value],Main.colors[0])
-			if Main.main.inventory_open: Main.draw_text(self,item.get_desc(),desc_pos,Main.colors[6],Main.colors[0])
+			if Main.main.inventory_open: Main.draw_text(self,Utils.syntaxificate(item.item_desc),desc_pos,Main.colors[6],Main.colors[0])
 		#endregion
 		
 		#region Playerhealth
@@ -118,7 +120,8 @@ class InfoHUD:
 		if Main.game_finished or not Main.main.current_level or not RunGUI.draw_me: return
 		#region Info HUD
 		var peril =Main.main.get_peril()
-		var infohud_pos:Vector2 = viewport - Vector2(40, 24)
+		var offset = 0 if not Main.main.inventory_open else 48
+		var infohud_pos:Vector2 = viewport - Vector2(40, 24 + offset)
 		var quarter_max_peril = Main.MAX_PRL / 4
 		var meter_jitteriness = int(Main.main.get_peril() / quarter_max_peril) * 3
 		var color_offset = (peril + quarter_max_peril) / quarter_max_peril - 1 if peril < Main.MAX_PRL else 11
@@ -134,7 +137,18 @@ class InfoHUD:
 				index = randi_range(0,Main.GameAtlas.atlas_array.size() - 1)
 			Main.spr(Main.GameAtlas,self,infohud_pos + spr_offset,index)
 		draw_line(perilometer_center, perilometer_center + line_vector,Main.colors[7])
-		
+		var upnext_pos = infohud_pos + Vector2(-48,24)
+		if Main.main.inventory_open:
+			var inst_text = "PERIL: %s" % Main.main.resources.peril
+			Main.draw_text(self,inst_text,infohud_pos + Vector2(0,-6))
+			Main.draw_text(self, "Up next:", upnext_pos + Vector2(0,-6),Main.colors[7])
+		draw_rect(Rect2(upnext_pos,Vector2(88,48)),Main.colors[1],true)
+		for i in range(5):
+			draw_rect(Rect2(upnext_pos + Vector2(1,1 + (i * 8)),Vector2(86,6)),Main.colors[0])
+			if not Main.disc_manager.hymn_buffer.size() <= i and Main.disc_manager.hymn_buffer[i]:
+				var disc_name = Main.disc_manager.hymn_buffer[i].disc_name
+				Main.draw_text(self, disc_name, upnext_pos + Vector2(1, 1 + i * 8),Main.colors[7])
+		Main.draw_text(self, "[Shift + K] to skip", upnext_pos + Vector2(0,42),Main.colors[7])
 		#CDTRACKLABEL
 		var cd_track_label_pos:Vector2 = infohud_pos + Vector2(0,16)
 		draw_rect(Rect2(cd_track_label_pos + Vector2(1,1),Vector2(38,6)),Main.colors[0])

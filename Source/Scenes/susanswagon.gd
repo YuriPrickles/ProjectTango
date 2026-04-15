@@ -17,9 +17,7 @@ func _ready() -> void:
 	susan_sprite = SusanSprite.new()
 	disc_textbox = DiscTextbox.new()
 	var rect = StupidRectangle.new()
-	disc_shop.resize(14)
-	for i in range(14):
-		disc_shop[i] = Main.disc_manager.get_random_disc()
+	disc_shop = Main.main.resources.disc_shop
 	
 	add_child(rect)
 	add_child(susan_sprite)
@@ -70,10 +68,9 @@ class DiscTextbox:
 	var current_disc:Disc
 	func _draw() -> void:
 		if current_disc:
-			Main.draw_text(self,"%s" % current_disc.disc_name,Vector2(16,136))
-			Main.draw_text(self,"[%s]" % Disc.Rarity.keys()[current_disc.rarity],Vector2(16,136+8),Main.colors[current_disc.get_rarity_color()])
+			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),Disc.Rarity.keys()[current_disc.rarity],current_disc.disc_name],Vector2(16,136))
 			
-			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 16))
+			Main.draw_text(self,"%s" % Utils.syntaxificate(current_disc.disc_desc),Vector2(16,136 + 16))
 class StupidRectangle:
 	extends Node2D
 	func _ready() -> void:

@@ -26,7 +26,6 @@ func _process(delta: float) -> void:
 	super._process(delta)
 
 func handle_lifetime():
-	var plr = Main.main.get_player()
 	if lifetime <= -5:
 		queue_free()
 	if lifetime <= 0 and not come_back:
@@ -35,7 +34,7 @@ func handle_lifetime():
 		tween.tween_property(self,"velocity",position.direction_to(target) * 2,0.2)
 func bounce():
 	if lifetime < 0.285 and not chase_player:
-		velocity *= -1.2
+		velocity *= -1
 func handle_wall_col():
 	bounce()
 func handle_enemy_col():

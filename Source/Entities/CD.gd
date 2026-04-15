@@ -1,5 +1,5 @@
 class_name Disc
-extends Node
+extends Resource
 enum Rarity{
 	Common = 0,
 	Uncommon = 1,
@@ -14,7 +14,7 @@ enum Patron{
 	Gammon = 3,
 }
 var disc_id = -1
-var patron:Patron = Patron.Godless
+var patron:int = Patron.Godless
 var rarity:Rarity = Rarity.Common
 var disc_name:String = "Pearls' Lament"
 var disc_desc:String = "+9223372036854775807 PERIL"
@@ -37,8 +37,14 @@ func get_rarity_color():
 		Rarity.Scrumptious: return 9
 	return 5
 
+func is_godless() -> bool:
+	return patron == Patron.Godless
+
 func on_play(was_destroyed) -> void:
 	Main.main.run_gui.gui_drawificator.set_track_text("              %s" % disc_name)
 	Main.main.run_gui.gui_drawificator.set_track_color(Main.colors[7 if not was_destroyed else 2])
 	print(disc_name + " was played!")
+	pass
+
+func on_skip() -> void:
 	pass

@@ -60,7 +60,7 @@ func _input(event: InputEvent) -> void:
 		if selected_disc < 0: selected_disc = tab_contents[tab].size() - 1
 	if event.is_action_pressed("accept"):
 		if tab == 0 and disc_array[selected_disc]:
-			if Main.disc_manager.get_cd_total() < 40 and Main.disc_manager.stored_discs.get(disc_array[selected_disc],0) != 0 and Main.disc_manager.cd.get(disc_array[selected_disc],0) < disc_array[selected_disc].max_stack:
+			if Main.disc_manager.get_cd_total() < DiscManager.MAX_HYMNS and Main.disc_manager.stored_discs.get(disc_array[selected_disc],0) != 0 and Main.disc_manager.cd.get(disc_array[selected_disc],0) < disc_array[selected_disc].max_stack:
 				Main.disc_manager.burn_to_cd(disc_array[selected_disc],1)
 				Main.disc_manager.stored_discs[disc_array[selected_disc]] -= 1
 				if Main.disc_manager.stored_discs.get(disc_array[selected_disc],0) == 0:
@@ -97,7 +97,7 @@ func _draw() -> void:
 	Main.spr(Main.GameAtlas,self,Vector2(8,0),28)
 	Main.draw_text(self,str(Main.main.resources.money),Vector2(16,0))
 	Main.draw_text(self,str(Main.disc_manager.get_cd_total()),Vector2(98,106))
-	Main.draw_text(self,"40",Vector2(111,106))
+	Main.draw_text(self,str(DiscManager.MAX_HYMNS),Vector2(111,106))
 	var blinkdelay = 12
 	var color = (11 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 10)
 	var index = 0
@@ -118,10 +118,8 @@ class DiscTextbox:
 	var current_disc:Disc
 	func _draw() -> void:
 		if current_disc:
-			Main.draw_text(self,"%s" % current_disc.disc_name,Vector2(16,136))
-			Main.draw_text(self,"[%s]" % Disc.Rarity.keys()[current_disc.rarity],Vector2(16,136+8),Main.colors[current_disc.get_rarity_color()])
-			
-			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 16))
+			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),Disc.Rarity.keys()[current_disc.rarity],current_disc.disc_name],Vector2(16,136))
+			Main.draw_text(self,"%s" % Utils.syntaxificate(current_disc.disc_desc),Vector2(16,136 + 16))
 			return
 		Main.draw_text(self,"no hymn selected",Vector2(16,136))
 class StupidRectangle:

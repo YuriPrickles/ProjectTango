@@ -6,7 +6,7 @@ func _init() -> void:
 	rarity = Rarity.Common
 	cost = 8
 	disc_name = "Our Bounty"
-	disc_desc = "+2 TREASURE"
+	disc_desc = "spawn_scrap(2)"
 	super._init(DiscID.OurBounty)
 
 func on_play(was_destroyed) -> void:

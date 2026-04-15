@@ -1,4 +1,4 @@
-class_name ConsumeEvent
+class_name EatEvent
 extends Event
 
 var player:Player

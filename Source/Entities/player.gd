@@ -31,10 +31,17 @@ func _ready() -> void:
 	width = 8
 	height = 8
 	pass
+	
+var prevent_holding_atk = false
 func _process(delta: float) -> void:
 	point_light_2d.enabled = Main.main.current_level.id != LevelID.Above
 	if iframe_timer > 0:
 		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)
+	if Main.main.resources.inventory.size() > 0:
+		var item = Main.main.resources.get_selected_item()
+		var holding_atk = Input.is_action_pressed("accept")
+		if item and not might_interact and (not prevent_holding_atk and holding_atk):
+			item.on_use()
 	if no_draw: return
 	queue_redraw()
 var snap_pos
@@ -77,24 +84,29 @@ func _input(event: InputEvent) -> void:
 		if Main.main.inventory_open and not throwmode and event.is_action_pressed("throw"):
 			throw()
 		elif event.is_action_pressed("accept"):
+			prevent_holding_atk = false
 			item.on_use()
-		
-	if event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right"):
-		var input = Input.get_axis("inv_left","inv_right")
-		if Main.main.resources.inv_selected + int(input) <= -1 and input == -1:
-			Main.main.resources.inv_selected = 14
-			while not Main.main.resources.get_selected_item():
-				Main.main.resources.inv_selected += int(input)
-		else:
-			Main.main.resources.inv_selected += int(input)
-			if not Main.main.inventory_open:
+	if event.is_action_pressed("skip_hymn") and Main.main.inventory_open:
+		Main.disc_manager.skip_next()
+	if not throwmode:
+		if (event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right")):
+			var input = Input.get_axis("inv_left","inv_right")
+			prevent_holding_atk = true
+			if Main.main.resources.inv_selected + int(input) <= -1 and input == -1:
+				Main.main.resources.inv_selected = 14
 				while not Main.main.resources.get_selected_item():
 					Main.main.resources.inv_selected += int(input)
-	if Main.main.inventory_open and event.is_action_pressed("inv_up") or event.is_action_pressed("inv_down"):
-		var input = Input.get_axis("inv_up","inv_down")
-		if Main.main.resources.inv_selected + int(input) * 5 <= -1 and input == -1:
-			Main.main.resources.inv_selected += 10
-		else: Main.main.resources.inv_selected += int(input) * 5
+			else:
+				Main.main.resources.inv_selected += int(input)
+				if not Main.main.inventory_open:
+					while not Main.main.resources.get_selected_item():
+						Main.main.resources.inv_selected += int(input)
+		if Main.main.inventory_open and (event.is_action_pressed("inv_up") or event.is_action_pressed("inv_down")):
+			var input = Input.get_axis("inv_up","inv_down")
+			prevent_holding_atk = true
+			if Main.main.resources.inv_selected + int(input) * 5 <= -1 and input == -1:
+				Main.main.resources.inv_selected += 10
+			else: Main.main.resources.inv_selected += int(input) * 5
 
 func _draw() -> void:
 	#Main.main.draw_text_centered(self,"hi pearlings", (Vector2(0,-32)))
@@ -107,13 +119,25 @@ func _draw() -> void:
 		Main.spr(Main.GameAtlas,self,size/-2,spr_index)
 
 func hurt(value, hurter:Entity):
-	var devent:DamageEvent = DamageEvent.new(value,self,hurter)
 	if iframe_timer > 0 or no_control or value == 0: return
+	var devent:DamageEvent = DamageEvent.new(value,self,hurter)
 	iframe_timer = IFRAMES
 	health -= devent.damage
+	print("player hurt for %s" % devent.damage)
 	if health <= 0:
 		Main.main.killed_by = hurter.dmg_source_name
 		Main.main.trigger_game_over.call_deferred()
+
+func hurt_hurter_freed(value, hurter_name:String):
+	if iframe_timer > 0 or no_control or value == 0: return
+	var devent:DamageEvent = DamageEvent.new(value,self,null)
+	iframe_timer = IFRAMES
+	health -= devent.damage
+	print("player hurt for %s" % devent.damage)
+	if health <= 0:
+		Main.main.killed_by = hurter_name
+		Main.main.trigger_game_over.call_deferred()
+
 func heal(value):
 	health = clamp(health + max(value,0),0,max_health)
 	print("healed for %s" % value)

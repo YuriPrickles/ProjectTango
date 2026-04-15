@@ -32,7 +32,8 @@ func _init(p_owner,pos,collision:Rect2,_velocity:Vector2,_hostile:bool,_damage:i
 	Utils.attach_collision_shape(self,collision,on_touch_thing,on_untouch_thing)
 	position = pos
 	offset = collision.size
-	Main.main.get_level().projectiles.add_child(self)
+	if Main.main.get_level():
+		Main.main.get_level().projectiles.add_child(self)
 	queue_redraw()
 
 func clear_collisions():
@@ -61,9 +62,9 @@ func handle_hitcount():
 	if hits == 0:
 		queue_free()
 func handle_wall_col():
-	if lifetime < max_lifetime * 0.8:
-		queue_free()
+	queue_free()
 func handle_enemy_col():
+	hits -= 1
 	pass
 func handle_player_col():
 	pass
@@ -80,10 +81,13 @@ func on_touch_thing(body):
 	if not hostile and body is Enemy:
 		handle_enemy_col()
 		body.hurt(damage,self)
+		handle_hitcount()
 	if hostile and body is Player:
 		handle_player_col()
-		body.hurt(damage,proj_owner)
-		hits -= 1
+		if proj_owner:
+			body.hurt(damage,proj_owner)
+		else:
+			body.hurt_hurter_freed(damage,dmg_source_name)
 		handle_hitcount()
 func on_untouch_thing(body):
 	pass

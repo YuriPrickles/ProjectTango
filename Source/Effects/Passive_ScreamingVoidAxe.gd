@@ -7,7 +7,6 @@ func _init() -> void:
 func process_event(event:Event):
 	if event is DamageEvent:
 		if event.target is Enemy and event.source is Projectile:
-			var enemy:Enemy = event.target
 			var proj:Projectile = event.source
 			var max_distance_dmg_dropoff = 75
 			var distance_percent = min(1,

@@ -2,11 +2,12 @@ class_name ResourceManager
 extends Resource
 
 static var scrap_sells=[0,0,0]
-var money:int = 0
+@export var money:int = 0
 var peril:int = 0
 var peril_block:int = 0
 
-var inventory:Array[Item]
+var disc_shop:Array[Disc]
+@export var inventory:Array[Item]
 var inv_selected:
 	get:
 		if not inv_selected: return 0
@@ -20,28 +21,37 @@ var inv_selected:
 				inventory[inv_selected].on_switch_to()
 			else:
 				thing.do_passive()
-		if Main.main.get_level():
+		if Main.main.get_level() and not Main.main.get_level().event_bus.get_effects().is_empty():
 			print(Main.main.get_level().event_bus.get_effects())
 
-func initialize_inventory():
+func new_run_refresh():
+	peril = 0
+	peril_block = 0
 	for i in range(3):
 		scrap_sells[i] = RandomNumberGenerator.new().randi_range(2,7)
-	money = 999
+	disc_shop.resize(14)
+	disc_shop.fill(null)
+	for i in range(14):
+		disc_shop[i] = Main.disc_manager.get_random_disc()
+
+func initialize_inventory():
+	money = 0
 	inventory.resize(15)
 	inventory.fill(null)
 	inv_selected = 0
-	inventory[0] = Squallita.new()
-	inventory[1] = ScreamingVoidAxe.new()
-	inventory[2] = MultiGrainWaffle.new()
-	inventory[3] = RedBerries.new()
+	inventory[0] = PrairieKingGun.new()
 
 
 func add_money(value):
 	money += value
+	if Main.main.get_level().id != LevelID.Above:
+		Main.main.run_gui.gui_drawificator.money_opacity = 1
 
 func spend_money(value):
 	money -= value
 func get_selected_item() -> Item:
+	if inventory.is_empty():
+		return null
 	return inventory[inv_selected]
 	
 func remove_inv_item(index:int=inv_selected):

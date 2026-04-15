@@ -62,9 +62,6 @@ func shoot_seed(target:Vector2):
 	BerrySeed.new(self,origin,origin.direction_to(target) * 0.3,10)
 	
 func _draw() -> void:
-	var lvl:Level = Main.main.get_level()
-	#if peril_affection_thresholds[0]:
-		#Main.draw_text( str(peril_affection_thresholds[0]),Vector2(0,8))
 	draw_from_dict(spr_dict,Vector2(0,-4),0 if not ripe else 1)
 
 func draw_from_dict(_spr_dict:Dictionary[int, Vector2], draw_offset:Vector2, spr_index_offset:int):

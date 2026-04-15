@@ -12,8 +12,16 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	super._process(delta)
 
+func trigger_trap(plr:Player) -> TriggerTrapEvent:
+	var trtevent = TriggerTrapEvent.new(plr,self)
+	if not trtevent.trigger_success:
+		return trtevent
+	return trtevent
+
 ##Override this function for behavior when the player steps on the Trap.
 func on_touch_thing(body):
+	if body is Player:
+		trigger_trap(body)
 	pass
 
 ##Override this function for behavior when the player steps off the Trap.

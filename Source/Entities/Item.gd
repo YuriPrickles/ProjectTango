@@ -1,5 +1,11 @@
 class_name Item
-extends Node
+extends Resource
+static var artifacts_floor1 = [
+	ScreamingVoidAxe,
+	SporeMother,
+	PrairieKingGun,
+	MultiGrainWaffle
+	]
 enum Value{
 	Junk = 5,
 	Scraps = 6,
@@ -15,7 +21,8 @@ enum WeaponType {
 	Unusable,
 	Regular,
 	Edible,
-	Thrown
+	Thrown,
+	Consumable
 }
 var weapon_type:WeaponType = WeaponType.Unusable
 var has_picked_up_before = false
@@ -29,33 +36,10 @@ var custom_pickup:Script = null
 var passive_effect:Effect = null
 
 var item_damage = 0
-var item_usedelay = 0
-var item_timer = 0
+var item_usedelay:float = 0
+var item_timer:float = 0
 
-func get_desc()->String:
-	var new_desc = item_desc
-	var regex = RegEx.new()
-	regex.compile("(?<red_ones>(!=|==|<|>|<=|>=null|true|false|and|not|or|is)(?!\\w))|(?<control>(for|if|else|elif)(?!\\w))|(?<numerical>(?<![\"\'])([0-9]+([.][0-9]+)?)(?![\"\']))|(?<func_name>[A-Za-z]+(?=(\\(.*\\))+))|(?<string>(\"|\').+\\7)")
-	var groups = {
-		"numerical":"B",
-		"func_name":"D",
-		"string":"A",
-		"red_ones":"8",
-		"control":"E",
-		}
-	var search = regex.search_all(new_desc)
-	var saved_length = 0
-	for result:RegExMatch in search:
-		for group in groups.keys():
-			var res_str = result.get_string(group)
-			var num_color_string = "¬%s%s¬¬"%[groups.get(group),res_str]
-			var start = result.get_start(group)
-			var end = result.get_end(group)
-			if start != -1:
-				new_desc = new_desc.erase(start + saved_length, end - start)
-				new_desc = new_desc.insert(start + saved_length, num_color_string)
-				saved_length += num_color_string.length() - res_str.length()
-	return new_desc
+
 
 ##Called when an item is picked up as a Pickup.
 func on_pickup():
@@ -79,24 +63,33 @@ func on_use() -> bool:
 	var plr:Player = Main.main.get_player()
 	if not can_use(): return false
 	if weapon_type == WeaponType.Edible:
+		on_eat(plr)
+		Main.main.resources.remove_inv_item()
+		return true
+	if weapon_type == WeaponType.Consumable:
 		on_consume(plr)
 		Main.main.resources.remove_inv_item()
 		return true
-	item_timer = item_usedelay
+	var useevent = ItemUseEvent.new(self)
+	item_timer = item_usedelay * useevent.usedelay_mod
 	if weapon_type == WeaponType.Thrown:
 		plr.throw()
 	return true
 
 func can_use() -> bool:
-	if item_timer > 0 or weapon_type == WeaponType.Unusable:
+	if item_timer > 0 or weapon_type == WeaponType.Unusable or Main.main.get_level().id == LevelID.Above:
 		return false
 	return true
 
 func forced_passive_effect():
 	pass
 
+func on_eat(plr:Player):
+	@warning_ignore("unused_variable")
+	var eatevent = EatEvent.new(plr,self)
+
 func on_consume(plr:Player):
-	var conevent = ConsumeEvent.new(plr,self)
+	pass
 
 func on_throw():
 	remove_passive()

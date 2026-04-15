@@ -21,10 +21,17 @@ func _draw() -> void:
 func on_detect(body: Node2D) -> void:
 	if body is Player and not force_awake:
 		if body.sneaking and body.direction != Vector2.ZERO: return
-		queue_redraw()
-		wake_up_nearby()
-		force_awake = true
-		asleep = false
+		trigger_trap(body)
+
+func trigger_trap(plr:Player) -> TriggerTrapEvent:
+	var trtevent = super.trigger_trap(plr)
+	if not trtevent.trigger_success:
+		return null
+	queue_redraw()
+	wake_up_nearby()
+	force_awake = true
+	asleep = false
+	return trtevent
 
 func wake_up_nearby():
 	var lvl:Level = Main.main.get_level()
@@ -51,7 +58,7 @@ func leave_detect(body: Node2D) -> void:
 		queue_redraw()
 		asleep = true
 
+
 func on_touch_thing(body):
 	if body is Player:
-		var devent = DamageEvent.new(10,body as Player,self)
 		body.hurt(10 if not asleep else 0,self)

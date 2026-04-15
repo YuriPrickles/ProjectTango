@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://be3v7ms7bdepa"]
+
+[ext_resource type="Script" uid="uid://dfbh8sx045jvw" path="res://Source/terminal.gd" id="1_rswpg"]
+
+[node name="Terminal" type="Node2D" unique_id=877311204]
+process_mode = 3
+script = ExtResource("1_rswpg")

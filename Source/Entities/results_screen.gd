@@ -68,6 +68,7 @@ func _input(event: InputEvent) -> void:
 	if allow_input and event.is_action_pressed("accept"):
 		Main.main.load_level(LevelID.Above)
 		queue_free()
+		Main.main.reset_run()
 		Main.escaped = false
 		Main.game_over = false
 

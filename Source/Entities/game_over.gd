@@ -46,9 +46,9 @@ func cutscene():
 
 func _input(event: InputEvent) -> void:
 	if allow_input and event.is_action_pressed("accept"):
-		Main.main._ready()
 		queue_free()
-		Main.main.reset_run()
+		Main.main.reset_run(true)
+		Main.main.load_level(LevelID.Above)
 		Main.game_over = false
 		Main.escaped = false
 

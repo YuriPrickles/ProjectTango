@@ -33,7 +33,7 @@ func _input(event: InputEvent) -> void:
 		plr.no_draw = false
 		starting_to_close = false
 		closed = false
-		Main.main.save_level()
+		#Main.main.save_level()
 		Main.main.add_child(preload("res://Source/Entities/ResultsScreen.tscn").instantiate())
 		Main.escaped = true
 		Main.main.run_gui.queue_free()

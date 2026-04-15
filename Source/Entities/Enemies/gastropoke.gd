@@ -34,7 +34,7 @@ func _init(pos) -> void:
 	
 	add_child(detection_range)
 	add_child(leave_range)
-	
+
 func _process(delta: float) -> void:
 	super._process(delta)
 	var plr:Player = Main.main.get_player()

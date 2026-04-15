@@ -21,8 +21,8 @@ func _ready() -> void:
 	pass
 
 func hurt(value:int,source):
-	var devent = DamageEvent.new(value,self,source)
 	if iframe_timer > 0 or value == 0: return
+	var devent = DamageEvent.new(value,self,source)
 	iframe_timer = IFRAMES
 	print("%s hurt for %s damage" % [dmg_source_name,devent.damage])
 	Health -= devent.damage

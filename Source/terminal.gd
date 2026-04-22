@@ -48,6 +48,7 @@ func _ready() -> void:
 	echo("to return to gameplay, press [esc] again.")
 	echo()
 	echo("enter '¬Ahelp¬¬' for a list of commands")
+	echo("enter '¬Akeys¬¬' for a list of controls")
 	echo()
 
 func clear():
@@ -62,10 +63,23 @@ func giveup():
 		Main.main.get_player().hurt_hurter_freed(99999,"unreality implosion")
 	else:
 		echo("¬8cannot be used outside a run")
-
+func keys():
+	echo()
+	echo("--------CONTROLS LIST--------")
+	echo("¬6WASD¬¬ - ¬6move")
+	echo("¬6tab¬¬ - ¬6open/close inventory")
+	echo("¬6esc¬¬ - ¬6cancel / close menus")
+	echo("¬6enter¬¬ - ¬6use held item / interact")
+	echo("¬6ctrl¬¬ - ¬6hold to sneak")
+	echo("¬6shift¬¬ - ¬6hold to run")
+	echo("¬6t¬¬ - ¬6throw item")
+	echo("¬6q/e¬¬ - ¬6move prev/next in inventory")
+	echo("¬6arrow keys¬¬ - ¬6move in inventory")
+	echo("¬6shift + k¬¬ - ¬6skip hymn")
 func help(debug=false):
 	echo("--------COMMAND LIST--------")
 	echo("¬6help - ¬6display this menu")
+	echo("¬6keys - ¬6display controls list")
 	echo("¬6clear¬¬ - ¬6clear the terminal")
 	echo("¬6exit¬¬ - ¬6exit game. ¬8doesnt save!!¬¬")
 	echo("¬6play¬¬ - ¬6enter the game. automatically loads the current save.")
@@ -210,6 +224,8 @@ func parse_command():
 				"help":
 					echo()
 					help()
+				"keys":
+					keys()
 				"help debug":
 					echo()
 					help(true)

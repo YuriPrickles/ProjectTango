@@ -31,6 +31,8 @@ class Passive_PrairieKingGun:
 	
 	func _init() -> void:
 		effect_name = "Rapid Reload"
+		icon_atlas = Main.ItemAtlas
+		icon_index = 8
 	
 	func process_event(event:Event):
 		if event is ItemUseEvent:

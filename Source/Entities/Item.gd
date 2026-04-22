@@ -4,7 +4,8 @@ static var artifacts_floor1 = [
 	ScreamingVoidAxe,
 	SporeMother,
 	PrairieKingGun,
-	MultiGrainWaffle
+	MultiGrainWaffle,
+	TomeOfTheHills
 	]
 enum Value{
 	Junk = 5,
@@ -49,7 +50,7 @@ func on_pickup():
 		do_passive()
 	forced_passive_effect()
 	if not has_picked_up_before and value == Value.Artifact:
-		Main.main.add_peril(5)
+		Main.main.add_peril(15)
 	Main.main.resources.try_place_inventory(self.get_script())
 	pass
 

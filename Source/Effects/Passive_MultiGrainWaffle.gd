@@ -3,6 +3,8 @@ extends Effect
 
 func _init() -> void:
 	effect_name = "Yummy Blessing"
+	icon_atlas = Main.ItemAtlas
+	icon_index = 6
 
 func process_event(event:Event):
 	if event is EatEvent:

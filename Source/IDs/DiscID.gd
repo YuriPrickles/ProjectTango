@@ -1,5 +1,5 @@
 class_name DiscID
-
+extends Object
 const UNREADABLE = -1
 const OurLife = 0
 const OurGuardian = 1

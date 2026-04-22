@@ -16,7 +16,7 @@ func tick_down(delta: float) -> void:
 			if effect.time <= 0:
 				unregister_effect(effect)
 		else:
-			continue
+				continue
 
 func process_event(event:Event):
 	for e:Effect in effects:
@@ -33,4 +33,7 @@ func register_effect(effect:Effect):
 		(check_effect_is_there_array[0] as TimedEffect).time += effect.time
 
 func unregister_effect(effect:Effect):
-	effects.erase(effect)
+	var effect_check_callable:Callable = func(e:Effect): return e.effect_name == effect.effect_name
+	var check_effect_is_there_array:Array[Effect] = effects.filter(effect_check_callable)
+	for eff in check_effect_is_there_array:
+		effects.erase(eff)

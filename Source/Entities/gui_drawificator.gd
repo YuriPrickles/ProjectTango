@@ -55,6 +55,19 @@ func _draw() -> void:
 				draw_line(compass_center + compass_offset * 2,compass_center + make_canvas_position_local(Main.main.current_level.get_compass_vector()),Main.colors[8],1)
 				draw_line(compass_center + compass_offset * 2,compass_center + make_canvas_position_local(Main.main.current_level.get_compass_vector() * -1),Main.colors[0],1)
 				draw_circle(compass_center,2,Main.colors[1])
+		if Main.main.current_level:
+			var lvl = Main.main.current_level
+			var effect_arr:Array[Effect] = lvl.event_bus.effects
+			var effect_list_pos = compass_pos + Vector2(18,0)
+			for i in range(effect_arr.size()):
+				var separation = Main.SPR_SIZE * i * 1.5
+				Main.spr(effect_arr[i].icon_atlas,self,effect_list_pos + Vector2(separation,0),effect_arr[i].icon_index)
+				if effect_arr[i] is TimedEffect:
+					var timed_eff:TimedEffect = effect_arr[i]
+					Main.draw_text(self,"%.0d" % (timed_eff.time * 10),effect_list_pos + Vector2(separation,Main.SPR_SIZE),Main.colors[Utils.blink(6,7,8)])
+				if effect_arr[i] is ConditionalStackEffect:
+					var stack_eff:ConditionalStackEffect = effect_arr[i]
+					Main.draw_text(self,"%01d" % (stack_eff.stack),effect_list_pos + Vector2(separation,Main.SPR_SIZE),Main.colors[7])
 		#endregion
 		#region Inventory
 		#if Main.main.inventory_open:

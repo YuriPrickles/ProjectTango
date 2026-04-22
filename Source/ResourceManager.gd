@@ -1,7 +1,7 @@
 class_name ResourceManager
 extends Resource
 
-static var scrap_sells=[0,0,0]
+var scrap_sells=[0,0,0]
 @export var money:int = 0
 var peril:int = 0
 var peril_block:int = 0

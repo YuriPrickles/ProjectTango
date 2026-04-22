@@ -3,6 +3,8 @@ extends Effect
 
 func _init() -> void:
 	effect_name = "Void Shredder"
+	icon_atlas = Main.ItemAtlas
+	icon_index = 5
 
 func process_event(event:Event):
 	if event is DamageEvent:

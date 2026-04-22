@@ -31,6 +31,8 @@ class Passive_TomeOfTheHills:
 	var timer:float = 0
 	func _init() -> void:
 		effect_name = "Concentration"
+		icon_atlas = Main.ItemAtlas
+		icon_index = 11
 	func process_event(event:Event):
 		if event is UpdateEvent:
 			timer += event.delta

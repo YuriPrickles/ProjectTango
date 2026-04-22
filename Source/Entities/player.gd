@@ -30,6 +30,7 @@ func _ready() -> void:
 	kb_override = false
 	width = 8
 	height = 8
+	Main.main.resources.inv_selected = 0
 	pass
 	
 var prevent_holding_atk = false

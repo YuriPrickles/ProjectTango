@@ -3,6 +3,8 @@ extends ConditionalStackEffect
 
 func _init(st:int) -> void:
 	effect_name = "Protect"
+	icon_atlas = Main.GameAtlas
+	icon_index = 26
 	super._init(st)
 
 func process_event(event:Event):

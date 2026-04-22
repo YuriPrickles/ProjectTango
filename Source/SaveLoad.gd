@@ -24,6 +24,7 @@ static func load_game() -> bool:
 		return false
 	else:
 		savefile = ResourceLoader.load(base_path)
+		if not savefile: return false
 		Main.main.resources.inventory = savefile.resource_manager.inventory
 		Main.main.resources.money = savefile.resource_manager.money
 		Main.main.disc_manager.stored_discs = savefile.disc_manager.stored_discs

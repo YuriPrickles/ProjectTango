@@ -32,6 +32,8 @@ class Passive_SporeMother:
 	
 	func _init() -> void:
 		effect_name = "Spore Burst"
+		icon_atlas = Main.ItemAtlas
+		icon_index = 7
 	
 	func process_event(event:Event):
 		if event is DamageEvent and event.target is Player:

@@ -31,6 +31,7 @@ func start_cd_player():
 	for i in range(5): add_hymn_to_buffer()
 	cd_player_timer = Timer.new()
 	cd_player_timer.wait_time = hymn_delay
+	cd_player_timer.process_mode = Node.PROCESS_MODE_PAUSABLE
 	cd_player_timer.timeout.connect(play_random)
 	Main.main.add_child(cd_player_timer)
 	cd_player_timer.start()
@@ -104,7 +105,12 @@ func add_cd_to_storage(disc:Disc):
 
 
 func burn_to_cd(disc:Disc,amount=1):
-	cd[disc] = cd.get(disc,0) + amount
+	var disc_check_callable:Callable = func(d:Disc): return d.disc_id == disc.disc_id
+	var matching_disc_array:Array[Disc] = cd.keys().filter(disc_check_callable)
+	if matching_disc_array.size() == 1:
+		cd[matching_disc_array[0]] = cd.get(matching_disc_array[0],0) + amount
+	else:
+		cd[disc] = cd.get(disc,0) + amount
 
 func get_cd_total() -> int:
 	var total = 0

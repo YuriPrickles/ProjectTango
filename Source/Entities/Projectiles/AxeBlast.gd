@@ -18,7 +18,8 @@ func _init(p_owner:Entity,pos:Vector2,_velocity:Vector2,_damage:int) -> void:
 	tween.tween_property(self,"radius",8,0.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
 	tween.tween_callback(queue_free)
 
-
+func handle_wall_col():
+	pass
 
 func _process(delta: float) -> void:
 	super._process(delta)

@@ -33,7 +33,7 @@ func _init(p_owner,pos,collision:Rect2,_velocity:Vector2,_hostile:bool,_damage:i
 	position = pos
 	offset = collision.size
 	if Main.main.get_level():
-		Main.main.get_level().projectiles.add_child(self)
+		Main.main.get_level().projectiles.call_deferred("add_child",self)
 	queue_redraw()
 
 func clear_collisions():

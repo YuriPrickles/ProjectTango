@@ -30,7 +30,7 @@ var has_picked_up_before = false
 var spr_index:int = 16
 var value:Value = Value.Normal
 var item_name:String = "Nothing"
-var item_desc:String = "null"
+var item_desc = "null"
 
 var sell_value:int = 1
 var custom_pickup:Script = null
@@ -40,18 +40,24 @@ var item_damage = 0
 var item_usedelay:float = 0
 var item_timer:float = 0
 
-
+func _init() -> void:
+	var name_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
+	var desc_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
+	item_name = ("ITEM_%s" % name_key)
+	item_desc = ("ITEM_DESC_%s" % desc_key)
 
 ##Called when an item is picked up as a Pickup.
 func on_pickup():
-	if self == Main.main.resources.get_selected_item():
-		on_switch_to()
-	else:
-		do_passive()
-	forced_passive_effect()
 	if not has_picked_up_before and value == Value.Artifact:
 		Main.main.add_peril(15)
 	Main.main.resources.try_place_inventory(self.get_script())
+	print(Main.main.resources.get_selected_item().item_name + " " + item_name)
+	if Main.main.resources.get_selected_item().item_name == item_name:
+		on_switch_to()
+	else:
+		print("oihrfuieghthiosdgfuisdgfhiasdfgyio")
+		on_switch_away()
+	#on_switch_to()
 	pass
 
 func _process(delta: float) -> void:

@@ -28,5 +28,4 @@ func _input(event: InputEvent) -> void:
 func _draw() -> void:
 	draw_from_dict(spr_dict,-offset/2,0)
 	if touching:
-		Main.draw_text_centered(self, "[enter]\nenter scrapnest", Vector2(0,-24),Main.colors[7],Main.colors[0])
-		Main.draw_text_centered(self, "sell scraps!", Vector2(0,-12),Main.colors[5],Main.colors[0])
+		Main.draw_text(self, "SCRAPNEST_HOVERTEXT", Vector2(0,-24),Main.colors[7],Main.colors[0],false,true)

@@ -25,6 +25,4 @@ func _draw() -> void:
 	var sprite = Utils.blink(75,76,blinkdelay)
 	Main.spr(Main.GameAtlas,self,Vector2(-8,-11),sprite)
 	if touching:
-		Main.draw_text_centered(self, "[enter]", Vector2(0,-40),Main.colors[7],Main.colors[0])
-		Main.draw_text_centered(self, "nero the fire spirit", Vector2(0,-34),Main.colors[7],Main.colors[0])
-		Main.draw_text_centered(self, "burns hymns onto cd", Vector2(0,-28),Main.colors[5],Main.colors[0])
+		Main.draw_text(self, "NERO_HOVERTEXT", Vector2(0,-40),Main.colors[7],Main.colors[0],false,true)

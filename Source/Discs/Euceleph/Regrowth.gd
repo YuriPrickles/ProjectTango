@@ -5,8 +5,6 @@ func _init() -> void:
 	patron = Patron.Euceleph
 	rarity = Rarity.Common
 	cost = 8
-	disc_name = "Regrowth"
-	disc_desc = "plr.heal(5)\nif plr.health >= plr.max_health:\nlevel.drop_item(redberries,1)"
 	super._init(DiscID.Regrowth)
 
 func on_play(was_destroyed) -> void:

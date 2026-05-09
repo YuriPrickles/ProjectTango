@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bj1qi6nt3gdmy"]
+
+[ext_resource type="Script" uid="uid://r4gxjvwx7yap" path="res://Source/Entities/dialog_box.gd" id="1_qbkkm"]
+
+[node name="DialogBox" type="Node2D" unique_id=1812247888]
+process_mode = 3
+script = ExtResource("1_qbkkm")

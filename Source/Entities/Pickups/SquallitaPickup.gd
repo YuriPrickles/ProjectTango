@@ -35,8 +35,8 @@ func _draw() -> void:
 	if Engine.get_frames_drawn() % 8 == 0:
 		if draw_offset.y != 0:
 			index = (index + 1)
-			if index > 19:
-				index = 16
+			if index > 3:
+				index = 0
 		else:
 			index = 78 if index != 78 else 79
 	Main.spr(Main.GameAtlas,self,draw_offset, index)

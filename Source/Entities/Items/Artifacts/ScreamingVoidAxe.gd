@@ -5,12 +5,11 @@ func _init() -> void:
 	spr_index = 5
 	weapon_type = WeaponType.Regular
 	value = Value.Artifact
-	item_name = "Axe of the Screaming Void"
-	item_desc = "(Passive): damage *= lerp(3,0.6,distance_percent)"
 	sell_value = 25
 	item_damage = 3
 	item_usedelay = 0.6
 	passive_effect = Passive_ScreamingVoidAxe.new()
+	super()
 
 func _process(delta: float) -> void:
 	super._process(delta)

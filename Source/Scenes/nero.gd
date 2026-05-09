@@ -118,8 +118,8 @@ class DiscTextbox:
 	var current_disc:Disc
 	func _draw() -> void:
 		if current_disc:
-			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),Disc.Rarity.keys()[current_disc.rarity],current_disc.disc_name],Vector2(16,136))
-			Main.draw_text(self,"%s" % Utils.syntaxificate(current_disc.disc_desc),Vector2(16,136 + 16))
+			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name],Vector2(16,136))
+			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 6),Main.colors[7],Main.colors[16],true)
 			return
 		Main.draw_text(self,"no hymn selected",Vector2(16,136))
 class StupidRectangle:

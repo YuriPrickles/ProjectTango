@@ -3,6 +3,7 @@ extends Node
 
 @onready var _2DLayer = $"2DLayer"
 @onready var other_ui: CanvasLayer = $OtherUI
+@onready var dialog_layer: CanvasLayer = $DialogLayer
 @onready var transitioner: Node2D = $Transitioner
 
 enum Depths{
@@ -30,7 +31,8 @@ const colors:Array[Color] = [
 	Color("29adff"),
 	Color("83769c"),
 	Color("ff77a8"),
-	Color("ffccaa")
+	Color("ffccaa"),
+	Color("00000000")
 ]
 var debugmode = false
 ##Each index of the array is a 8x8 region of the atlas.
@@ -39,7 +41,7 @@ static var ItemAtlasTexture:Texture2D
 static var GameAtlas:Atlas
 static var GameAtlasTexture:Texture2D
 static var FontAtlasTexture:Texture2D
-static var fontmap:String = "abcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+-=?:.\"\';,[]></ "
+static var fontmap:String = "abcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+-=?:.\"\';,[]></ 	"
 var FONTCHARS:int
 const FONTCHAR_SIZE=Vector2i(4,6)
 var SPR_COLS:int
@@ -74,7 +76,10 @@ var in_run:bool= false
 
 const MAX_PRL = 100
 
+static var main_lang:Language
+
 func _ready() -> void:
+	main_lang = Language.from_txt("res://Dialog/English.txt")
 	main = self
 	game_state = GameState.MAINMENU
 	FontAtlasTexture = preload("res://Graphics/Atlases/Fonts/font.png")
@@ -214,88 +219,100 @@ func text_popup(pos,text,c1=Main.colors[7],c2=Main.colors[8],target=null):
 
 static func pal():
 	pass
-static func draw_text(canvas_item:CanvasItem,string:String, pos:Vector2, color:Color=Color.WHITE,bg_color:Color=Color.TRANSPARENT):
+##string can either be just a string or a dialog key.
+static func draw_text(canvas_item:CanvasItem,string:Variant, pos:Vector2, color:Color=Color.WHITE,bg_color:Color=Color.TRANSPARENT,syntaxificate:bool=false, centered:bool=false):
+	var collected_dialog
+	if string is String:
+		collected_dialog = main_lang.get_dialog(string)
+	elif string is Array:
+		collected_dialog = string.duplicate()
+	if not collected_dialog: return
+	if syntaxificate: collected_dialog = Utils.syntaxificate(collected_dialog)
 	var offsetx = 0
 	var offsety = 0
 	var extr_length:int = 0
-	var line_chunks := string.split("\n")
 	if bg_color != Color.TRANSPARENT:
-		for line:String in line_chunks:
+		if collected_dialog is Array:
+			for line:String in collected_dialog:
+				extr_length = 0
+				for s in "0123456789ABCDEF¬":
+					var colortag = "¬%s" % s
+					extr_length += line.count(colortag) * 2
+				var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * (line.length()-extr_length),FONTCHAR_SIZE.y)
+				canvas_item.draw_rect(Rect2(pos + Vector2(offsetx - ((line.length()-extr_length) * 2) if centered else 0,collected_dialog.find(line) * 6),rect_size),bg_color)
+		else:
+			for s in "0123456789ABCDEF¬":
+				var colortag = "¬%s" % s
+				extr_length += collected_dialog.count(colortag) * 2
+			var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * (collected_dialog.length()-extr_length),FONTCHAR_SIZE.y)
+			canvas_item.draw_rect(Rect2(pos + Vector2(offsetx - ((collected_dialog.length() * 2) if centered else 0), 0),rect_size),bg_color)
+	var skip_next = false
+	var current_color = Color(color)
+	if collected_dialog is Array:
+		for line in collected_dialog:
+			if not line: return
+			line = line.to_lower()
 			extr_length = 0
 			for s in "0123456789ABCDEF¬":
 				var colortag = "¬%s" % s
 				extr_length += line.count(colortag) * 2
-			extr_length += line.count("\n")
-			var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * (line.length()-extr_length),FONTCHAR_SIZE.y)
-			canvas_item.draw_rect(Rect2(pos + Vector2(offsetx,line_chunks.find(line) * 6),rect_size),bg_color)
-	var skip_next = false
-	var current_color = Color(color)
-	string = string.to_lower()
-	for s in range(string.length()):
-		if skip_next:
-			skip_next = false
-			continue
-		var index = fontmap.find(string[s])
-		
-		if string[s] == "¬":
-			var next_char = string[s + 1]
-			if s + 1 < string.length():
-				var color_char = next_char
-				if color_char.is_valid_hex_number() and color_char.hex_to_int() < 16:
-
-					current_color = Main.colors[color_char.hex_to_int()]
-					skip_next = true
-				elif next_char == "¬":
-					current_color = color
-					#print("%s - %s %s" % [s,color_char,current_color.to_html()])
-					skip_next = true
-				continue
-		if string[s] == "\n":
-			offsety += 6
+			for s in range(line.length()):
+				if skip_next:
+					skip_next = false
+					continue
+				var index = fontmap.find(line[s])
+				if line[s] == "¬":
+					var next_char = line[s + 1]
+					if s + 1 < line.length():
+						var color_char = next_char
+						if color_char.is_valid_hex_number() and color_char.hex_to_int() < 16:
+							current_color = Main.colors[color_char.hex_to_int()]
+							skip_next = true
+						elif next_char == "¬":
+							current_color = color
+							skip_next = true
+						continue
+				FontAtlasTexture.draw_rect_region(
+					canvas_item.get_canvas_item(),
+					Rect2(pos + Vector2(offsetx - (((collected_dialog[offsety/6].length() - extr_length) * 2) if centered else 0),offsety),FONTCHAR_SIZE),
+					Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),
+					current_color)
+				offsetx += 4
 			offsetx = 0
-			continue
-		FontAtlasTexture.draw_rect_region(canvas_item.get_canvas_item(),Rect2(pos + Vector2(offsetx,offsety),FONTCHAR_SIZE),Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),current_color)
-		offsetx += 4
-
-static func draw_text_centered(canvas_item:CanvasItem,string:String, pos:Vector2, color:Color=Color.WHITE,bg_color:Color=Color.TRANSPARENT):
-	var offsetx = 0
-	var offsety = 0
-	var extr_length:int = 0
-	var line_chunks := string.split("\n")
-	if bg_color != Color.TRANSPARENT:
-		for line:String in line_chunks:
-			extr_length = 0
-			for s in "0123456789ABCDEF¬":
-				var colortag = "¬%s" % s
-				extr_length += line.count(colortag) * 2
-			extr_length += line.count("\n")
-			var rect_size:Vector2= Vector2(FONTCHAR_SIZE.x * (line.length()-extr_length),FONTCHAR_SIZE.y)
-			canvas_item.draw_rect(Rect2(pos + Vector2(offsetx- line.length() * 2,line_chunks.find(line) * 6),rect_size),bg_color)
-	var skip_next = false
-	var current_color = Color(color)
-	string = string.to_lower()
-	for s in range(string.length()):
-		if skip_next:
-			skip_next = false
-			continue
-		var index = fontmap.find(string[s])
-		
-		if string[s] == "¬":
-			var next_char = string[s + 1]
-			if s + 1 < string.length():
-				var color_char = next_char
-				if color_char.is_valid_hex_number() and color_char.hex_to_int() < 16:
-
-					current_color = Main.colors[color_char.hex_to_int()]
-					skip_next = true
-				elif next_char == "¬":
-					current_color = color
-					#print("%s - %s %s" % [s,color_char,current_color.to_html()])
-					skip_next = true
-				continue
-		if string[s] == "\n":
 			offsety += 6
-			offsetx = 0
-			continue
-		FontAtlasTexture.draw_rect_region(canvas_item.get_canvas_item(),Rect2(pos + Vector2(offsetx- line_chunks[offsety/6].length() * 2,offsety),FONTCHAR_SIZE),Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),current_color)
-		offsetx += 4
+	else:
+		collected_dialog = collected_dialog.to_lower()
+		extr_length = 0
+		for s in "0123456789ABCDEF¬":
+			var colortag = "¬%s" % s
+			extr_length += collected_dialog.count(colortag) * 2
+		for s in range(collected_dialog.length()):
+			if skip_next:
+				skip_next = false
+				continue
+			var index = fontmap.find(collected_dialog[s])
+			
+			if collected_dialog[s] == "¬":
+				var next_char = collected_dialog[s + 1]
+				if s + 1 < collected_dialog.length():
+					var color_char = next_char
+					if color_char.is_valid_hex_number() and color_char.hex_to_int() < 16:
+
+						current_color = Main.colors[color_char.hex_to_int()]
+						skip_next = true
+					elif next_char == "¬":
+						current_color = color
+						#print("%s - %s %s" % [s,color_char,current_color.to_html()])
+						skip_next = true
+					continue
+			FontAtlasTexture.draw_rect_region(
+				canvas_item.get_canvas_item(),
+				Rect2(pos + Vector2(offsetx - (((collected_dialog.length() - extr_length) * 2) if centered else 0),offsety),FONTCHAR_SIZE),
+				Rect2(Vector2(index * 4,0),FONTCHAR_SIZE),
+				current_color)
+			offsetx += 4
+
+func say(dialog_key:String,pos:Vector2,size:Vector2,color:Color=Main.colors[0]):
+	var dialog_entry:Array[String]
+	dialog_entry.append_array(main_lang.get_dialog(dialog_key))
+	dialog_layer.add_child(DialogBox.new(dialog_entry,pos,size,color))

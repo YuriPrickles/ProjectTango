@@ -61,7 +61,7 @@ static func attach_round_collision_shape(thing:CollisionObject2D,radius:float,on
 static func blink(value1,value2,blinkdelay):
 	return value1 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else value2
 
-static func syntaxificate(string:String)->String:
+static func syntaxificate(string):
 	var new_desc = string
 	var regex = RegEx.new()
 	regex.compile("(?<red_ones>(!=|==|<|>|<=|>=)|(null|true|false|and|not|or|is)(?!\\w))|(?<control>(for|if|else|elif)(?!\\w))|(?<numerical>(?<![\"\'])([0-9]+([.][0-9]+)?)(?![\"\']))|(?<func_name>([A-Za-z]+_*)+(?=(\\(.*\\))+))|(?<string>(\"|\').+\\13)")
@@ -72,16 +72,34 @@ static func syntaxificate(string:String)->String:
 		"red_ones":"8",
 		"control":"E",
 		}
-	var search = regex.search_all(new_desc)
-	var saved_length = 0
-	for result:RegExMatch in search:
-		for group in groups.keys():
-			var res_str = result.get_string(group)
-			var num_color_string = "¬%s%s¬¬"%[groups.get(group),res_str]
-			var start = result.get_start(group)
-			var end = result.get_end(group)
-			if start != -1:
-				new_desc = new_desc.erase(start + saved_length, end - start)
-				new_desc = new_desc.insert(start + saved_length, num_color_string)
-				saved_length += num_color_string.length() - res_str.length()
+	if new_desc is Array:
+		var new_desc_array = []
+		for line:String in new_desc:
+			var search = regex.search_all(line)
+			var saved_length = 0
+			for result:RegExMatch in search:
+				for group in groups.keys():
+					var res_str = result.get_string(group)
+					var num_color_string = "¬%s%s¬¬"%[groups.get(group),res_str]
+					var start = result.get_start(group)
+					var end = result.get_end(group)
+					if start != -1:
+						line = line.erase(start + saved_length, end - start)
+						line = line.insert(start + saved_length, num_color_string)
+						saved_length += num_color_string.length() - res_str.length()
+			new_desc_array.append(line)
+		return new_desc_array
+	elif new_desc is String:
+		var search = regex.search_all(new_desc)
+		var saved_length = 0
+		for result:RegExMatch in search:
+			for group in groups.keys():
+				var res_str = result.get_string(group)
+				var num_color_string = "¬%s%s¬¬"%[groups.get(group),res_str]
+				var start = result.get_start(group)
+				var end = result.get_end(group)
+				if start != -1:
+					new_desc = new_desc.erase(start + saved_length, end - start)
+					new_desc = new_desc.insert(start + saved_length, num_color_string)
+					saved_length += num_color_string.length() - res_str.length()
 	return new_desc

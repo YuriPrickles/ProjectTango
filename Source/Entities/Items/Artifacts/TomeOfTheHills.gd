@@ -5,12 +5,11 @@ func _init() -> void:
 	spr_index = 11
 	weapon_type = WeaponType.Regular
 	value = Value.Artifact
-	item_name = "Tome of the Hiils"
-	item_desc = "(Passive): if event is UpdateEvent:\nfor proj in level.get_projectiles():\n    if timer > 0.3:\n        proj.damage += 1\n        timer = 0"
 	sell_value = 25
 	item_damage = 7
 	item_usedelay = 0.5
 	passive_effect = Passive_TomeOfTheHills.new()
+	super()
 
 func _process(delta: float) -> void:
 	super._process(delta)

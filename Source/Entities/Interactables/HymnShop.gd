@@ -32,6 +32,4 @@ func _input(event: InputEvent) -> void:
 func _draw() -> void:
 	draw_from_dict(spr_dict,-offset/2,0)
 	if touching:
-		Main.draw_text_centered(self, "[enter]", Vector2(0,-24),Main.colors[7],Main.colors[0])
-		Main.draw_text_centered(self, "susan's wagon", Vector2(0,-18),Main.colors[7],Main.colors[0])
-		Main.draw_text_centered(self, "purchase hymns!", Vector2(0,-12),Main.colors[5],Main.colors[0])
+		Main.draw_text(self, "SUSAN_HOVERTEXT", Vector2(0,-24),Main.colors[7],Main.colors[0],false,true)

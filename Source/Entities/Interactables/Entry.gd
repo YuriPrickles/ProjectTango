@@ -39,6 +39,6 @@ func _input(event: InputEvent) -> void:
 func _draw() -> void:
 	draw_from_dict(spr_dict,offset/-2,0 if not closed else 16)
 	#draw_circle(Vector2.ZERO,2,Main.colors[9])
-	var text = "[enter] to go back to floor 1" if Main.main.saved_levels[LevelID.Floor1] and super_special_entry else "[enter] to start a new run"
+	var text = "[enter] to go back to floor 1" if Main.main.saved_levels[LevelID.Floor1] and super_special_entry else "ENTER_HOVERTEXT"
 	if touching:
-		Main.draw_text_centered(self, text, Vector2(0,-16),Main.colors[7])
+		Main.draw_text(self, text, Vector2(0,-16),Main.colors[7],Main.colors[0],false,true)

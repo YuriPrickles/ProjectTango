@@ -1,0 +1,255 @@
+TEST_DIALOG=
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+
+SUSAN_DIALOGUE=
+I'm selling Archangel hymns from across the lands!
+Come, listen! Maybe you'll like something!
+
+
+# TERMINAL
+
+
+TERMINAL_STARTUP=
+Project tango v0.0.0.0
+welcome to the terminal!
+ 
+during gameplay, press [esc] to make
+this pop up at any time.
+ 
+to return to gameplay, press [esc] again.
+ 
+enter '¬Atutorial¬¬' for some short instructions
+enter '¬Ahelp¬¬' for a list of commands
+enter '¬Akeys¬¬' for a list of controls
+
+
+TERMINAL_KEYS=
+--------CONTROLS LIST--------
+¬6WASD¬¬ - ¬6move
+¬6tab¬¬ - ¬6open/close inventory
+¬6esc¬¬ - ¬6cancel / close menus
+¬6enter¬¬ - ¬6use held item / interact
+¬6ctrl¬¬ - ¬6hold to sneak
+¬6shift¬¬ - ¬6hold to run
+¬6t¬¬ - ¬6throw item
+¬6q/e¬¬ - ¬6move prev/next in inventory
+¬6arrow keys¬¬ - ¬6move in inventory
+¬6shift + k¬¬ - ¬6skip hymn
+
+
+TERMINAL_HELP_1=
+--------COMMAND LIST--------
+¬6help - ¬6display this menu
+¬6tutorial - ¬6short instructions
+¬6keys - ¬6display controls list
+¬6clear¬¬ - ¬6clear the terminal
+¬6exit¬¬ - ¬6exit game. ¬8doesnt save!!¬¬
+¬6play¬¬ - ¬6enter the game. automatically loads the current save.
+¬6save¬¬ - ¬6save game. only outside of a run
+¬6giveup¬¬ - ¬8kill yourself¬6 during a run
+¬6reset¬¬ - ¬8reset your save file¬¬
+
+
+TERMINAL_HELP_2=
+--------DEBUG COMMAND LIST--------
+¬6nexthymn - plays the next hymn
+¬6reloadlang - reloads the current language
+
+
+TERMINAL_TUTORIAL=
+dodge enemies. sneak past traps.
+do not let your ¬8peril¬¬ get too high.
+collect artifacts and scraps.
+sell stuff, then buy hymns to burn on your cd.
+when you're ready, challenge the boss!
+
+
+TERMINAL_GIVEUP=
+You closed your eyes and wished it was over...
+TERMINAL_GIVEUP_FAIL=
+¬8cannot be used outside a run
+
+TERMINAL_NEXTHYMN_FAIL=
+¬8either outside of run or empty cd
+
+TERMINAL_PLAY_FAIL=
+¬8there is nowhere further to go.
+
+
+TERMINAL_SAVE_ERROR=¬8something went wrong while saving.
+TERMINAL_SAVE_SUCCESS=¬Asuccessfully saved!
+TERMINAL_SAVE_FAIL=¬8cannot save inside a run
+
+TERMINAL_LOAD_FUCKEDUP=
+¬6save file ¬8might be broken/corrupt¬6. load it anyway?
+¬8(it is not recommended to run it.)
+[ y / n ]
+
+TERMINAL_LOAD_NEW=¬6creating save file...
+TERMINAL_LOAD_SUCCESS=¬6save file loaded
+TERMINAL_LOAD_FAIL=¬8cannot load inside a run
+
+
+TERMINAL_PAUSEINPUT=press any key to continue...
+
+TERMINAL_RESET_ASK=
+¬6are you ¬8really sure¬6 you want to ¬8reset?¬6
+¬6this action is ¬8irreversible¬6.
+[ y / n ]
+
+TERMINAL_RESET_DONE=¬6we have erased it.
+TERMINAL_RESET_CANCEL=¬6your save file lives another day.
+TERMINAL_RESET_EMPTY=¬8there is nothing to reset.
+
+TERMINAL_CLOSE_FAIL=¬8no other gameplay loaded¬¬
+
+# MISC UI STUFF
+
+GAME_OVER_A=game over
+GAME_OVER_B=recovery successful
+GAME_OVER_C=press [enter] to return
+GAME_OVER_DEFEATED=defeated by:
+GAME_OVER_REMOVING_SELF=removing self from dungeon:
+
+
+HELD_ITEM=held:
+UP_NEXT=up next:
+
+EXIT_HOVERTEXT=[enter] to exit
+ENTER_HOVERTEXT=[enter] to start a new run
+
+SCRAPNEST_HOVERTEXT=
+[enter]
+scrapnest
+¬5sell stuff!¬¬
+
+SUSAN_HOVERTEXT=
+[enter]
+susan's wagon
+¬5purchase hymns!¬¬
+
+NERO_HOVERTEXT=
+[enter]
+nero the fire spirit
+¬5burn hymns onto cd!¬¬
+
+COMPUTER_HOVERTEXT=
+[enter]
+dungeon access terminal
+¬2perform special terminal commands¬¬
+
+# ITEMS
+
+ITEM_METAL=Metal
+ITEM_DESC_METAL=Sturdy material for building things.
+ITEM_WIRES=Wires
+ITEM_DESC_WIRES=Slightly Chewed...
+ITEM_BATTERY=Battery
+ITEM_DESC_BATTERY=All melded into one singular being.
+ITEM_BIGEEPLEBAG=Big Bag of Eeples
+ITEM_DESC_BIGEEPLEBAG=add_money(randi_range(10,15))
+ITEM_REDBERRIES=Red Berries
+ITEM_DESC_REDBERRIES=plr.heal(15)
+
+ITEM_MULTIGRAINWAFFLE=Multi-Grain Waffle
+ITEM_DESC_MULTIGRAINWAFFLE=
+(Passive):
+if event is ConsumeEvent:
+event.player.heal(10)
+
+ITEM_SPOREMOTHER=Spore Mother
+ITEM_DESC_SPOREMOTHER=
+(Passive):
+if event is DamageEvent:
+for i in range(30): Spore.new()
+
+ITEM_PRAIRIEKINGGUN=Prairie King's Gun
+ITEM_DESC_PRAIRIEKINGGUN=
+(Passive):
+item_usedelay *= 0.9
+
+ITEM_SCREAMINGVOIDAXE=Axe of the Screaming Void
+ITEM_DESC_SCREAMINGVOIDAXE=
+(Passive):
+damage *= lerp(3,0.6,distance_percent)
+
+ITEM_TOMEOFTHEHILLS=Tome of the Hiils
+ITEM_DESC_TOMEOFTHEHILLS=
+(Passive):
+if event is UpdateEvent:
+for proj in level.get_projectiles():
+	if timer > 0.3:
+		proj.damage += 1
+		timer = 0
+
+
+# DISCS and ARCHANGELS
+
+ARCHANGEL=Archangel
+
+CHLANKE=Chlanke
+# Name comes from "clank", reference to Decked Out 1/2,
+# and also from the clanking of metal armor
+
+EUCELEPH=Euceleph
+# Name comes from Eucalyptus trees I'm not really sure why
+
+MIRRARA=Mirrara
+# Name comes from mirrors, reflections showing the truth
+
+GAMMON=Gammon
+# Name is a reference to Lenna's Inception and Cassette Beasts
+# Gammon/Mammon is a greedy chairman in LI
+# Mammon is a boss in CB
+# Also just a reference to the demon called Mammon
+
+RARITY_0=COMMON
+RARITY_1=UNCOMMON
+RARITY_2=RARE
+RARITY_3=SCRUMPTIOUS
+# Translators! i encourage you to find a really ridiculous word for "Scrumptious" in your language.
+
+
+DISC_UNREADABLE=UNREADABLE FILE
+DISC_DESC_UNREADABLE=peril += 2
+
+
+DISC_OURGUARDIAN=Our Guardian
+DISC_DESC_OURGUARDIAN=peril_block += 4
+
+DISC_PROTECT=Protect
+DISC_DESC_PROTECT=
+peril_block += 2
+if event is DamageEvent and event.player_hurt:
+	event.damage *= 0.75
+
+DISC_OURLIFE=Our Life
+DISC_DESC_OURLIFE=
+peril -= 3
+level.drop_on_player(RedBerries,1)
+
+DISC_REGROWTH=Regrowth
+DISC_DESC_REGROWTH=
+plr.heal(5)
+if plr.health >= plr.max_health:
+	level.drop_item(redberries,1)
+
+DISC_OURBOUNTY=Our Bounty
+DISC_DESC_OURBOUNTY=spawn_scrap(2)
+
+DISC_HEIST=Heist
+DISC_DESC_HEIST=
+peril += 3
+level.drop_item(BigEepleBag)
+
+DISC_OURTRUTH=Our Truth
+DISC_DESC_OURTRUTH=register_effect(SilentFoot.new(7))
+
+DISC_SEARCH=Search
+DISC_DESC_SEARCH=queue_hymn(MatchLastPatron.new())
+
+
+
+
+END_OF_DIALOG_FILE

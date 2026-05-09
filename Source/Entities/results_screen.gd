@@ -49,7 +49,7 @@ func cutscene():
 	await get_tree().create_timer(0.05).timeout
 	string_array.append("-------------------")
 	await get_tree().create_timer(1).timeout
-	string_array.append("items obtained:" if not inv_string_dict.is_empty() else "nothing obtained")
+	string_array.append("items obtained:" if not inv_string_dict.is_empty() else "¬BMain¬¬.¬6main¬¬.¬6resources¬¬.inventory.¬Dis_empty¬¬() returned ¬8true")
 	start_and_stop_value_color[0] = string_array.size() - 1
 	start_and_stop_value_color[1] = start_and_stop_value_color[0] + inv_string_dict.size() + 1
 	await get_tree().create_timer(1).timeout
@@ -59,7 +59,10 @@ func cutscene():
 			queue_redraw()
 			await get_tree().create_timer(0.2).timeout
 	else:
-		string_array.append("the princess is disappointed")
+		await get_tree().create_timer(0.3).timeout
+		string_array.append("")
+		string_array.append("¬5A feeling of shame washes over you...")
+		string_array.append("")
 	await get_tree().create_timer(1).timeout
 	string_array.append("press [ENTER] to return")
 	allow_input = true

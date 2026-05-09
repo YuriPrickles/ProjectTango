@@ -69,5 +69,7 @@ func try_place_inventory(item:GDScript):
 			inventory[i] = item_object
 			if not i == inv_selected:
 				item_object.do_passive()
+			else:
+				item_object.remove_passive()
 			return true;
 	return false

@@ -43,4 +43,4 @@ func _draw() -> void:
 	draw_from_dict(spr_dict,offset/-2,0 if not closed else 16)
 	#draw_circle(Vector2.ZERO,2,Main.colors[9])
 	if touching:
-		Main.draw_text_centered(self, "[enter] to exit", Vector2(0,-16),Main.colors[7])
+		Main.draw_text(self, "EXIT_HOVERTEXT", Vector2(0,-16),Main.colors[7],Main.colors[0],false,true)

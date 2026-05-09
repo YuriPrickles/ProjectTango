@@ -11,6 +11,7 @@ var sneaking:bool = false
 var running:bool = false
 var health:int=100
 var max_health:int = 100
+var current_stamina:float = 100
 const IFRAMES = 0.2
 var iframe_timer:float = 0
 var kb_override = false
@@ -34,8 +35,17 @@ func _ready() -> void:
 	pass
 	
 var prevent_holding_atk = false
+var refill_delay = 0
+var refill_delay_max = 3.0
 func _process(delta: float) -> void:
 	point_light_2d.enabled = Main.main.current_level.id != LevelID.Above
+	if running:
+		refill_delay = 0
+		current_stamina = clampf(current_stamina - delta * 25,0,health)
+	else:
+		refill_delay += delta
+		if refill_delay >= refill_delay_max:
+			current_stamina = clampf(current_stamina + delta * 10,0,health)
 	if iframe_timer > 0:
 		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)
 	if Main.main.resources.inventory.size() > 0:
@@ -52,7 +62,7 @@ func _physics_process(delta: float) -> void:
 	camera.zoom = Vector2(1,1) if not Main.main.debugmode else Vector2(0.125,0.125)
 	direction = Input.get_vector("left", "right", "up", "down")
 	sneaking = Input.is_action_pressed("sneak")
-	running = Input.is_action_pressed("run")
+	running = Input.is_action_pressed("run") and current_stamina > 0
 	sneaking = sneaking && !running
 	if kb_override_vector.length() <= 0:
 		if direction:
@@ -116,6 +126,9 @@ func _draw() -> void:
 	if no_draw: return
 	if facing:
 		spr_index = (1 if facing.x > 0 else 3) if facing.x != 0 else (2 if facing.y < 0 else 0)
+		if direction:
+			#spr_index += Utils.blink(131,147,12)
+			spr_index += Utils.blink(0,Utils.blink(131,147,12),6)
 	if floori(iframe_timer * 100.0) % 4 == 0 and iframe_timer < IFRAMES:
 		Main.spr(Main.GameAtlas,self,size/-2,spr_index)
 

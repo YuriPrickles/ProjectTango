@@ -13,4 +13,8 @@ script = ExtResource("1_kvypo")
 process_mode = 3
 layer = 2
 
+[node name="DialogLayer" type="CanvasLayer" parent="." unique_id=68704066]
+process_mode = 3
+layer = 3
+
 [node name="Transitioner" parent="." unique_id=817232785 instance=ExtResource("2_p7x2e")]

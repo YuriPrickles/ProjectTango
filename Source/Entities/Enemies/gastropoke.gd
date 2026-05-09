@@ -83,4 +83,4 @@ func _draw() -> void:
 			spr_index_offset = 6
 	draw_from_dict(spr_dict,Vector2(-8,-14),spr_index_offset)
 	if chasing:
-		Main.draw_text_centered(self,"!", Vector2(0,-20),Main.colors[8])
+		Main.draw_text(self,"!", Vector2(0,-20),Main.colors[8],Main.colors[0],false,true)

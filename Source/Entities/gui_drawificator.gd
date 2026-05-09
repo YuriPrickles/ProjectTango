@@ -87,12 +87,15 @@ func _draw() -> void:
 					Main.spr(Main.ItemAtlas,self,backpack_pos + inv_grid_offset + Vector2((i * 8) % 40, row_offset),item.spr_index if not Main.main.inventory_open else item.spr_index)
 		if Main.main.resources.get_selected_item():
 			var item = Main.main.resources.get_selected_item()
-			var extra_offset = -6 * item.item_desc.count("\n") if Main.main.inventory_open else -6
+			var linecount = 1
+			if Main.main_lang.get_dialog(item.item_desc) is Array:
+				linecount = Main.main_lang.get_dialog(item.item_desc).size()
+			var extra_offset = -6 * (linecount - 1) if Main.main.inventory_open else -6
 			var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-12 + extra_offset)
 			var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-6 + extra_offset) 
-			
-			Main.draw_text(self,"¬7held:¬¬ %s" % item.item_name,name_pos,Main.colors[item.value],Main.colors[0])
-			if Main.main.inventory_open: Main.draw_text(self,Utils.syntaxificate(item.item_desc),desc_pos,Main.colors[6],Main.colors[0])
+			var name_arr = [Main.main_lang.get_dialog("HELD_ITEM"),Main.main_lang.get_dialog(item.item_name)]
+			Main.draw_text(self,"¬6%s¬¬ %s" % name_arr,name_pos,Main.colors[item.value],Main.colors[0])
+			if Main.main.inventory_open: Main.draw_text(self,item.item_desc,desc_pos,Main.colors[6],Main.colors[0], true)
 		#endregion
 		
 		#region Playerhealth
@@ -107,6 +110,11 @@ func _draw() -> void:
 
 			draw_rect(Rect2(health_pos, health_border_size),Main.colors[8],true)
 			draw_rect(Rect2(health_pos + Vector2(1,1), health_border_size - Vector2(2,2)),Main.colors[2],true)
+			if plr.current_stamina < plr.health:
+				var stamina_pos = Vector2(0 + margin,viewport.y * 0.95 + margin + 4)
+				var stamina_border_size = Vector2(plr.current_stamina, 1)
+				draw_rect(Rect2(stamina_pos, stamina_border_size),Main.colors[10],true)
+				#draw_rect(Rect2(stamina_pos + Vector2(1,1), stamina_border_size - Vector2(2,2)),Main.colors[Utils.blink(9,3,8)],true)
 		#endregion
 	#endregion
 
@@ -154,7 +162,7 @@ class InfoHUD:
 		if Main.main.inventory_open:
 			var inst_text = "PERIL: %s" % Main.main.resources.peril
 			Main.draw_text(self,inst_text,infohud_pos + Vector2(0,-6))
-			Main.draw_text(self, "Up next:", upnext_pos + Vector2(0,-6),Main.colors[7])
+			Main.draw_text(self, "UP_NEXT", upnext_pos + Vector2(0,-6),Main.colors[7])
 		draw_rect(Rect2(upnext_pos,Vector2(88,48)),Main.colors[1],true)
 		for i in range(5):
 			draw_rect(Rect2(upnext_pos + Vector2(1,1 + (i * 8)),Vector2(86,6)),Main.colors[0])

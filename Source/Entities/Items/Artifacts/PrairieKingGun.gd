@@ -5,12 +5,11 @@ func _init() -> void:
 	spr_index = 8
 	weapon_type = WeaponType.Regular
 	value = Value.Artifact
-	item_name = "Prairie King's Gun"
-	item_desc = "(Passive):\nitem_usedelay *= 0.9"
 	sell_value = 25
 	item_damage = 2
 	item_usedelay = 0.24
 	passive_effect = Passive_PrairieKingGun.new()
+	super()
 
 func _process(delta: float) -> void:
 	super._process(delta)

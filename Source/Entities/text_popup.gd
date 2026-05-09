@@ -28,4 +28,4 @@ func _process(delta: float) -> void:
 		queue_free()
 
 func _draw() -> void:
-	Main.draw_text_centered(self,text,Vector2.ZERO,Utils.blink(color1,color2,8) * opacity,Main.colors[0])
+	Main.draw_text(self,text,Vector2.ZERO,Utils.blink(color1,color2,8) * opacity,Main.colors[0],false,true)

@@ -32,6 +32,10 @@ func _process(delta: float) -> void:
 	susan_sprite.queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if Main.game_state != Main.GameState.CUTSCENE and event.is_action_pressed("special"):
+		Main.main.say("SUSAN_DIALOGUE",box_rect.position + Vector2(8,8),(Vector2((304-16)/4,(48-16)/6)))
+	if Main.game_state == Main.GameState.CUTSCENE:
+		return
 	if event.is_action_pressed("cancel"):
 		Main.main.remove_fullscreen()
 		Main.main.get_player().no_control = false
@@ -68,9 +72,9 @@ class DiscTextbox:
 	var current_disc:Disc
 	func _draw() -> void:
 		if current_disc:
-			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),Disc.Rarity.keys()[current_disc.rarity],current_disc.disc_name],Vector2(16,136))
+			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name],Vector2(16,136))
 			
-			Main.draw_text(self,"%s" % Utils.syntaxificate(current_disc.disc_desc),Vector2(16,136 + 16))
+			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 6),Main.colors[7],Color.TRANSPARENT,true)
 class StupidRectangle:
 	extends Node2D
 	func _ready() -> void:

@@ -5,8 +5,6 @@ func _init() -> void:
 	patron = Patron.Gammon
 	rarity = Rarity.Common
 	cost = 8
-	disc_name = "Our Bounty"
-	disc_desc = "spawn_scrap(2)"
 	super._init(DiscID.OurBounty)
 
 func on_play(was_destroyed) -> void:

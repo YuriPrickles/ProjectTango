@@ -4,8 +4,7 @@ func _init() -> void:
 	spr_index = 1
 	sell_value = Main.main.resources.scrap_sells[1]
 	value = Value.Scraps
-	item_name = "Wires"
-	item_desc = "Slightly Chewed"
+	super()
 
 func on_switch_to():
 	super()

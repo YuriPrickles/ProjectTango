@@ -5,12 +5,11 @@ func _init() -> void:
 	spr_index = 7
 	weapon_type = WeaponType.Regular
 	value = Value.Artifact
-	item_name = "Spore Mother"
-	item_desc = "(Passive):\nif event is DamageEvent:\nfor i in range(30): Spore.new()"
 	sell_value = 25
 	item_damage = 3
 	item_usedelay = 0.6
 	passive_effect = Passive_SporeMother.new()
+	super()
 
 func _process(delta: float) -> void:
 	super._process(delta)

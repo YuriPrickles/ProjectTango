@@ -16,32 +16,34 @@ func _process(delta: float) -> void:
 	pass
 
 func cutscene():
-	string_array.append("game over")
+	var remove_self_text = Main.main_lang.get_dialog("GAME_OVER_REMOVING_SELF")
+	string_array.append("GAME_OVER_A")
 	await get_tree().create_timer(1).timeout
-	string_array.append("removing self from dungeon: ")
+	string_array.append("%s " % remove_self_text)
 	await get_tree().create_timer(1).timeout
 	await get_tree().create_timer(0.1 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(24 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(24 + randi()%5))])
 	await get_tree().create_timer(0.2 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(47 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(47 + randi()%5))])
 	await get_tree().create_timer(0.12 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(59 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(59 + randi()%5))])
 	await get_tree().create_timer(0.1 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(75 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(75 + randi()%5))])
 	await get_tree().create_timer(0.07 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(93 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(93 + randi()%5))])
 	await get_tree().create_timer(0.1 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: 99%")
+	string_array[1]=("%s 99%%" % remove_self_text)
 	await get_tree().create_timer(1.2 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: 100%")
+	string_array[1]=("%s 100%%" % remove_self_text)
 	await get_tree().create_timer(0.05).timeout
-	string_array.append("recovery successful")
+	string_array.append("GAME_OVER_B")
 	await get_tree().create_timer(0.05).timeout
 	string_array.append("-------------------")
 	await get_tree().create_timer(1).timeout
-	string_array.append("defeated by: %s" % Main.main.killed_by)
+	var defeated_by = Main.main_lang.get_dialog("GAME_OVER_DEFEATED")
+	string_array.append("%s %s" % [defeated_by,Main.main.killed_by])
 	await get_tree().create_timer(1).timeout
-	string_array.append("press [ENTER] to return")
+	string_array.append("GAME_OVER_C")
 	allow_input = true
 
 func _input(event: InputEvent) -> void:

@@ -5,12 +5,11 @@ func _init() -> void:
 	spr_index = 6
 	weapon_type = WeaponType.Regular
 	value = Value.Artifact
-	item_name = "Multi-Grain Waffle"
-	item_desc = "(Passive):\nif event is ConsumeEvent:\nevent.player.heal(10)"
 	sell_value = 25
 	item_damage = 5
 	item_usedelay = 0.5
 	passive_effect = Passive_MultiGrainWaffle.new()
+	super()
 
 func _process(delta: float) -> void:
 	super._process(delta)

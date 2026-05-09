@@ -16,8 +16,10 @@ enum Patron{
 var disc_id = -1
 var patron:int = Patron.Godless
 var rarity:Rarity = Rarity.Common
-var disc_name:String = "Pearls' Lament"
-var disc_desc:String = "+9223372036854775807 PERIL"
+var disc_name:String:
+	get:
+		return Main.main_lang.get_dialog(disc_name)
+var disc_desc:String
 var max_stack = 4
 var cost:int = 0
 
@@ -28,6 +30,13 @@ func _init(id:int) -> void:
 		Rarity.Uncommon: max_stack = 4
 		Rarity.Rare: max_stack = 2
 		Rarity.Scrumptious: max_stack = 1
+	var name_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
+	var desc_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
+	disc_name = ("DISC_%s" % name_key)
+	disc_desc = ("DISC_DESC_%s" % desc_key)
+
+func get_rarity():
+	return Main.main_lang.get_dialog("RARITY_%s" % rarity)
 
 func get_rarity_color():
 	match rarity:

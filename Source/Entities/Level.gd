@@ -30,10 +30,11 @@ var spawned = false
 func _process(delta:float) -> void:
 	event_bus.tick_down(delta)
 
-func spawn_player(): pass
-func spawn_enemies(): pass
+func spawn_player() -> void: pass
+func spawn_enemies() -> void: pass
 func spawn_scrap(amount:int) -> void: pass
-func spawn_treasures(): pass
+func spawn_treasures() -> void: pass
+func spawn_objects() -> void: pass
 
 func drop_item(item:GDScript, amount:int=1):
 	for i in range(1):

@@ -11,6 +11,10 @@ size = Vector2(4, 3)
 shader = ExtResource("2_dy60o")
 shader_parameter/pixel_size = Vector2(32, 32)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h8l7r"]
+shader = ExtResource("2_dy60o")
+shader_parameter/pixel_size = Vector2(32, 32)
+
 [node name="Player" type="CharacterBody2D" unique_id=1987243598]
 process_mode = 1
 z_index = 1
@@ -30,12 +34,21 @@ rotation_smoothing_enabled = true
 position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_dy60o")
 
-[node name="PointLight2D" type="PointLight2D" parent="." unique_id=912261531]
+[node name="InnerLight" type="PointLight2D" parent="." unique_id=761631257]
 z_index = 1
 z_as_relative = false
 material = SubResource("ShaderMaterial_dy60o")
 position = Vector2(0, 1)
-energy = 0.7
+energy = 0.8
 shadow_enabled = true
 texture = ExtResource("2_7x6ql")
 texture_scale = 0.4
+
+[node name="OuterLight" type="PointLight2D" parent="." unique_id=792934108]
+z_index = 1
+z_as_relative = false
+material = SubResource("ShaderMaterial_h8l7r")
+position = Vector2(0, 1)
+energy = 0.05
+texture = ExtResource("2_7x6ql")
+texture_scale = 0.7

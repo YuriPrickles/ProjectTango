@@ -17,7 +17,7 @@ z_as_relative = false
 tile_set = ExtResource("2_2y2gb")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=686143727]
-color = Color(0.48963153, 0.55144083, 0.4565472, 1)
+color = Color(0.20929888, 0.2451267, 0.18895498, 1)
 
 [node name="Items" type="Node2D" parent="." unique_id=1896694085]
 

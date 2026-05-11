@@ -27,6 +27,9 @@ static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch=n
 		thing.set_collision_layer_value(2,true)
 		thing.set_collision_mask_value(1,true)
 		thing.set_collision_mask_value(2,true)
+		if thing is DecorObject:
+			thing.set_collision_mask_value(1,true)
+			thing.set_collision_mask_value(6,true)
 	var colmask = CollisionShape2D.new()
 	var shape = RectangleShape2D.new()
 	shape.size = size.size

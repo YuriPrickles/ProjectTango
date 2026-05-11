@@ -19,7 +19,7 @@ var kb_override_vector:Vector2
 var no_control = false
 var no_draw = false
 @onready var camera:Camera2D = $Camera2D
-@onready var point_light_2d: PointLight2D = $PointLight2D
+@onready var point_light_2d: PointLight2D = $InnerLight
 var throwmode:bool = false
 var might_interact = false
 
@@ -39,6 +39,8 @@ var refill_delay = 0
 var refill_delay_max = 3.0
 func _process(delta: float) -> void:
 	point_light_2d.enabled = Main.main.current_level.id != LevelID.Above
+	if point_light_2d.enabled:
+		point_light_2d.texture_scale = 0.4 + (sin(Engine.get_frames_drawn() * 0.05) * 0.01 )
 	if running:
 		refill_delay = 0
 		current_stamina = clampf(current_stamina - delta * 25,0,health)

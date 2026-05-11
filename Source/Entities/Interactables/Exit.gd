@@ -4,6 +4,7 @@ extends Interactable
 var closed = false
 var starting_to_close = false
 
+var pointlight:PointLight2D = PointLight2D.new()
 
 func _init(pos:Vector2) -> void:
 	super._init(pos,Rect2(-16,-2,16,4))
@@ -12,7 +13,13 @@ func _init(pos:Vector2) -> void:
 		67: Vector2(0,0),
 		68: Vector2(1,0)
 	}
-
+	pointlight.texture = preload("res://Graphics/Atlases/Misc/pointlight.png")
+	pointlight.texture_scale = 0.3
+	pointlight.energy = 0.1
+	add_child(pointlight)
+func _process(delta: float) -> void:
+	pointlight.energy = 0.6
+	pointlight.texture_scale = 0.1 + (sin(Engine.get_frames_drawn() * 0.05) * 0.01 )
 func _input(event: InputEvent) -> void:
 	if touching and event.is_action_pressed("accept") and not starting_to_close:
 		Main.disc_manager.stop_cd_player()

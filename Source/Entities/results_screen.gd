@@ -26,30 +26,31 @@ func _process(delta: float) -> void:
 	pass
 
 func cutscene():
-	string_array.append("successfully escaped")
+	string_array.append("ESCAPE_SUCCESS")
+	var remove_self_text = Main.main_lang.get_dialog("GAME_OVER_REMOVING_SELF")
 	await get_tree().create_timer(1).timeout
-	string_array.append("removing self from dungeon: ")
+	string_array.append("%s " % remove_self_text)
 	await get_tree().create_timer(1).timeout
 	await get_tree().create_timer(0.1 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(24 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(24 + randi()%5))])
 	await get_tree().create_timer(0.2 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(47 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(47 + randi()%5))])
 	await get_tree().create_timer(0.12 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(59 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(59 + randi()%5))])
 	await get_tree().create_timer(0.1 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(75 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(75 + randi()%5))])
 	await get_tree().create_timer(0.07 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: %s%%" % (str(93 + randi()%5)))
+	string_array[1]=("%s %s%%" % [remove_self_text, (str(93 + randi()%5))])
 	await get_tree().create_timer(0.1 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: 99%")
+	string_array[1]=("%s 99%%" % remove_self_text)
 	await get_tree().create_timer(1.2 + randf_range(0.04,0.08)).timeout
-	string_array[1]=("removing self from dungeon: 100%")
+	string_array[1]=("%s 100%%" % remove_self_text)
 	await get_tree().create_timer(0.05).timeout
-	string_array.append("recovery successful")
-	await get_tree().create_timer(0.05).timeout
+	string_array.append("GAME_OVER_B")
 	string_array.append("-------------------")
 	await get_tree().create_timer(1).timeout
-	string_array.append("items obtained:" if not inv_string_dict.is_empty() else "¬BMain¬¬.¬6main¬¬.¬6resources¬¬.inventory.¬Dis_empty¬¬() returned ¬8true")
+	var items_ob_str = Main.main_lang.get_dialog("ITEMS_GOT")
+	string_array.append("%s" % items_ob_str if not inv_string_dict.is_empty() else "¬BMain¬¬.¬6main¬¬.¬6resources¬¬.inventory.¬Dis_empty¬¬() returned ¬8true")
 	start_and_stop_value_color[0] = string_array.size() - 1
 	start_and_stop_value_color[1] = start_and_stop_value_color[0] + inv_string_dict.size() + 1
 	await get_tree().create_timer(1).timeout
@@ -61,10 +62,10 @@ func cutscene():
 	else:
 		await get_tree().create_timer(0.3).timeout
 		string_array.append("")
-		string_array.append("¬5A feeling of shame washes over you...")
+		string_array.append("ESCAPE_COWARD")
 		string_array.append("")
 	await get_tree().create_timer(1).timeout
-	string_array.append("press [ENTER] to return")
+	string_array.append("GAME_OVER_C")
 	allow_input = true
 
 func _input(event: InputEvent) -> void:

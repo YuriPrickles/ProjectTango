@@ -55,10 +55,7 @@ func on_pickup():
 	if Main.main.resources.get_selected_item().item_name == item_name:
 		on_switch_to()
 	else:
-		print("oihrfuieghthiosdgfuisdgfhiasdfgyio")
 		on_switch_away()
-	#on_switch_to()
-	pass
 
 func _process(delta: float) -> void:
 	if weapon_type == WeaponType.Unusable:

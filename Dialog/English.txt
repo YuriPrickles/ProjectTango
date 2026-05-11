@@ -112,6 +112,9 @@ GAME_OVER_C=press [enter] to return
 GAME_OVER_DEFEATED=defeated by:
 GAME_OVER_REMOVING_SELF=removing self from dungeon:
 
+ESCAPE_SUCCESS=successfully escaped
+ITEMS_GOT=items obtained:
+ESCAPE_COWARD=¬5A feeling of shame washes over you...
 
 HELD_ITEM=held:
 UP_NEXT=up next:

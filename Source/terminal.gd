@@ -59,9 +59,13 @@ func keys():
 	echo()
 	echo("TERMINAL_KEYS")
 
-func help(debug=false):
+func help(type=""):
+	if type=="dat":
+		clear()
+		echo("TERMINAL_HELP_SPECIAL")
+		return
 	echo("TERMINAL_HELP_1")
-	if debug:
+	if type=="debug":
 		echo()
 		await pause()
 		clear()
@@ -176,6 +180,11 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	queue_redraw()
 
+func summon():
+	echo("TERMINAL_BOSS_SUMMONED")
+	var lvl = Main.main.get_level()
+	lvl.enemies.add_child(Verdano.new(lvl.dungeon_layout.rooms[0].get_center() * lvl.dungeon_layout.tile_size))
+
 signal y_n_result(value:bool)
 func parse_command():
 	match state:
@@ -194,6 +203,8 @@ func parse_command():
 				echo()
 				return
 			match current_line.to_lower():
+				"summon":
+					summon()
 				"help":
 					echo()
 					help()
@@ -203,7 +214,13 @@ func parse_command():
 					keys()
 				"help debug":
 					echo()
-					help(true)
+					help("debug")
+				"help dat":
+					if special_commands:
+						echo()
+						help("dat")
+					else:
+						echo("¬8unrecognized command \"%s\"." % current_line)
 				"t":
 					test_dialog()
 				"testdialog":

@@ -12,6 +12,7 @@ var target_destination:Vector2
 var starting_point:Vector2
 var is_custom_pickup:bool = false
 var landed:bool = false
+var pointlight:PointLight2D = PointLight2D.new()
 static func new_pickup(item_scr:GDScript, pos:Vector2, alwaysfollow=false, throw:Vector2=Vector2(0,0)) -> Pickup:
 	var i:Item = item_scr.new()
 	if i.custom_pickup != null:
@@ -33,12 +34,19 @@ func _init(item_scr:GDScript, pos:Vector2, alwaysfollow=false, throw:Vector2=Vec
 		item.has_picked_up_before = true
 		vel = plr.facing
 		draw_offset = Vector2(0,-4)
+	pointlight.texture = preload("res://Graphics/Atlases/Misc/pointlight.png")
+	pointlight.texture_scale = 0.2
+	pointlight.energy = 0.05
+	add_child(pointlight)
 func _ready() -> void:
 	pass
 var arc:float = 0.016
 var arc_mult = 1
 var arc_height = 48
 func _process(delta: float) -> void:
+	pointlight.offset = Vector2(4,4)
+	pointlight.texture_scale = 0.08
+	pointlight.energy = 0.2
 	var plr:Player = Main.main.get_player()
 	if thrown and position.distance_to(target_destination) >= 1:
 		arc += delta * arc_mult

@@ -31,6 +31,8 @@ func register_effect(effect:Effect):
 		effects.append(effect)
 	elif effect is TimedEffect:
 		(check_effect_is_there_array[0] as TimedEffect).time += effect.time
+	elif effect is ConditionalStackEffect:
+		(check_effect_is_there_array[0] as ConditionalStackEffect).stack += effect.stack
 
 func unregister_effect(effect:Effect):
 	var effect_check_callable:Callable = func(e:Effect): return e.effect_name == effect.effect_name

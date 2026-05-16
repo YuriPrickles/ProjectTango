@@ -11,7 +11,7 @@ var Center:
 var int_position: Vector2i:
 	get: return Vector2i(position)
 var dmg_source_name:String=""
-var name_file:String="res://Source/Names/snitchweed.txt"
+var name_file:String
 var peril_affection_thresholds:Array[int]=[]
 var unreality_affection_thresholds:Array[int]=[]
 var y_sort_offset:int = 0
@@ -19,10 +19,13 @@ var solid = false
 var spr_dict:Dictionary[int,Vector2]
 
 func _init(pos,collision:Rect2,_solid=false) -> void:
-	var file = FileAccess.open(name_file, FileAccess.READ)
-	var name_arr:PackedStringArray = file.get_as_text().split("\n")
-	while dmg_source_name.is_empty():
-		dmg_source_name = name_arr[randi() % name_arr.size() - 1]
+	if name_file:
+		var file = FileAccess.open(name_file, FileAccess.READ)
+		var name_arr:PackedStringArray = file.get_as_text().split("\n")
+		while dmg_source_name.is_empty():
+			dmg_source_name = name_arr[randi() % name_arr.size() - 1]
+	else:
+		dmg_source_name = "The Nameless"
 	if _solid:
 		solid = true
 		var static_body = StaticBody2D.new()

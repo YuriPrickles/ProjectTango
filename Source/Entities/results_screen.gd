@@ -12,7 +12,7 @@ func _ready() -> void:
 	for item:Item in inventory_result:
 		if not item: continue
 		
-		inv_string_dict.get_or_add("%s x%d" % [item.item_name,
+		inv_string_dict.get_or_add("%s x%d" % [item.get_proper_item_name(),
 		inventory_result.filter(func(i:Item): return item.get_script() == i.get_script()).size()],item.value)
 	pass
 

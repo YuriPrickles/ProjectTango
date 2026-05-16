@@ -62,19 +62,19 @@ func _draw() -> void:
 	var blinkdelay = 12
 	var color = (11 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 10)
 	for i in range(disc_shop.size()):
-		draw_rect(Rect2(18,18 + i * 8,60,5),Main.colors[5])
+		if disc_shop[i]:
+			draw_rect(Rect2(18,18 + i * 8,60,5),Main.colors[disc_shop[i].get_rarity_color()])
 		var text = disc_shop[i].disc_name if disc_shop[i] else "--------------"
 		Main.draw_text(self,text,Vector2(0,i * 8) + starting_margin, Main.colors[color] if i == selected_disc else Main.colors[7])
-		
 	pass
 class DiscTextbox:
 	extends Node2D
 	var current_disc:Disc
 	func _draw() -> void:
 		if current_disc:
-			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name],Vector2(16,136))
+			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name],Vector2(16,136),Main.colors[7])
 			
-			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 6),Main.colors[7],Color.TRANSPARENT,true)
+			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 6),Main.colors[6],Color.TRANSPARENT,true)
 class StupidRectangle:
 	extends Node2D
 	func _ready() -> void:

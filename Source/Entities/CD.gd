@@ -22,6 +22,8 @@ var disc_name:String:
 var disc_desc:String
 var max_stack = 4
 var cost:int = 0
+var replayable:bool = false
+var protected:bool = false
 
 func _init(id:int) -> void:
 	disc_id = id
@@ -51,7 +53,7 @@ func is_godless() -> bool:
 
 func on_play(was_destroyed) -> void:
 	Main.main.run_gui.gui_drawificator.set_track_text("              %s" % disc_name)
-	Main.main.run_gui.gui_drawificator.set_track_color(Main.colors[7 if not was_destroyed else 2])
+	Main.main.run_gui.gui_drawificator.set_track_color(Main.colors[7 if not was_destroyed or protected else 2])
 	print(disc_name + " was played!")
 	pass
 

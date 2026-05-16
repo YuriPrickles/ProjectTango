@@ -93,7 +93,7 @@ func _draw() -> void:
 			var extra_offset = -6 * (linecount - 1) if Main.main.inventory_open else -6
 			var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-12 + extra_offset)
 			var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-6 + extra_offset) 
-			var name_arr = [Main.main_lang.get_dialog("HELD_ITEM"),Main.main_lang.get_dialog(item.item_name)]
+			var name_arr = [Main.main_lang.get_dialog("HELD_ITEM"),item.get_proper_item_name()]
 			Main.draw_text(self,"¬6%s¬¬ %s" % name_arr,name_pos,Main.colors[item.value],Main.colors[0])
 			if Main.main.inventory_open: Main.draw_text(self,item.item_desc,desc_pos,Main.colors[6],Main.colors[0], true)
 		#endregion
@@ -168,7 +168,8 @@ class InfoHUD:
 			draw_rect(Rect2(upnext_pos + Vector2(1,1 + (i * 8)),Vector2(86,6)),Main.colors[0])
 			if not Main.disc_manager.hymn_buffer.size() <= i and Main.disc_manager.hymn_buffer[i]:
 				var disc_name = Main.disc_manager.hymn_buffer[i].disc_name
-				Main.draw_text(self, disc_name, upnext_pos + Vector2(1, 1 + i * 8),Main.colors[7])
+				var color:Color = Main.colors[7] if Main.disc_manager.hymn_buffer[i] else Main.colors[Utils.blink(12,14,7)]
+				Main.draw_text(self, disc_name, upnext_pos + Vector2(1, 1 + i * 8),color)
 		Main.draw_text(self, "[Shift + K] to skip", upnext_pos + Vector2(0,42),Main.colors[7])
 		#CDTRACKLABEL
 		var cd_track_label_pos:Vector2 = infohud_pos + Vector2(0,16)

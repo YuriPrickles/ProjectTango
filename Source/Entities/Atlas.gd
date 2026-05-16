@@ -14,5 +14,5 @@ func _init(tex:Texture2D) -> void:
 			atlas_array[(j + (i * texture.get_width() / Main.SPR_SIZE))] = Rect2(Vector2(j,i) * Main.SPR_SIZE, Vector2(Main.SPR_SIZE,Main.SPR_SIZE)) 
 		pass
 
-func draw_from_atlas(item:RID, offset:Vector2,index:int,clr:Color=Main.colors[7]):
-	texture.draw_rect_region(item,Rect2(offset,Vector2(Main.SPR_SIZE,Main.SPR_SIZE)),atlas_array[index],clr)
+func draw_from_atlas(item:RID, offset:Vector2,index:int,clr:Color=Main.colors[7],scale:Vector2=Vector2(1,1)):
+	texture.draw_rect_region(item,Rect2(offset,Vector2(Main.SPR_SIZE * scale.x,Main.SPR_SIZE * scale.y)),atlas_array[index],clr)

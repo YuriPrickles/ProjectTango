@@ -104,6 +104,21 @@ TERMINAL_RESET_EMPTY=¬8there is nothing to reset.
 
 TERMINAL_CLOSE_FAIL=¬8no other gameplay loaded¬¬
 
+TERMINAL_HELP_SPECIAL=
+--------DUNGEON TERMINAL COMMAND LIST--------
+¬6help dat - ¬6display this list
+ 
+¬8summon¬¬ - ¬6helper function for summoning a boss¬¬
+ 
+¬8fiddle commands are currently not implemented!
+¬5[only one fiddle command can be used per run]
+¬6fiddle -h - ¬8set hp to 1¬¬,¬A gain 1 eeple for every 5 hp lost
+¬6fiddle -g - ¬8remove all items on ground¬¬, gain 2 eeples for every item lost
+¬6fiddle -a - ¬Achange a held artifact into a random artifact¬¬.
+¬6fiddle -b - ¬8increase peril by 50¬¬. gain a remixer.
+
+TERMINAL_BOSS_SUMMON_FAIL=¬8returned no entry from table "bosses"
+
 # MISC UI STUFF
 
 GAME_OVER_A=game over
@@ -211,7 +226,8 @@ RARITY_0=COMMON
 RARITY_1=UNCOMMON
 RARITY_2=RARE
 RARITY_3=SCRUMPTIOUS
-# Translators! i encourage you to find a really ridiculous word for "Scrumptious" in your language.
+# Translators! i encourage you to find a
+# really ridiculous word for "Scrumptious" in your language.
 
 
 DISC_UNREADABLE=UNREADABLE FILE
@@ -252,7 +268,33 @@ DISC_DESC_OURTRUTH=register_effect(SilentFoot.new(7))
 DISC_SEARCH=Search
 DISC_DESC_SEARCH=queue_hymn(MatchLastPatron.new())
 
+DISC_DIVINEDOCTOR=Divine Doctor
+DISC_DESC_DIVINEDOCTOR=
+stack = 2; reduce_on_hymn = true
+if event is HealEvent and event.healed_amount > 0:
+	add_peril_block(event.healed_amount * 0.2)
+	event.healed_amount *= 0.8
 
+DISC_SACRIFICE=Sacrifice
+DISC_DESC_SACRIFICE=
+for i in range(2):
+	Main.disc_manager.skip_next()
+add_peril_block(10)
 
+DISC_BLESSOURSOULS=Bless Our Souls
+DISC_DESC_BLESSOURSOULS=
+var pb_gained = (plr.max_health - plr.health) / 5
+add_peril_block(pb_gained)
+
+DISC_PRAYERTOCHLANKE=Prayer To Chlanke
+DISC_DESC_PRAYERTOCHLANKE=
+register_effect(CS_SafePlayback.new(3))
+add_peril_block(3)
+
+DISC_SILENTSAVIOR=Silent Savior
+DISC_DESC_SILENTSAVIOR=
+stack = 2; reduce_on_hymn = true
+if event is PerilBlockEvent:
+	register_effect(SilentFoot.new(3))
 
 END_OF_DIALOG_FILE

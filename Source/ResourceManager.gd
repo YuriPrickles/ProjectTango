@@ -39,6 +39,7 @@ func initialize_inventory():
 	inventory.resize(15)
 	inventory.fill(null)
 	inv_selected = 0
+	money = 999
 	inventory[0] = PrairieKingGun.new()
 
 

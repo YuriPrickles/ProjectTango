@@ -155,8 +155,9 @@ func hurt_hurter_freed(value, hurter_name:String):
 		Main.main.trigger_game_over.call_deferred()
 
 func heal(value):
-	health = clamp(health + max(value,0),0,max_health)
-	print("healed for %s" % value)
+	var hevent:HealEvent = HealEvent.new(value)
+	health = clamp(health + max(hevent.healed_amount,0),0,max_health)
+	print("healed for %s" % hevent.healed_amount)
 func knockback(vector:Vector2,power:float):
 	if no_control: return
 	kb_override = true

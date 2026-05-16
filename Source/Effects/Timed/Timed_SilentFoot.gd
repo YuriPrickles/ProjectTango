@@ -10,3 +10,4 @@ func _init(t:float) -> void:
 func process_event(event:Event):
 	if event is TriggerTrapEvent:
 		event.trigger_success = false
+	super(event)

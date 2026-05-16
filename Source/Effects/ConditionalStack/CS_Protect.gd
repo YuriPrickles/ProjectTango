@@ -11,3 +11,4 @@ func process_event(event:Event):
 	if event is DamageEvent and event.player_hurt:
 		(event as DamageEvent).damage = floori(float((event as DamageEvent).damage) * 0.75)
 		stack -= 1
+	super(event)

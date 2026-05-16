@@ -40,6 +40,7 @@ var item_damage = 0
 var item_usedelay:float = 0
 var item_timer:float = 0
 
+func get_proper_item_name(): return Main.main_lang.get_dialog(item_name)
 func _init() -> void:
 	var name_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
 	var desc_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")

@@ -198,11 +198,15 @@ func _process(delta: float) -> void:
 			if item:
 				item._process(delta)
 
+func toggle_terminal():
+	terminal.visible = !terminal.visible
+	get_tree().paused = terminal.visible
 
 func _input(event: InputEvent) -> void:
 	if not loaded_fullscreen and terminal.is_overlay and event.is_action_pressed("cancel") and game_state != GameState.RESULTS:
-		terminal.visible = !terminal.visible
-		get_tree().paused = terminal.visible
+		toggle_terminal()
+		if not terminal.visible:
+			terminal.special_commands = false
 		#run_gui.visible = !terminal.visible
 	if event.is_action_pressed("DEBUG_ADD_PRL"):
 		add_peril(1)
@@ -210,8 +214,8 @@ func _input(event: InputEvent) -> void:
 		add_peril(-1)
 ##Usually you'll want to put Vector2(width,height)/-2 as the offset.
 ##Just fuck around with the offset if you need to, you can do this
-static func spr(atlas:Atlas,item:CanvasItem, offset:Vector2,index:int,color:Color=Main.colors[7]):
-	atlas.draw_from_atlas(item.get_canvas_item(),offset,index,color)
+static func spr(atlas:Atlas,item:CanvasItem, offset:Vector2,index:int,color:Color=Main.colors[7],scale:Vector2=Vector2(1,1)):
+	atlas.draw_from_atlas(item.get_canvas_item(),offset,index,color,scale)
 
 func text_popup(pos,text,c1=Main.colors[7],c2=Main.colors[8],target=null):
 	var popup = TextPopup.new(pos + Vector2(0,-16),text,c1,c2,target)

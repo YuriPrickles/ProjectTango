@@ -10,9 +10,14 @@ static var disc_list:Dictionary[int,Disc]={
 	DiscID.Regrowth: Regrowth.new(),
 	DiscID.Search: Search.new(),
 	DiscID.Heist: Heist.new(),
+	DiscID.DivineDoctor: DivineDoctor.new(),
+	DiscID.Sacrifice: Sacrifice.new(),
+	DiscID.BlessOurSouls: BlessOurSouls.new(),
+	DiscID.PrayerToChlanke: PrayerToChlanke.new(),
+	DiscID.SilentSavior: SilentSavior.new(),
 }
 func get_random_disc():
-	return disc_list.get(randi() % 8)
+	return disc_list.get(randi() % (disc_list.size() - 1))
 var cd_player_timer:Timer = Timer.new()
 @export var stored_discs:Dictionary[Disc,int]
 @export var cd:Dictionary[Disc,int]
@@ -90,17 +95,24 @@ func play_random() -> Disc:
 	var will_destroy:bool = randi() % 100 < 5
 	var played_disc:Disc = hymn_buffer.pop_front()
 	if played_disc:
-		played_disc.on_play(will_destroy)
+		var hymnevent:HymnPlayEvent = HymnPlayEvent.new(played_disc)
+		hymnevent.hymn.on_play(will_destroy)
 		
-		print(Disc.Patron.find_key(played_disc.patron))
-		if not played_disc.is_godless(): last_hymn_patron = played_disc.patron
-		if will_destroy:
+		print(Disc.Patron.find_key(hymnevent.hymn.patron))
+		if not hymnevent.hymn.is_godless(): last_hymn_patron = hymnevent.hymn.patron
+		if hymnevent.hymn.replayable:
+			temporary_cd[played_disc] = temporary_cd.get(played_disc,0) + 1
+		if will_destroy and not hymnevent.hymn.protected:
 			print(played_disc.disc_name + " has been destroyed!")
 			destroyed_hymns[played_disc] = destroyed_hymns.get(played_disc,0) + 1
 	if hymn_buffer.size() < 5: add_hymn_to_buffer()
 	return played_disc
 
 func add_cd_to_storage(disc:Disc):
+	for hymn:Disc in stored_discs.keys():
+		if disc.disc_id == hymn.disc_id:
+			stored_discs[hymn] = stored_discs.get(hymn,0) + 1
+			return
 	stored_discs[disc] = stored_discs.get(disc,0) + 1
 
 

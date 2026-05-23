@@ -52,11 +52,12 @@ func on_pickup():
 	if not has_picked_up_before and value == Value.Artifact:
 		Main.main.add_peril(15)
 	Main.main.resources.try_place_inventory(self.get_script())
-	print(Main.main.resources.get_selected_item().item_name + " " + item_name)
-	if Main.main.resources.get_selected_item().item_name == item_name:
-		on_switch_to()
-	else:
-		on_switch_away()
+	if Main.main.resources.get_selected_item():
+		print(Main.main.resources.get_selected_item().item_name + " " + item_name)
+		if Main.main.resources.get_selected_item().item_name == item_name:
+			on_switch_to()
+		else:
+			on_switch_away()
 
 func _process(delta: float) -> void:
 	if weapon_type == WeaponType.Unusable:

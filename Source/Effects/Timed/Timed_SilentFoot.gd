@@ -1,4 +1,4 @@
-class_name SilentFoot
+class_name Timed_SilentFoot
 extends TimedEffect
 
 func _init(t:float) -> void:

@@ -86,7 +86,7 @@ func pickup():
 	pass
 
 func on_land():
-	pass
+	var pckup = PickupLandEvent.new(self)
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is Player and not Main.main.resources.is_inventory_full() and not thrown:

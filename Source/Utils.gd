@@ -67,8 +67,9 @@ static func blink(value1,value2,blinkdelay):
 static func syntaxificate(string):
 	var new_desc = string
 	var regex = RegEx.new()
-	regex.compile("(?<red_ones>(!=|==|<|>|<=|>=)|(var|null|true|false|and|not|or|is)(?!\\w))|(?<control>(for|if|else|elif)(?!\\w))|(?<numerical>(?<![\"\'])([0-9]+([.][0-9]+)?)(?![\"\']))|(?<func_name>([A-Za-z]+_*)+(?=(\\(.*\\))+))|(?<string>(\"|\').+\\13)")
+	regex.compile("(?<red_ones>(<=|>=)|(!=|==|<|>)|(var|null|true|false|and|not|or|is)(?!\\w))|(?<control>(for|if|else|elif)(?!\\w))|(?<numerical>(?<![\"\'])([0-9]+([.][0-9]+)?)(?![\"\']))|(?<func_name>([A-Za-z]+_*)+(?=(\\(.*\\))+))|(?<string>(\"|\').+\\13)|(?<classname>(?=.\\w)[A-Z]([A-z_])+)")
 	var groups = {
+		"classname":"B",
 		"numerical":"B",
 		"func_name":"D",
 		"string":"A",

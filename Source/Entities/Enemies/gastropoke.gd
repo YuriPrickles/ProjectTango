@@ -44,7 +44,6 @@ func _process(delta: float) -> void:
 func _physics_process(delta):
 	if navigator.is_navigation_finished():
 		return
-
 	current_agent_position = position
 	next_path_position = navigator.get_next_path_position()
 	var final_vel = current_agent_position.direction_to(next_path_position)
@@ -55,7 +54,8 @@ func _physics_process(delta):
 		facing = Vector2(0,1) * sign(final_vel.y)
 		queue_redraw()
 	if chasing:
-		position += delta * final_vel * (snail_speed * (1 + float(Main.main.get_peril())/Main.MAX_PRL))
+		print(name)
+		position += delta * final_vel * ((snail_speed * (1 + float(Main.main.get_peril())/Main.MAX_PRL)) * final_speed_mod)
 
 func on_touch_thing(body):
 	if body is Player:

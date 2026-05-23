@@ -16,7 +16,7 @@ welcome to the terminal!
  
 during gameplay, press [esc] to make
 this pop up at any time.
- 
+
 to return to gameplay, press [esc] again.
  
 enter '¬Atutorial¬¬' for some short instructions
@@ -232,41 +232,71 @@ RARITY_3=SCRUMPTIOUS
 
 DISC_UNREADABLE=UNREADABLE FILE
 DISC_DESC_UNREADABLE=peril += 2
+DISC_SIMPLEDESC_UNREADABLE=Gain 2 Peril.
 
 
 DISC_OURGUARDIAN=Our Guardian
 DISC_DESC_OURGUARDIAN=peril_block += 4
+DISC_SIMPLEDESC_OURGUARDIAN=Gain 2 Peril Block.
+
 
 DISC_PROTECT=Protect
 DISC_DESC_PROTECT=
 peril_block += 2
 if event is DamageEvent and event.player_hurt:
 	event.damage *= 0.75
+DISC_SIMPLEDESC_PROTECT=
+Gain 2 Peril Block.
+The next hit hurts 25% less.
+
 
 DISC_OURLIFE=Our Life
 DISC_DESC_OURLIFE=
 peril -= 3
 level.drop_on_player(RedBerries,1)
+DISC_SIMPLEDESC_OURLIFE=
+Reduce Peril by 3.
+Gain a Red Berry.
+
 
 DISC_REGROWTH=Regrowth
 DISC_DESC_REGROWTH=
 plr.heal(5)
 if plr.health >= plr.max_health:
 	level.drop_item(redberries,1)
+DISC_SIMPLEDESC_REGROWTH=
+Heal 5.
+If at full health, Drop a Red Berry in the current level.
+
 
 DISC_OURBOUNTY=Our Bounty
 DISC_DESC_OURBOUNTY=spawn_scrap(2)
+DISC_SIMPLEDESC_OURBOUNTY=
+Drop 2 Scrap on the current level.
+
 
 DISC_HEIST=Heist
 DISC_DESC_HEIST=
 peril += 3
 level.drop_item(BigEepleBag)
+DISC_SIMPLEDESC_HEIST=
+Increase Peril by 3.
+Drop a Big Bag of Eeples in the current level.
+
 
 DISC_OURTRUTH=Our Truth
 DISC_DESC_OURTRUTH=register_effect(SilentFoot.new(7))
+DISC_SIMPLEDESC_OURTRUTH=
+Gain 7 seconds of Silent Foot.
+Silent Foot lets you become undetected by traps.
+
 
 DISC_SEARCH=Search
 DISC_DESC_SEARCH=queue_hymn(MatchLastPatron.new())
+DISC_SIMPLEDESC_SEARCH=
+Queue a hymn.
+The queued hymn will be of previous hymn's Archangel.
+
 
 DISC_DIVINEDOCTOR=Divine Doctor
 DISC_DESC_DIVINEDOCTOR=
@@ -274,27 +304,176 @@ stack = 2; reduce_on_hymn = true
 if event is HealEvent and event.healed_amount > 0:
 	add_peril_block(event.healed_amount * 0.2)
 	event.healed_amount *= 0.8
+DISC_SIMPLEDESC_DIVINEDOCTOR=
+For the next 2 hymns:
+20% of healing is converted into Peril Block.
+
 
 DISC_SACRIFICE=Sacrifice
 DISC_DESC_SACRIFICE=
 for i in range(2):
-	Main.disc_manager.skip_next()
+	disc_manager.skip_next()
 add_peril_block(10)
+DISC_SIMPLEDESC_SACRIFICE=
+Skip the next 2 hymns.
+Gain 10 Peril Block.
+
 
 DISC_BLESSOURSOULS=Bless Our Souls
 DISC_DESC_BLESSOURSOULS=
 var pb_gained = (plr.max_health - plr.health) / 5
 add_peril_block(pb_gained)
+DISC_SIMPLEDESC_BLESSOURSOULS=
+Gain 1 Peril Block for each 5 health lost.
+
 
 DISC_PRAYERTOCHLANKE=Prayer To Chlanke
 DISC_DESC_PRAYERTOCHLANKE=
 register_effect(CS_SafePlayback.new(3))
 add_peril_block(3)
+DISC_SIMPLEDESC_PRAYERTOCHLANKE=
+The next 3 hymns cannot be destroyed when played.
+
 
 DISC_SILENTSAVIOR=Silent Savior
 DISC_DESC_SILENTSAVIOR=
 stack = 2; reduce_on_hymn = true
 if event is PerilBlockEvent:
 	register_effect(SilentFoot.new(3))
+DISC_SIMPLEDESC_SILENTSAVIOR=
+When consuming Peril Block:
+Gain 3 seconds of Silent Foot.
+
+
+DISC_THEHARVEST=The Harvest
+DISC_DESC_THEHARVEST=
+stack = 1; reduce_on_hymn = true
+if event is PickupLandEvent and event.item.value == Value.Scraps
+	and event.item.sell_value >= 4:
+		event.item = RedBerries.new()
+DISC_SIMPLEDESC_THEHARVEST=
+Until the next hymn:
+Thrown Scraps worth at least 4 Eeples turn into Red Berries.
+
+
+DISC_NEWCREATION=New Creation
+DISC_DESC_NEWCREATION=
+stack = 2; reduce_on_hymn = true
+if event is PickupLandEvent:
+	if event.item.item_name == "ITEM_REDBERRIES":
+		StunBlast.new()
+		event.item.queue_free()
+DISC_SIMPLEDESC_NEWCREATION=
+For the next 2 hymns:
+Thrown Red Berries explode into a stun blast.
+
+
+DISC_CHILDRENOFTHETREE=Children Of The Tree
+DISC_DESC_CHILDRENOFTHETREE=
+var peril = get_peril()
+add_peril(get_peril_block() * -1)
+add_peril_block(peril * -1)
+DISC_SIMPLEDESC_CHILDRENOFTHETREE=
+Consume all Peril Block to reduce that much Peril.
+
+
+DISC_PRAYERTOEUCELEPH=Prayer To Euceleph
+DISC_DESC_PRAYERTOEUCELEPH=
+if get_peril() <= 31:
+	plr.heal(plr.max_health * 0.31)
+DISC_SIMPLEDESC_PRAYERTOEUCELEPH=
+If Peril is below 31:
+Heal 31% of max health.
+
+
+DISC_BLESSINGOFLIFE=Blessing Of Life
+DISC_DESC_BLESSINGOFLIFE=
+bus.register_effect(Timed_LocustSwarm.new(60))
+if event is MoveEvent and event.mover is Enemy:
+	if event.mover.position.distance_to(plr.position) < 64:
+		register_effect(Timed_SpeedChange.new(0.1,-0.31),event.mover.effects)
+DISC_SIMPLEDESC_BLESSINGOFLIFE=
+For 1 minute, locusts circle around the player.
+Enemies within the circle are slowed.
+
+DISC_PRAYERTOMIRRARA=Prayer To Mirrara
+DISC_DESC_PRAYERTOMIRRARA=
+for i in range(2): disc_manager.cut_queue_hymn(IsMirrara.new())
+register_effect(CS_HymnPlayDelay.new(2,10))
+DISC_SIMPLEDESC_PRAYERTOMIRRARA=
+Queues 2 Mirrara hymns, playing them at a shorter delay.
+
+DISC_TRUTHSEEKER=Truth Seeker
+DISC_DESC_TRUTHSEEKER=
+if event is PerilBlockEvent or event is PerilGainEvent:
+	stack -= 1
+register_effect(Timed_SpeedChange.new(0.1, +0.4))
+DISC_SIMPLEDESC_TRUTHSEEKER=
+Gain a Speed buff until Peril is blocked/consumed.
+
+DISC_UNYIELDINGJUSTICE=Unyielding Justice
+DISC_DESC_UNYIELDINGJUSTICE=
+for i in range(2):
+	disc_manager.hymn_buffer[i].replayable = true
+DISC_SIMPLEDESC_UNYIELDINGJUSTICE=
+The next 2 hymns are shuffled back into the disc when played.
+
+DISC_SERENITY=Serenity
+DISC_DESC_SERENITY=
+if event is EatEvent:
+	if event.item.item_name == "ITEM_REDBERRIES":
+		register_effect(Timed_SilentFoot.new(4))
+DISC_SIMPLEDESC_SERENITY=
+Until the next hymn, eating Red Berries also grants 4 seconds of Silent Foot.
+
+DISC_EAVESDROPPER=Eavesdropper
+DISC_DESC_EAVESDROPPER=
+register_effect(Timed_SilentFoot.new(12))
+register_effect(Timed_SpeedChange.new(12,0.4))
+DISC_SIMPLEDESC_EAVESDROPPER=
+Gain Silent Foot and Speed for 12 seconds.
+
+DISC_THEBOYWHOBROKEDOORS=The Boy Who Broke Doors
+DISC_DESC_THEBOYWHOBROKEDOORS=
+add_peril(5)
+lvl.spawn_scrap(7)
+DISC_SIMPLEDESC_THEBOYWHOBROKEDOORS=
+Gain 5 Peril. Drop 7 Scrap on the current floor.
+
+DISC_THESHERIFFSGAZE=The Sheriff's Gaze
+DISC_DESC_THESHERIFFSGAZE=
+if event is PerilGainEvent:
+	add_money(2)
+DISC_SIMPLEDESC_THESHERIFFSGAZE=
+Until the next hymn is played, gain 2 Eeples for each time Peril is generated.
+
+DISC_GAMMONSMERRYBALLAD=Gammon's Merry Ballad
+DISC_DESC_GAMMONSMERRYBALLAD=
+for item:Item in lvl.items.get_children():
+	if item.value == Item.Value.Artifact: has_artifact = true
+	if has_artifact: register_effect(Timed_SpeedChange.new(25,0.4))
+	else: Main.main.add_peril(7)
+DISC_SIMPLEDESC_GAMMONSMERRYBALLAD=
+When an Artifact is uncollected, Gain 25 seconds of Speed.
+Otherwise, increase Peril by 7.
+
+DISC_PRAYERTOGAMMON=Prayer To Gammon
+DISC_DESC_PRAYERTOGAMMON=
+for item:Item in resources.inventory:
+	add_money(item.sell_value / 2)
+	add_peril(3 * (1 if item.value != Value.Artifact else 2))
+	spawn_scrap(7)
+DISC_SIMPLEDESC_PRAYERTOGAMMON=
+Gain Eeples equal to half the combined sell value of your inventory.
+Gain 3 Peril for each item affected, doubled if it's an artifact.
+
+DISC_RECKLESSCHARGE=Reckless Charge
+DISC_DESC_RECKLESSCHARGE=
+if event is DamageEvent and event.player_hurt:
+	total_damage += (event as DamageEvent).damage
+	if total_damage >= 10:
+		lvl.drop_item(BigEepleBag,3); lvl.spawn_scrap(8)
+DISC_SIMPLEDESC_RECKLESSCHARGE=
+Drop 3 Big Bags of Eeples and 8 Scrap if you lose at least 10 Health in 4 seconds.
 
 END_OF_DIALOG_FILE

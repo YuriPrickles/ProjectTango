@@ -8,12 +8,12 @@ func _init(pos) -> void:
 	y_sort_offset = 8
 	touching = false
 	spr_dict={
-		104: Vector2(0,0),
-		105: Vector2(1,0),
-		106: Vector2(2,0),
-		120: Vector2(0,1),
-		121: Vector2(1,1),
-		122: Vector2(2,1),
+		106: Vector2(0,0),
+		107: Vector2(1,0),
+		108: Vector2(2,0),
+		122: Vector2(0,1),
+		123: Vector2(1,1),
+		124: Vector2(2,1),
 	}
 	queue_redraw()
 

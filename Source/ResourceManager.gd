@@ -41,6 +41,10 @@ func initialize_inventory():
 	inv_selected = 0
 	money = 999
 	inventory[0] = PrairieKingGun.new()
+	inventory[1] = RedBerries.new()
+	inventory[2] = Metal.new()
+	inventory[3] = Wires.new()
+	inventory[4] = Battery.new()
 
 
 func add_money(value):

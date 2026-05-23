@@ -11,5 +11,5 @@ func _init(st:int) -> void:
 func process_event(event:Event):
 	if event is PerilBlockEvent:
 		var bus = Main.main.get_level().event_bus
-		bus.register_effect(SilentFoot.new(3))
+		bus.register_effect(Timed_SilentFoot.new(3))
 	super(event)

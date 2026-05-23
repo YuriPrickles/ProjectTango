@@ -8,5 +8,5 @@ func _init() -> void:
 	super._init(DiscID.Search)
 
 func on_play(was_destroyed) -> void:
-	Main.disc_manager.cut_queue_hymn(MatchLastPatron.new())
 	super.on_play(was_destroyed)
+	Main.disc_manager.cut_queue_hymn(MatchLastPatron.new())

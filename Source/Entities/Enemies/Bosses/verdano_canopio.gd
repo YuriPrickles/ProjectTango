@@ -98,7 +98,7 @@ func _draw() -> void:
 			spr_index_offset += 16
 			if index == 103: continue
 		if index == 102:
-			spr_index_offset += Utils.blink(Utils.blink(5,6,24),0,12)
+			spr_index_offset += Utils.blink(Utils.blink(2,3,24),0,12)
 		var flipXval = Vector2(1,1) if facing == Vector2(-1,0) else Vector2(-1,1)
 		if facing.y != 0: flipXval = Vector2(1,1)
 		Main.spr(Main.GameAtlas,self, extra_offset + (offset) + (body_dict.get(index)) * (Main.SPR_SIZE),spr_index_offset + index,Main.colors[7],flipXval)

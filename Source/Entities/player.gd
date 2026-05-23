@@ -58,6 +58,10 @@ func _process(delta: float) -> void:
 	if no_draw: return
 	queue_redraw()
 var snap_pos
+
+var positive_speed_mod = 0
+var negative_speed_mod = 0
+var final_speed_mod = 0
 func _physics_process(delta: float) -> void:
 	snap_pos = Vector2(int(position.x) % 8 * 8,int(position.y) % 8 * 8)
 	#camera.rotation = get_angle_to(position + direction)
@@ -71,8 +75,18 @@ func _physics_process(delta: float) -> void:
 			facing = direction
 			if no_draw: return
 			queue_redraw()
-			velocity = direction * SPEED * (1.9 if running and not sneaking else (1.0 if not sneaking else 0.4))
+			velocity = direction * (SPEED * final_speed_mod) * (1.9 if running and not sneaking else (1.0 if not sneaking else 0.4))
 		else:
+			negative_speed_mod = 0
+			positive_speed_mod = 0
+			var mevent:MoveEvent = MoveEvent.new(0,self)
+			if mevent.speedmod < 0:
+				if abs(mevent.speedmod) > negative_speed_mod:
+					negative_speed_mod = abs(mevent.speedmod)
+			else:
+				if abs(mevent.speedmod) > positive_speed_mod:
+					positive_speed_mod = abs(mevent.speedmod)
+			final_speed_mod = 1 + (positive_speed_mod - negative_speed_mod)
 			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
 	else:
 		kb_override_vector = kb_override_vector.move_toward(Vector2.ZERO, SPEED * .25)
@@ -172,13 +186,3 @@ func throw():
 
 func get_damage(base):
 	return base * damage_mult
-
-func add_effect(effect_id:int):
-	for effect:Effect in effects.keys():
-		if effect.effect_id == effect_id:
-			effects[effect] += 1
-			return
-	#effects[Effect.new_effect(effect_id)] = 1
-
-func has_effect(effect_id:int):
-	return effects.has(effect_id)

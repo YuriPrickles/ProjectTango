@@ -3,7 +3,7 @@ extends Disc
 
 func _init() -> void:
 	patron = Patron.Godless
-	rarity = Rarity.Common
+	rarity = Rarity.Trash
 	cost = 1
 	super._init(DiscID.UNREADABLE)
 

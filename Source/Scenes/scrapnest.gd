@@ -4,7 +4,7 @@ extends Node2D
 var main_rect:Rect2 = Rect2(0,0,320,180)
 var board_rect:Rect2 = Rect2(0,8,112,120)
 var box_rect:Rect2 = Rect2(8,128,304,48)
-var susan_sprite:SquallitaSprite
+var dolores_sprite:DoloresSprite
 var sellbox:SellBox
 var texture:Texture2D = preload("res://Graphics/Fullscreens/scrapnest_bg.png")
 static var BoardFontTexture:Texture2D = preload("res://Graphics/Atlases/Fonts/boardfont.png")
@@ -12,19 +12,35 @@ var FONTCHAR_SIZE = Vector2(8,16)
 var fontmap = "c1234567890"
 func _ready() -> void:
 	z_index = Main.Depths.Fullscreens
-	susan_sprite = SquallitaSprite.new()
+	dolores_sprite = DoloresSprite.new()
 	sellbox = SellBox.new()
 	var rect = StupidRectangle.new()
 	add_child(rect)
-	add_child(susan_sprite)
+	add_child(dolores_sprite)
 	add_child(sellbox)
 	queue_redraw()
 
 
 func _process(delta: float) -> void:
-	susan_sprite.queue_redraw()
+	dolores_sprite.queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if Main.game_state != Main.GameState.CUTSCENE and event.is_action_pressed("special"):
+		var dialog:String = "DOLORES_SHOP_DEMAND_"
+		var max_index = 0
+		var rand_variant = (randi() % 1) + 1
+		var current_max_sellval = 0
+		for i in range(Main.main.resources.scrap_sells.size()):
+			if Main.main.resources.scrap_sells[i] > current_max_sellval:
+				current_max_sellval = Main.main.resources.scrap_sells[i]
+				max_index = i
+		match max_index:
+			0: dialog += "METAL_%s" % rand_variant
+			1: dialog += "WIRES_%s" % rand_variant
+			2: dialog += "BATTERIES%s" % rand_variant
+		Main.main.say(dialog,box_rect.position + Vector2(8,8),(Vector2((304-16)/4,(48-16)/6)))
+	if Main.game_state == Main.GameState.CUTSCENE:
+		return
 	if event.is_action_pressed("cancel"):
 		Main.main.remove_fullscreen()
 		Main.main.get_player().no_control = false
@@ -84,25 +100,25 @@ class StupidRectangle:
 	func _draw() -> void:
 		draw_rect(Rect2(0,0,320,180),Main.colors[0])
 	
-class SquallitaSprite:
+class DoloresSprite:
 	extends Node2D
-	var squallita_rect:Rect2 = Rect2(112,8,168,120)
-	var emotion_eye_rect: Rect2 = Rect2(280,64,32,32)
+	var dolores_rect:Rect2 = Rect2(112,8,168,120)
+	#var emotion_eye_rect: Rect2 = Rect2(280,64,32,32)
 	var texture:Texture2D = preload("res://Graphics/Fullscreens/scrapnest_bg.png")
-	var noise:NoiseTexture2D = NoiseTexture2D.new()
+	#var noise:NoiseTexture2D = NoiseTexture2D.new()
 	func _ready() -> void:
 		z_index = 99
 		z_as_relative = false
-		var noise_noise = FastNoiseLite.new()
-		noise_noise.frequency = 1
-		noise_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-		noise.noise = noise_noise
+		#var noise_noise = FastNoiseLite.new()
+		#noise_noise.frequency = 1
+		#noise_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+		#noise.noise = noise_noise
 	var offset_y_strength = 0.02
 	func _draw() -> void:
-		var blinkdelay = 43
-		var eye_y = abs(32 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 0)
-		var noise_eye_rect: Rect2 = Rect2(280,eye_y,32,32)
+		#var blinkdelay = 43
+		#var eye_y = abs(32 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 0)
+		#var noise_eye_rect: Rect2 = Rect2(280,eye_y,32,32)
 		var offset_y = sin(Engine.get_process_frames() * offset_y_strength)
-		texture.draw_rect_region(get_canvas_item(),Rect2(120,8 + offset_y + 2,168,120),squallita_rect)
-		noise.draw_rect_region(get_canvas_item(),Rect2(208,40 + offset_y + 2,32,32),Rect2(Engine.get_frames_drawn() % 32 * 8,Engine.get_frames_drawn() % 32 * 8,32,32))
-		texture.draw_rect_region(get_canvas_item(),Rect2(208,40 + offset_y + 2,32,32),noise_eye_rect)
+		texture.draw_rect_region(get_canvas_item(),Rect2(120,8 + offset_y + 2,168,120),dolores_rect)
+		#noise.draw_rect_region(get_canvas_item(),Rect2(208,40 + offset_y + 2,32,32),Rect2(Engine.get_frames_drawn() % 32 * 8,Engine.get_frames_drawn() % 32 * 8,32,32))
+		#texture.draw_rect_region(get_canvas_item(),Rect2(208,40 + offset_y + 2,32,32),noise_eye_rect)

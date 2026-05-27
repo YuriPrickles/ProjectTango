@@ -476,4 +476,24 @@ if event is DamageEvent and event.player_hurt:
 DISC_SIMPLEDESC_RECKLESSCHARGE=
 Drop 3 Big Bags of Eeples and 8 Scrap if you lose at least 10 Health in 4 seconds.
 
+################## DIALOGUE! ########################
+
+DOLORES_SHOP_DEMAND_METAL_1=
+Greetings, Princess Squallita. There is a high demand on metal today.
+Doesn't really matter what kind, the Vesselmasters just want their boats made.
+
+DOLORES_SHOP_DEMAND_METAL_2=
+Greetings, Princess Squallita. There is a high demand on metal today.
+The Pillowfort Furniture Co. is restocking their "Very Hard Metal Pillows".
+
+DOLORES_SHOP_DEMAND_WIRES_1=
+Greetings, Princess Squallita. There is a high demand on wires today.
+Selling these to some real freaks at the Giggle Gang. They're making those electrocution nets that use exposed copper wiring.
+I think this technically makes me an arms dealer now.
+
+DOLORES_SHOP_DEMAND_BATTERIES_1=
+Greetings, Princess Squallita. There is a high demand on batteries today.
+They're thinking about attempting to make Battery Bites a thing again.
+Personally, I don't see it doing as well as it did last decade.
+
 END_OF_DIALOG_FILE

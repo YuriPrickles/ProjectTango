@@ -31,8 +31,15 @@ static var disc_list:Dictionary[int,Disc]={
 	DiscID.PrayerToGammon: PrayerToGammon.new(),
 	DiscID.RecklessCharge: RecklessCharge.new(),
 }
-func get_random_disc():
+func get_random_disc() -> Disc:
 	return disc_list.get(randi() % (disc_list.size() - 1))
+func get_of_rarity(rarity:Disc.Rarity) -> Disc:
+	var disc:Disc = disc_list.get(DiscID.UNREADABLE)
+	var max_tries = 100
+	while disc.rarity != rarity and max_tries>0:
+		disc = get_random_disc()
+		max_tries -= 1
+	return disc
 var cd_player_timer:Timer = Timer.new()
 @export var stored_discs:Dictionary[Disc,int]
 @export var cd:Dictionary[Disc,int]

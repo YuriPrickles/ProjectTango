@@ -24,15 +24,27 @@ var inv_selected:
 		if Main.main.get_level() and not Main.main.get_level().event_bus.get_effects().is_empty():
 			print(Main.main.get_level().event_bus.get_effects())
 
+const MAX_DISCS_IN_SHOP = 14
 func new_run_refresh():
 	peril = 0
 	peril_block = 0
 	for i in range(3):
 		scrap_sells[i] = RandomNumberGenerator.new().randi_range(2,7)
-	disc_shop.resize(14)
-	disc_shop.fill(null)
-	for i in range(14):
-		disc_shop[i] = Main.disc_manager.get_random_disc()
+	disc_shop.clear()
+	var rarity_weights:Dictionary[int,Disc.Rarity] ={
+		7: Disc.Rarity.Common,
+		5: Disc.Rarity.Uncommon,
+		2: Disc.Rarity.Rare,
+	}
+	for weight:int in rarity_weights.keys():
+		for i in range(weight):
+			var rarity = rarity_weights.get(weight)
+			if rarity_weights.get(weight) == Disc.Rarity.Rare and randi() % 100 < 3:
+				rarity = Disc.Rarity.Scrumptious
+			var disc = Main.disc_manager.get_of_rarity(rarity)
+			if not disc:
+				Main.disc_manager.get_of_rarity(Disc.Rarity.Common)
+			disc_shop.append(disc)
 
 func initialize_inventory():
 	money = 0

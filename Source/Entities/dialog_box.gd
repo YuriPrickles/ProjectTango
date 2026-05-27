@@ -76,7 +76,6 @@ func _process(delta: float) -> void:
 		for wr in word_arr:
 			for chr in wr:
 				if not is_writing:
-					print("stoppp")
 					break
 				display_array[index] += chr
 				await get_tree().create_timer(0.04).timeout
@@ -106,3 +105,5 @@ var current_rect:Rect2 = Rect2(Vector2.ZERO,Vector2(1,1))
 func _draw() -> void:
 	draw_rect(current_rect.grow(1),color)
 	Main.draw_text(self,display_array,Vector2.ZERO)
+	if not is_writing and grown_to_full:
+		Main.draw_text(self,">",current_rect.size - Vector2(Main.FONTCHAR_SIZE),Main.colors[Utils.blink(0,7,24)])

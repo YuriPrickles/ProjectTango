@@ -59,8 +59,12 @@ func _draw() -> void:
 			var lvl = Main.main.current_level
 			var effect_arr:Array[Effect] = lvl.event_bus.effects
 			var effect_list_pos = compass_pos + Vector2(18,0)
+			var skipped_effects:int = 0
 			for i in range(effect_arr.size()):
-				var separation = Main.SPR_SIZE * i * 1.5
+				if effect_arr[i].icon_index == -1:
+					skipped_effects += 1
+					continue
+				var separation = Main.SPR_SIZE * max(0, i - skipped_effects) * 1.5
 				Main.spr(effect_arr[i].icon_atlas,self,effect_list_pos + Vector2(separation,0),effect_arr[i].icon_index)
 				if effect_arr[i] is TimedEffect:
 					var timed_eff:TimedEffect = effect_arr[i]

@@ -1,6 +1,7 @@
 class_name Disc
 extends Resource
 enum Rarity{
+	Trash = -1,
 	Common = 0,
 	Uncommon = 1,
 	Rare = 2,
@@ -42,11 +43,12 @@ func get_rarity():
 
 func get_rarity_color():
 	match rarity:
+		Rarity.Trash: return 1
 		Rarity.Common: return 5
-		Rarity.Uncommon: return 4
-		Rarity.Rare: return 2
-		Rarity.Scrumptious: return 9
-	return 5
+		Rarity.Uncommon: return 3
+		Rarity.Rare: return 12
+		Rarity.Scrumptious: return 14
+	return 1
 
 func is_godless() -> bool:
 	return patron == Patron.Godless

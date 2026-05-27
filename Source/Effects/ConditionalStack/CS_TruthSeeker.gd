@@ -4,7 +4,7 @@ extends ConditionalStackEffect
 func _init(st:int) -> void:
 	effect_name = "Truth Seeker"
 	icon_atlas = Main.GameAtlas
-	icon_index = 169
+	icon_index = -1
 	super._init(st)
 
 func process_event(event:Event):

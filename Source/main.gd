@@ -318,5 +318,9 @@ static func draw_text(canvas_item:CanvasItem,string:Variant, pos:Vector2, color:
 
 func say(dialog_key:String,pos:Vector2,size:Vector2,color:Color=Main.colors[0]):
 	var dialog_entry:Array[String]
-	dialog_entry.append_array(main_lang.get_dialog(dialog_key))
+	var acquired_dialog = main_lang.get_dialog(dialog_key)
+	if acquired_dialog is String:
+		dialog_entry.append(acquired_dialog)
+	else:
+		dialog_entry.append_array(acquired_dialog)
 	dialog_layer.add_child(DialogBox.new(dialog_entry,pos,size,color))

@@ -3,7 +3,7 @@ class_name HymnShop
 func _init(pos) -> void:
 	super._init(pos,Rect2(-40,8,40,8))
 	var static_body:StaticBody2D = StaticBody2D.new()
-	Utils.attach_collision_shape(static_body,Rect2(-40,6,40,4),on_touch_thing,null)
+	Utils.attach_collision_shape(static_body,Rect2(-40,3,40,4),on_touch_thing,null)
 	add_child(static_body)
 	y_sort_offset = 8
 	touching = false
@@ -30,6 +30,6 @@ func _input(event: InputEvent) -> void:
 		plr.no_control = true
 		Main.main.change_fullscreen(SusansWagon.new())
 func _draw() -> void:
-	draw_from_dict(spr_dict,-offset/2,0)
+	draw_from_dict(spr_dict,-offset/2 + Vector2(0,-6),0)
 	if touching:
 		Main.draw_text(self, "SUSAN_HOVERTEXT", Vector2(0,-24),Main.colors[7],Main.colors[0],false,true)

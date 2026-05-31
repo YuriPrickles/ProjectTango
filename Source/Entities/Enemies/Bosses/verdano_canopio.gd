@@ -46,9 +46,22 @@ func _init(pos) -> void:
 var head_switch_delay = 0
 const head_switch_delay_MAX = 0.3
 var switching = false
+enum Attacks {
+	Idle,
+	PoisonOrb,
+	Rooting,
+	
+}
+var current_attack:Attacks = Attacks.Idle
+var attack_timer:float = 0
+var counter = 0
+var moving = false
 func _process(delta: float) -> void:
+	name = "verdano"
 	super._process(delta)
 	var plr:Player = Main.main.get_player()
+	var lvl = Main.main.get_level()
+	attack_timer += delta
 	if old_facing != facing and not switching:
 		switching = true
 	if switching:
@@ -56,9 +69,64 @@ func _process(delta: float) -> void:
 		if head_switch_delay >= head_switch_delay_MAX:
 			head_switch_delay = 0
 			switching = false
-	if plr and plr.position.distance_to(position) < 640:
+	if moving and (plr and plr.position.distance_to(position) < 640):
 		set_movement_target(plr.position)
 		kb_dir = position.direction_to(plr.position)
+	match current_attack:
+		Attacks.Idle:
+			moving = true
+			if attack_timer > 7:
+				current_attack = Attacks.PoisonOrb
+				attack_timer = 0
+		Attacks.PoisonOrb:
+			moving = false
+			facing = Vector2(0,1)
+			if attack_timer > 1:
+				shoot_orb(plr.position)
+				shoot_orb(plr.position,0.2,randf_range(-60,60))
+				shoot_orb(plr.position,0.2,randf_range(-60,60))
+				current_attack = Attacks.Rooting
+				attack_timer = 0
+		Attacks.Rooting:
+			moving = false
+			if counter == 0 and attack_timer > 2:
+				for i in range(3):
+					for j in range(3):
+						if (i == 0 or i == 2) and (j == 0 or j == 2):
+							continue
+						lvl.enemies.add_child.call_deferred(TwigPile.new((position + Vector2((i - 1) * 8,(j - 1) * 8)) - Vector2(8,8)))
+				attack_timer = 0
+				counter += 1
+			if counter >= 1 and attack_timer > 3:
+				var weed_array:Array[Snitchweed]
+				for i in range(counter-1):
+					for j in range(counter-1):
+						if (i == 0 or i == counter-2) or (j == 0 or j == counter-2):
+							weed_array.append(Snitchweed.new((position + Vector2((i - 1) * 8,(j - 1) * 8)) - Vector2(8,8)))
+				
+				for i in range(counter):
+					if not weed_array.is_empty():
+						var chosen_weed = weed_array.pick_random()
+						lvl.traps.add_child.call_deferred(chosen_weed)
+						weed_array.erase(chosen_weed)
+				counter += 1
+				attack_timer = 0
+				if counter > 6:
+					counter = 0
+					current_attack = Attacks.Idle
+					attack_timer = 0
+					
+var hitcount = 0
+const hits_for_twigpile = 4
+func hurt(value:int,source):
+	super(value,source)
+	if current_attack != Attacks.Rooting:
+		hitcount += 1
+		if hitcount > hits_for_twigpile:
+			hitcount = 0
+			var lvl = Main.main.get_level()
+			lvl.enemies.add_child.call_deferred(TwigPile.new(position - Vector2(8,8)))
+
 func _physics_process(delta):
 	if navigator.is_navigation_finished():
 		return
@@ -71,8 +139,12 @@ func _physics_process(delta):
 		facing = Vector2(1,0) * sign(final_vel.x)
 	if abs(final_vel.x) <= abs(final_vel.y) and facing != Vector2(0,1) * sign(final_vel.y):
 		facing = Vector2(0,1) * sign(final_vel.y)
-	if chasing:
+	if chasing and moving:
 		position += delta * final_vel * (snail_speed * (1 + float(Main.main.get_peril())/Main.MAX_PRL))
+
+func shoot_orb(target:Vector2, shoot_speed:float=0.5, rot:float=0):
+	var origin:Vector2 = position - Vector2(16, 16)
+	PoisonOrb.new(self,origin,(origin.direction_to(target - Vector2(16, 16)) * shoot_speed).rotated(deg_to_rad(rot)),7)
 
 func on_touch_thing(body):
 	if body is Player:
@@ -87,6 +159,7 @@ func leave_detect(body: Node2D) -> void:
 
 func _draw() -> void:
 	if not body_dict or not head_dict: return
+	var head_pos_offset:Vector2 = Vector2(0,0)
 	for index in body_dict.keys():
 		var spr_index_offset = 0
 		var extra_offset = Vector2(0,0)
@@ -104,15 +177,21 @@ func _draw() -> void:
 		Main.spr(Main.GameAtlas,self, extra_offset + (offset) + (body_dict.get(index)) * (Main.SPR_SIZE),spr_index_offset + index,Main.colors[7],flipXval)
 	var head_spr_index_offset = 0 if not switching else 3
 	var bobbing_offset = Vector2(0,sin(Engine.get_frames_drawn() * 0.1) + 1)
-	draw_from_dict(head_dict,offset + bobbing_offset,head_spr_index_offset)
+	if current_attack == Attacks.Rooting:
+		if counter >= 1:
+			head_pos_offset.y =  8
+		else:
+			head_pos_offset.y = lerp(0,8,attack_timer/2)
+	var finaL_pos = offset + bobbing_offset + head_pos_offset
+	draw_from_dict(head_dict,finaL_pos,head_spr_index_offset)
 	var plr = Main.main.get_player()
 	if not switching:
-		var eyes = [Vector2(4,-9 + bobbing_offset.y),Vector2(-4,-11 + bobbing_offset.y),Vector2(12,-11 + bobbing_offset.y)]
+		var eyes = [Vector2(4,-9),Vector2(-4,-11),Vector2(12,-11)]
 		for eye in eyes:
-			draw_circle(eye + position.direction_to(plr.position),1,Main.colors[2], true,0)
+			draw_circle(eye + finaL_pos + position.direction_to(plr.position),1,Main.colors[2])
 	else:
 		var eyes = [Vector2(-3,-9 + bobbing_offset.y),Vector2(11,-9 + bobbing_offset.y)]
 		for eye in eyes:
-			draw_circle(eye + position.direction_to(plr.position),1,Main.colors[2], true,0)
+			draw_circle(eye + position.direction_to(plr.position),1,Main.colors[2])
 	if chasing:
 		Main.draw_text(self,"!", Vector2(0,-30),Main.colors[8],Main.colors[0],false,true)

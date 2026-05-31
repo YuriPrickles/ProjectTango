@@ -19,6 +19,7 @@ var solid = false
 var spr_dict:Dictionary[int,Vector2]
 
 func _init(pos,collision:Rect2,_solid=false) -> void:
+	y_sort_enabled = true
 	if name_file:
 		var file = FileAccess.open(name_file, FileAccess.READ)
 		var name_arr:PackedStringArray = file.get_as_text().split("\n")
@@ -37,10 +38,10 @@ func _init(pos,collision:Rect2,_solid=false) -> void:
 
 func _process(delta: float) -> void:
 	var plr:Player = Main.main.get_player()
-	if plr.position.y > position.y + y_sort_offset:
-		z_index = Main.Depths.BelowPlayer
-	else:
-		z_index = Main.Depths.AbovePlayer
+	#if plr.position.y > position.y + y_sort_offset:
+		#z_index = Main.Depths.BelowPlayer
+	#else:
+		#z_index = Main.Depths.AbovePlayer
 ##Override this function for behavior when the player collides with the enemy.
 func on_touch_thing(body):
 	pass

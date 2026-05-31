@@ -57,6 +57,7 @@ func _process(delta: float) -> void:
 		print("Pathways: %s" % dungeon_layout.paths.size())
 		print("Scrap: %s" % items.get_child_count())
 		spawned = true
+		#move_child(player,items.get_index())
 
 func spawn_enemies():
 	for room:Branch in dungeon_layout.rooms:

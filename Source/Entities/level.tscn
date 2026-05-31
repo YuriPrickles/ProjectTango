@@ -5,7 +5,7 @@
 
 [node name="Level" type="Node2D" unique_id=2088028645]
 process_mode = 1
-z_as_relative = false
+y_sort_enabled = true
 script = ExtResource("1_2y2gb")
 
 [node name="Floor" type="TileMapLayer" parent="." unique_id=1197865555]
@@ -20,11 +20,16 @@ tile_set = ExtResource("2_2y2gb")
 color = Color(0.20929888, 0.2451267, 0.18895498, 1)
 
 [node name="Items" type="Node2D" parent="." unique_id=1896694085]
-
-[node name="Enemies" type="Node2D" parent="." unique_id=957493013]
+y_sort_enabled = true
 
 [node name="Traps" type="Node2D" parent="." unique_id=1808434440]
+y_sort_enabled = true
+
+[node name="Enemies" type="Node2D" parent="." unique_id=957493013]
+y_sort_enabled = true
 
 [node name="OtherThings" type="Node2D" parent="." unique_id=626437170]
+y_sort_enabled = true
 
 [node name="Projectiles" type="Node2D" parent="." unique_id=1288945030]
+y_sort_enabled = true

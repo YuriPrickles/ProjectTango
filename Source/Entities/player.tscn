@@ -17,7 +17,7 @@ shader_parameter/pixel_size = Vector2(32, 32)
 
 [node name="Player" type="CharacterBody2D" unique_id=1987243598]
 process_mode = 1
-z_index = 1
+y_sort_enabled = true
 collision_mask = 62
 motion_mode = 1
 script = ExtResource("1_7x6ql")
@@ -30,7 +30,7 @@ position_smoothing_enabled = true
 rotation_smoothing_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2131081055]
-position = Vector2(0, 2)
+position = Vector2(0, 4)
 shape = SubResource("RectangleShape2D_dy60o")
 
 [node name="InnerLight" type="PointLight2D" parent="." unique_id=761631257]

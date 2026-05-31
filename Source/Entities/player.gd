@@ -27,7 +27,7 @@ var effects:Dictionary[Effect,int]
 var damage_mult = 1
 
 func _ready() -> void:
-	z_index = Main.Depths.Player
+	#z_index = Main.Depths.Player
 	kb_override = false
 	width = 8
 	height = 8
@@ -139,6 +139,7 @@ func _draw() -> void:
 	#Main.main.draw_text_centered(self,"hi pearlings", (Vector2(0,-32)))
 	#Main.main.draw_text_centered(self,"centered text", (Vector2(0,-24)))
 	#Main.main.draw_text("uncentered text", (Vector2(0,-16)))
+	
 	if no_draw: return
 	if facing:
 		spr_index = (1 if facing.x > 0 else 3) if facing.x != 0 else (2 if facing.y < 0 else 0)
@@ -146,7 +147,7 @@ func _draw() -> void:
 			#spr_index += Utils.blink(131,147,12)
 			spr_index += Utils.blink(0,Utils.blink(131,147,12),6)
 	if floori(iframe_timer * 100.0) % 4 == 0 and iframe_timer < IFRAMES:
-		Main.spr(Main.GameAtlas,self,size/-2,spr_index)
+		Main.spr(Main.GameAtlas,self,-size/2,spr_index)
 
 func hurt(value, hurter:Entity):
 	if iframe_timer > 0 or no_control or value == 0: return

@@ -18,8 +18,8 @@ var starting_pos:Vector2
 var ending_pos:Vector2
 
 var damage_mult:float
-signal add_to_damage_mult(value:float)
 func _init(p_owner,pos,collision:Rect2,_velocity:Vector2,_hostile:bool,_damage:int,_hits:int,_lifetime:float) -> void:
+	super(pos,collision)
 	starting_pos = pos
 	velocity = _velocity
 	hostile = _hostile
@@ -37,10 +37,10 @@ func _init(p_owner,pos,collision:Rect2,_velocity:Vector2,_hostile:bool,_damage:i
 	queue_redraw()
 
 func clear_collisions():
-	disconnect("body_entered",on_touch_thing)
-	disconnect("body_exited",on_untouch_thing)
-	disconnect("area_entered",on_touch_thing)
-	disconnect("area_exited",on_untouch_thing)
+	if is_connected("body_entered",on_touch_thing): disconnect("body_entered",on_touch_thing)
+	if is_connected("body_exited",on_untouch_thing): disconnect("body_exited",on_untouch_thing)
+	if is_connected("area_entered",on_touch_thing): disconnect("area_entered",on_touch_thing)
+	if is_connected("area_exited",on_untouch_thing): disconnect("area_exited",on_untouch_thing)
 	for col in get_children():
 		if col is CollisionShape2D:
 			col.queue_free()

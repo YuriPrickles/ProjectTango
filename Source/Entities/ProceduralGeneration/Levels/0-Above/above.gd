@@ -8,6 +8,7 @@ func _process(delta: float) -> void:
 	if !spawned:
 		player = spawn_player()
 		spawned = true
+		#move_child(player,items.get_index())
 func spawn_player():
 	var plr:Player = preload("res://Source/Entities/player.tscn").instantiate()
 	var player_pos:Vector2i = Vector2i(160,70)

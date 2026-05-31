@@ -5,7 +5,7 @@ func _init(pos) -> void:
 	var static_body:StaticBody2D = StaticBody2D.new()
 	Utils.attach_collision_shape(static_body,Rect2(-24,6,24,4),on_touch_thing,null)
 	add_child(static_body)
-	y_sort_offset = 8
+	
 	touching = false
 	spr_dict={
 		106: Vector2(0,0),

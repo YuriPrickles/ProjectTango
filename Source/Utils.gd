@@ -52,6 +52,24 @@ static func attach_round_collision_shape(thing:CollisionObject2D,radius:float,on
 	if thing is Trap:
 		thing.set_collision_layer_value(4,true)
 		thing.set_collision_mask_value(1,true)
+	if thing is Enemy:
+		thing.set_collision_layer_value(5,true)
+		thing.set_collision_mask_value(1,true)
+		thing.set_collision_mask_value(6,true)
+	if thing is Projectile:
+		thing.set_collision_layer_value(5,true)
+		thing.set_collision_layer_value(6,true)
+		thing.set_collision_mask_value(1,true)
+		thing.set_collision_mask_value(2,true)
+		thing.set_collision_mask_value(5,true)
+		thing.set_collision_mask_value(6,true)
+	if thing is StaticBody2D:
+		thing.set_collision_layer_value(2,true)
+		thing.set_collision_mask_value(1,true)
+		thing.set_collision_mask_value(2,true)
+		if thing is DecorObject:
+			thing.set_collision_mask_value(1,true)
+			thing.set_collision_mask_value(6,true)
 	var colmask = CollisionShape2D.new()
 	var shape = CircleShape2D.new()
 	shape.radius = radius

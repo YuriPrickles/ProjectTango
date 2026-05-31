@@ -28,9 +28,13 @@ var padding = Vector4i(0,0,1,1)
 var spawned = false
 
 func _process(delta:float) -> void:
+	if player: move_child(player,items.get_index() - 1)
 	event_bus.tick_down(delta)
 
-func spawn_player() -> void: pass
+func spawn_player() -> void:
+	var plr = Main.main.get_player()
+	if plr:
+		move_child(plr,items.get_index() - 1)
 func spawn_enemies() -> void: pass
 func spawn_scrap(amount:int) -> void: pass
 func spawn_treasures() -> void: pass

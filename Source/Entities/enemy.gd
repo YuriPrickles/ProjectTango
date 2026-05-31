@@ -40,8 +40,9 @@ var stun_time:float=0
 func vanquish():
 	Main.main.add_peril(peril_penalty)
 	queue_free()
-
+var snap_pos:Vector2
 func _process(delta: float) -> void:
+	snap_pos = Vector2(int(position.x) % 8 * 8,int(position.y) % 8 * 8)
 	if damage_flash_self_only:
 		self_modulate = Main.colors[7] if floori(iframe_timer * 100.0) % 4 == 0 and iframe_timer < IFRAMES else Main.colors[8]
 	else:

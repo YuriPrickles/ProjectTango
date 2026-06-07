@@ -47,6 +47,7 @@ func _process(delta: float) -> void:
 	else:
 		refill_delay += delta
 		if refill_delay >= refill_delay_max:
+			refill_delay = refill_delay_max
 			current_stamina = clampf(current_stamina + delta * 10,0,health)
 	if iframe_timer > 0:
 		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)

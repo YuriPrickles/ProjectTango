@@ -2,8 +2,7 @@ class_name SaveLoad
 extends Node
 
 const base_path = "user://savefile.tres"
-const res_path = "user://resources.tres"
-const disc_path = "user://disc.tres"
+const options_path = "user://options.tres"
 
 static var savefile = Savefile.new()
 
@@ -17,7 +16,7 @@ static func save_game():
 	savefile.disc_manager = Main.main.disc_manager
 	savefile.resource_manager = Main.main.resources
 	return ResourceSaver.save(savefile,base_path,ResourceLoader.CACHE_MODE_IGNORE)
-	
+
 
 static func load_game() -> bool:
 	if not ResourceLoader.exists(base_path):

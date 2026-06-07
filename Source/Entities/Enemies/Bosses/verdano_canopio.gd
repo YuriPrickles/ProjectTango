@@ -1,6 +1,6 @@
 class_name Verdano
 extends Enemy
-var snail_speed = 10
+var snail_speed = 20
 var current_agent_position: Vector2
 var next_path_position: Vector2
 var kb_dir:Vector2
@@ -21,23 +21,24 @@ var body_dict:Dictionary[int,Vector2]={
 	103:Vector2(1,0),
 }
 func _init(pos) -> void:
-	super._init(pos,Rect2(-4,0,8,4))
-	offset = Vector2(0,0)
+	super._init(pos,Rect2(4,0,8,4))
+	draw_offset = Vector2(0,-4)
 	dmg_source_name = "Verdano Canopio"
 	Health = 300
 	MaxHealth = 300
 	navigator = NavigationAgent2D.new()
 	navigator.radius = 64
+	peril_penalty = 20
 	#navigator.debug_enabled = true
 	navigator.avoidance_enabled = true
 	navigator.path_desired_distance = 4.0
 	navigator.target_desired_distance = 0.0
 	add_child(navigator)
 	var detection_range:Area2D = Area2D.new()
-	Utils.attach_round_collision_shape(detection_range,128,on_detect,Vector2(-2,0))
+	Utils.attach_round_collision_shape(detection_range,128,on_detect,Vector2(0,0))
 	
 	var leave_range:Area2D = Area2D.new()
-	Utils.attach_round_collision_shape(leave_range,128,null,Vector2(-2,0))
+	Utils.attach_round_collision_shape(leave_range,128,null,Vector2(0,0))
 	leave_range.connect("body_exited",leave_detect)
 	
 	add_child(detection_range)
@@ -50,12 +51,15 @@ enum Attacks {
 	Idle,
 	PoisonOrb,
 	Rooting,
-	
+	Rush,
 }
 var current_attack:Attacks = Attacks.Idle
 var attack_timer:float = 0
 var counter = 0
 var moving = false
+const porb_delay:float = 1
+const weed_grow_delay:float = 2
+const rush_delay:float = 1.5
 func _process(delta: float) -> void:
 	name = "verdano"
 	super._process(delta)
@@ -64,6 +68,8 @@ func _process(delta: float) -> void:
 	attack_timer += delta
 	if old_facing != facing and not switching:
 		switching = true
+	if current_attack == Attacks.Rush:
+		switching = Utils.blink(true,false,2 + (12 * attack_timer/rush_delay))
 	if switching:
 		head_switch_delay += delta
 		if head_switch_delay >= head_switch_delay_MAX:
@@ -76,33 +82,60 @@ func _process(delta: float) -> void:
 		Attacks.Idle:
 			moving = true
 			if attack_timer > 7:
-				current_attack = Attacks.PoisonOrb
+				current_attack = Attacks.PoisonOrb if Utils.maybe() else Attacks.Rush
+				moving = false
 				attack_timer = 0
 		Attacks.PoisonOrb:
 			moving = false
 			facing = Vector2(0,1)
-			if attack_timer > 1:
+			if attack_timer > porb_delay:
 				shoot_orb(plr.position)
 				shoot_orb(plr.position,0.2,randf_range(-60,60))
 				shoot_orb(plr.position,0.2,randf_range(-60,60))
 				current_attack = Attacks.Rooting
 				attack_timer = 0
+		Attacks.Rush:
+			if counter == 0 and attack_timer > weed_grow_delay:
+				hitcount = 0
+				set_movement_target(plr.position)
+				kb_dir = position.direction_to(plr.position)
+				attack_timer = 0
+				counter = 1
+				moving = true
+			if counter >= 1:
+				moving = true
+				if Engine.get_frames_drawn() % 6 == 0:
+					shoot_seed(plr.position)
+				set_movement_target(plr.position)
+				kb_dir = position.direction_to(plr.position)
+				snail_speed = 40
+				var rush_max = 2 + (4 * (Main.main.get_peril()/Main.MAX_PRL))
+				if attack_timer >= rush_max:
+					counter = 0
+					snail_speed = 20
+					current_attack = Attacks.Rooting
+					attack_timer = 0
 		Attacks.Rooting:
 			moving = false
-			if counter == 0 and attack_timer > 2:
+			if counter == 0 and attack_timer > weed_grow_delay:
+				hitcount = 0
 				for i in range(3):
 					for j in range(3):
 						if (i == 0 or i == 2) and (j == 0 or j == 2):
 							continue
-						lvl.enemies.add_child.call_deferred(TwigPile.new((position + Vector2((i - 1) * 8,(j - 1) * 8)) - Vector2(8,8)))
+						var twig_x = (i - 1) * 8
+						var twig_y = (j - 1) * 8
+						lvl.enemies.add_child.call_deferred(TwigPile.new((position + Vector2(twig_x + (twig_x % 8),twig_y + (twig_y % 8)))))
 				attack_timer = 0
 				counter += 1
-			if counter >= 1 and attack_timer > 3:
+			if counter >= 1 and attack_timer > 1.1:
 				var weed_array:Array[Snitchweed]
 				for i in range(counter-1):
 					for j in range(counter-1):
 						if (i == 0 or i == counter-2) or (j == 0 or j == counter-2):
-							weed_array.append(Snitchweed.new((position + Vector2((i - 1) * 8,(j - 1) * 8)) - Vector2(8,8)))
+							var weed_x = (i - 1) * 8
+							var weed_y = (j - 1) * 8
+							weed_array.append(Snitchweed.new((position + Vector2(weed_x + (weed_x % 8),weed_y + (weed_y % 8)) )))
 				
 				for i in range(counter):
 					if not weed_array.is_empty():
@@ -118,15 +151,26 @@ func _process(delta: float) -> void:
 					
 var hitcount = 0
 const hits_for_twigpile = 4
-func hurt(value:int,source):
-	super(value,source)
+const base_hits_for_rootskip = 6
+func hurt(value:int,source,iframe_override=IFRAMES):
+	if not super(value,source): return false
 	if current_attack != Attacks.Rooting:
 		hitcount += 1
 		if hitcount > hits_for_twigpile:
 			hitcount = 0
 			var lvl = Main.main.get_level()
-			lvl.enemies.add_child.call_deferred(TwigPile.new(position - Vector2(8,8)))
-
+			lvl.enemies.add_child.call_deferred(TwigPile.new(position + Vector2(int(position.x) % 8,int(position.y) % 8)))
+	elif counter >= 1:
+		attack_timer -= 0.15
+		hitcount += 1
+		if hitcount > base_hits_for_rootskip:
+			moving = true
+			hitcount = 0
+			counter = 0
+			current_attack = Attacks.Idle
+			attack_timer = 0
+			
+		
 func _physics_process(delta):
 	if navigator.is_navigation_finished():
 		return
@@ -143,9 +187,12 @@ func _physics_process(delta):
 		position += delta * final_vel * (snail_speed * (1 + float(Main.main.get_peril())/Main.MAX_PRL))
 
 func shoot_orb(target:Vector2, shoot_speed:float=0.5, rot:float=0):
-	var origin:Vector2 = position - Vector2(16, 16)
-	PoisonOrb.new(self,origin,(origin.direction_to(target - Vector2(16, 16)) * shoot_speed).rotated(deg_to_rad(rot)),7)
-
+	var origin:Vector2 = position
+	PoisonOrb.new(self,origin,(origin.direction_to(target) * shoot_speed).rotated(deg_to_rad(rot)),7)
+func shoot_seed(target:Vector2):
+	var origin:Vector2 = position
+	var proj = BerrySeed.new(self,origin,origin.direction_to(target) * 0,10)
+	proj.lifetime = 10
 func on_touch_thing(body):
 	if body is Player:
 		body.knockback(kb_dir, 200)
@@ -158,6 +205,7 @@ func leave_detect(body: Node2D) -> void:
 		chasing = false
 
 func _draw() -> void:
+	super()
 	if not body_dict or not head_dict: return
 	var head_pos_offset:Vector2 = Vector2(0,0)
 	for index in body_dict.keys():
@@ -181,7 +229,12 @@ func _draw() -> void:
 		if counter >= 1:
 			head_pos_offset.y =  8
 		else:
-			head_pos_offset.y = lerp(0,8,attack_timer/2)
+			head_pos_offset.y = lerp(0,8,attack_timer/weed_grow_delay)
+	elif current_attack == Attacks.Rush:
+		if counter >= 1:
+			head_pos_offset.y =  8
+		else:
+			head_pos_offset.y = lerp(0,8,attack_timer/rush_delay)
 	var finaL_pos = offset + bobbing_offset + head_pos_offset
 	draw_from_dict(head_dict,finaL_pos,head_spr_index_offset)
 	var plr = Main.main.get_player()
@@ -190,7 +243,7 @@ func _draw() -> void:
 		for eye in eyes:
 			draw_circle(eye + finaL_pos + position.direction_to(plr.position),1,Main.colors[2])
 	else:
-		var eyes = [Vector2(-3,-9 + bobbing_offset.y),Vector2(11,-9 + bobbing_offset.y)]
+		var eyes = [Vector2(-3,-9 + bobbing_offset.y + head_pos_offset.y),Vector2(11,-9 + bobbing_offset.y + head_pos_offset.y)]
 		for eye in eyes:
 			draw_circle(eye + position.direction_to(plr.position),1,Main.colors[2])
 	if chasing:

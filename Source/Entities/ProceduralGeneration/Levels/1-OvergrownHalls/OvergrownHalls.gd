@@ -27,16 +27,16 @@ func spawn_player():
 						exit_room = room
 						break
 			exit_pos = exit_room.get_center() * 8
-			print(room.size)
-			var dat_room:Branch = dungeon_layout.rooms[dungeon_layout.rooms.find(room) + 2]
-			if dat_room.size.x > 7 and dat_room.size.y > 6:
-				for rm in dungeon_layout.rooms:
-					if rm.size.x > 7 and rm.size.y > 6 and rm != room:
-						dat_room = room
-						break
-			dat_pos = dat_room.get_center() * 8
-			print(room.size)
 			break
+	var later_rooms:Array[Branch]
+	for i in range(dungeon_layout.rooms.size()):
+		if i >= dungeon_layout.rooms.size() / 2:
+			later_rooms.append(dungeon_layout.rooms[i])
+	var dat_room:Branch = later_rooms.pick_random()
+	while dat_room.size.x <= 10 or dat_room.size.y <= 10:
+		dat_room = later_rooms.pick_random()
+	dat_pos = dat_room.get_center() * 8
+	terminal_pos = dat_pos
 	plr.position = player_pos
 	other_things.add_child(Exit.new(exit_pos))
 	other_things.add_child(DAT.new(dat_pos))
@@ -138,16 +138,13 @@ class TreeDecor:
 	extends DecorObject
 	var top_sprites:Array[int] = [6,7,8,9,135]
 	var trunks:Array[Vector2]
-	var height:int
+	var tree_height:int
 	var chosen_spr:int = top_sprites.pick_random()
 	func _init(pos) -> void:
-		height = randi_range(0,3)
-		y_sort_offset = 4
-		offset = Vector2(2,0)
-		super(Rect2(3,3,4,3))
-		position = pos
-		spr_dict[chosen_spr] = Vector2(0,-1 - height)
-		if height > 0: for i in range(height + 1): trunks.append(Vector2(0,-i))
+		tree_height = randi_range(0,3)
+		super(pos, Rect2(0,3,4,3))
+		spr_dict[chosen_spr] = Vector2(0,-1 - tree_height)
+		if tree_height > 0: for i in range(tree_height + 1): trunks.append(Vector2(0,-i))
 		spr_dict[chosen_spr + 16] = Vector2(0,0)
 		add_child(TreeTrunk.new(self))
 		add_child(TreeLeaves.new(self))
@@ -172,9 +169,9 @@ class TreeDecor:
 		func _draw() -> void:
 			for index in tree_base.spr_dict.keys():
 				if tree_base.top_sprites.has(index):
-					Main.spr(Main.GameAtlas,self,(tree_base.offset) + (tree_base.spr_dict.get(index)) * (Main.SPR_SIZE),index,Main.colors[7])
+					Main.spr(Main.GameAtlas,self,(tree_base.draw_offset) + (tree_base.spr_dict.get(index)) * (Main.SPR_SIZE),index,Main.colors[7])
 			for t in tree_base.trunks:
-				Main.spr(Main.GameAtlas,self,t * Main.SPR_SIZE + tree_base.offset,19, Main.colors[7])
+				Main.spr(Main.GameAtlas,self,t * Main.SPR_SIZE + tree_base.draw_offset,19, Main.colors[7])
 			
 	class TreeLeaves:
 		extends Node2D
@@ -192,11 +189,11 @@ class TreeDecor:
 				for i in range(5):
 					if i - j <= 0: continue
 					draw_rect(
-						Rect2(tree_base.spr_dict.get(tree_base.chosen_spr) * Main.SPR_SIZE + tree_base.offset + Vector2(randi_range(-i,i),i),
+						Rect2(tree_base.spr_dict.get(tree_base.chosen_spr) * Main.SPR_SIZE + tree_base.draw_offset + Vector2(randi_range(-i,i),i),
 						Vector2(1 + ((i-j)*3),2 + (i-j) * 2)),
 						Main.colors[9])
 					draw_rect(
-						Rect2(tree_base.spr_dict.get(tree_base.chosen_spr) * Main.SPR_SIZE + tree_base.offset + Vector2(randi_range(-i,i), i + j),
+						Rect2(tree_base.spr_dict.get(tree_base.chosen_spr) * Main.SPR_SIZE + tree_base.draw_offset + Vector2(randi_range(-i,i), i + j),
 						Vector2(1 + (i*2),2 + i * 1)),
 						Main.colors[10])
 			for j in range(2):
@@ -209,7 +206,7 @@ class TreeDecor:
 	func _draw():
 		for index in spr_dict.keys():
 			if not top_sprites.has(index):
-				Main.spr(Main.GameAtlas,self,(offset) + (spr_dict.get(index)) * (Main.SPR_SIZE),index,Main.colors[7])
+				Main.spr(Main.GameAtlas,self,(draw_offset) + (spr_dict.get(index)) * (Main.SPR_SIZE),index,Main.colors[7])
 		
 
 func spawn_treasures():

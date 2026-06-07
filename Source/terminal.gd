@@ -183,7 +183,7 @@ func _process(delta: float) -> void:
 func summon():
 	echo("TERMINAL_BOSS_SUMMONED")
 	var lvl = Main.main.get_level()
-	lvl.enemies.add_child(Verdano.new(lvl.dungeon_layout.rooms[0].get_center() * lvl.dungeon_layout.tile_size))
+	lvl.enemies.add_child(Verdano.new(lvl.terminal_pos))
 
 signal y_n_result(value:bool)
 func parse_command():

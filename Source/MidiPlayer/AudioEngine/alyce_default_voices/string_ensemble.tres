@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://h0q55mvehrka"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "String Ensemble"
+waveform = 3
+attack = 0.04
+decay = 0.25
+sustain = 0.9
+release = 0.5
+filter_cutoff = 12000.0
+filter_resonance = 0.1
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

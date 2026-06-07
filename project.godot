@@ -17,6 +17,10 @@ boot_splash/show_image=false
 boot_splash/use_filter=false
 config/icon="res://icon.svg"
 
+[audio]
+
+general/default_playback_type=1
+
 [debug]
 
 gdscript/warnings/unused_parameter=0

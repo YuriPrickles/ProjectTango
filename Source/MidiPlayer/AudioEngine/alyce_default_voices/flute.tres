@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://vvnwxb3c0cqa"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "Flute"
+attack = 0.015
+sustain = 0.85
+filter_cutoff = 16000.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

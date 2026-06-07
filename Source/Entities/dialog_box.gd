@@ -26,7 +26,7 @@ var grown_to_full = false
 var start_typing = false
 var cur_rect_size:Vector2
 var textbox_speed = 360
-	
+
 func _process(delta: float) -> void:
 	grown_to_full = current_rect.size == box_size * Vector2(Main.FONTCHAR_SIZE)
 	start_typing = current_rect.size >= box_size * Vector2(Main.FONTCHAR_SIZE) / 2
@@ -42,15 +42,12 @@ func _process(delta: float) -> void:
 		is_writing = true
 		var total_length = 0
 		var temp_phrase = ""
-		print(current_string)
 		for chr in current_string:
 			#print(chr)
 			word += chr
 			chr_counter += 1
 			if chr == ' ' or chr_counter >= current_string.length():
-				print(word)
 				total_length += word.length()
-				print(temp_phrase)
 				#print(box_size.x - chr_counter, " [%s,%s] - %s (%s)" % [int(box_size.x),chr_counter,word,word.length()])
 				if total_length > box_size.x or chr_counter >= current_string.length():
 					if chr_counter >= current_string.length():
@@ -64,7 +61,6 @@ func _process(delta: float) -> void:
 						else:
 							temp_phrase += word
 					word_arr.append(temp_phrase)
-					print(total_length - word.length())
 					total_length = word.length()
 					temp_phrase = ""
 				temp_phrase += word

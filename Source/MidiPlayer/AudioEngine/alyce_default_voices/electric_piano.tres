@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://71pb3ttagw72"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "Electric Piano"
+attack = 0.005
+decay = 0.2
+release = 0.2
+filter_cutoff = 12000.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

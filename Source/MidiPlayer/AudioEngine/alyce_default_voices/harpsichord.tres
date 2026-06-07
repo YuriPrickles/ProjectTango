@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://c83ai8r2g38cg"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "Harpsichord"
+waveform = 2
+attack = 0.001
+decay = 0.2
+sustain = 0.05
+release = 0.05
+filter_cutoff = 18000.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

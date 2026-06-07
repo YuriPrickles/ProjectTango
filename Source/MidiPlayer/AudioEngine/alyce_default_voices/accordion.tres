@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://ost2o8il70cl"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://Source/MidiPlayer/AudioEngine/voice.gd" id="1_1yv28"]
+
+[resource]
+script = ExtResource("1_1yv28")
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

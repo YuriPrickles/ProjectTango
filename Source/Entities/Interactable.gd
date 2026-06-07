@@ -16,3 +16,6 @@ func on_untouch_thing(body):
 		body.might_interact = false
 		touching = false
 		queue_redraw()
+
+func _draw() -> void:
+	super()

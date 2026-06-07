@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://GALZvlybwz"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "Vibraphone"
+waveform = 0
+volume = 1.0
+attack = 0.003
+decay = 0.4
+sustain = 0.25
+release = 0.5
+filter_cutoff = 16000.0
+filter_resonance = 0.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

@@ -7,8 +7,8 @@ var starting_to_close = false
 var pointlight:PointLight2D = PointLight2D.new()
 
 func _init(pos:Vector2) -> void:
-	super._init(pos,Rect2(-16,-2,16,4))
-	y_sort_offset = 2
+	super._init(pos,Rect2(0,6,16,4))
+	draw_offset = Vector2(-8,0)
 	spr_dict={
 		67: Vector2(0,0),
 		68: Vector2(1,0)
@@ -47,7 +47,8 @@ func _input(event: InputEvent) -> void:
 		for ch in Main.main._2DLayer.get_children():
 			Main.main._2DLayer.remove_child(ch)
 func _draw() -> void:
-	draw_from_dict(spr_dict,offset/-2,0 if not closed else 16)
+	super()
+	draw_from_dict(spr_dict,Vector2.ZERO,0 if not closed else 16)
 	#draw_circle(Vector2.ZERO,2,Main.colors[9])
 	if touching:
 		Main.draw_text(self, "EXIT_HOVERTEXT", Vector2(0,-16),Main.colors[7],Main.colors[0],false,true)

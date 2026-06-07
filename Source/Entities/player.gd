@@ -111,7 +111,7 @@ func _input(event: InputEvent) -> void:
 		if Main.main.inventory_open and not throwmode and event.is_action_pressed("throw"):
 			throw()
 		elif event.is_action_pressed("accept"):
-			prevent_holding_atk = false
+			prevent_holding_atk = not item.item_auto
 			item.on_use()
 	if event.is_action_pressed("skip_hymn") and Main.main.inventory_open:
 		Main.disc_manager.skip_next()

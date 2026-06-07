@@ -7,7 +7,7 @@ func _init(pos) -> void:
 		119:Vector2(0,0)
 	}
 	Health = 15
-	
+	peril_penalty = 0
 	MaxHealth = 15
 
 func _process(delta: float) -> void:

@@ -17,11 +17,12 @@ var poison_rect:PoisonRect
 func _init(pos,room_ass) -> void:
 	name_file = "res://Source/Names/gasberry.txt"
 	poison_rect = PoisonRect.new(self)
-	super._init(pos,Rect2(-2,-2,6,4))
+	super._init(pos,Rect2(0,2,6,4))
 	spr_dict={
 		44:Vector2(0,-1),
 		60:Vector2(0,0)
 	}
+	draw_offset = Vector2(-6,-4)
 	add_child(poison_rect)
 	Health = 40
 	MaxHealth = 40
@@ -58,11 +59,12 @@ func on_touch_thing(body):
 	if body is TileMapLayer:
 		position += position.direction_to(Main.main.get_level().dungeon_layout.rooms[room_assigned].get_center())
 func shoot_seed(target:Vector2):
-	var origin:Vector2 = position + Vector2(2,-8)
+	var origin:Vector2 = position + Vector2(0,-8)
 	BerrySeed.new(self,origin,origin.direction_to(target) * 0.3,10)
 	
 func _draw() -> void:
-	draw_from_dict(spr_dict,Vector2(0,-4),0 if not ripe else 1)
+	super()
+	draw_from_dict(spr_dict,Vector2.ZERO,0 if not ripe else 1)
 
 func draw_from_dict(_spr_dict:Dictionary[int, Vector2], draw_offset:Vector2, spr_index_offset:int):
 	for index in _spr_dict.keys():

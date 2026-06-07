@@ -20,6 +20,8 @@ var ending_pos:Vector2
 var damage_mult:float
 func _init(p_owner,pos,collision:Rect2,_velocity:Vector2,_hostile:bool,_damage:int,_hits:int,_lifetime:float) -> void:
 	super(pos,collision)
+	iframes_on_hit = Enemy.IFRAMES
+	y_sort_enabled = true
 	starting_pos = pos
 	velocity = _velocity
 	hostile = _hostile
@@ -29,13 +31,11 @@ func _init(p_owner,pos,collision:Rect2,_velocity:Vector2,_hostile:bool,_damage:i
 	dmg_source_name = proj_owner.dmg_source_name if proj_owner else "Ownerless"
 	lifetime = _lifetime
 	max_lifetime = lifetime
-	Utils.attach_collision_shape(self,collision,on_touch_thing,on_untouch_thing)
 	position = pos
-	offset = collision.size
 	if Main.main.get_level():
 		Main.main.get_level().projectiles.call_deferred("add_child",self)
 	queue_redraw()
-
+func _draw() -> void: super()
 func clear_collisions():
 	if is_connected("body_entered",on_touch_thing): disconnect("body_entered",on_touch_thing)
 	if is_connected("body_exited",on_untouch_thing): disconnect("body_exited",on_untouch_thing)
@@ -73,14 +73,14 @@ func movement():
 	position += velocity
 ##Override this function for behavior when the player collides with the projectile.
 
-
+var iframes_on_hit = Enemy.IFRAMES
 func on_touch_thing(body):
 	ending_pos = position
 	if body is TileMapLayer:
 		handle_wall_col()
 	if not hostile and body is Enemy:
 		handle_enemy_col()
-		body.hurt(damage,self)
+		body.hurt(damage,self,iframes_on_hit)
 		handle_hitcount()
 	if hostile and body is Player:
 		handle_player_col()

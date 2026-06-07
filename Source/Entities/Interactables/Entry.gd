@@ -7,9 +7,9 @@ var destination:int
 var super_special_entry=false
 
 func _init(pos:Vector2,dest:int,special:bool = false) -> void:
-	super._init(pos,Rect2(-16,-2,16,4))
-	y_sort_offset = 2
+	super._init(pos,Rect2(0,6,16,4))
 	destination = dest
+	draw_offset = Vector2(-8,0)
 	super_special_entry = special
 	spr_dict={
 		67: Vector2(0,0),
@@ -37,7 +37,8 @@ func _input(event: InputEvent) -> void:
 			Main.main._2DLayer.remove_child(ch)
 		Main.main.load_level(destination)
 func _draw() -> void:
-	draw_from_dict(spr_dict,offset/-2,0 if not closed else 16)
+	super()
+	draw_from_dict(spr_dict,Vector2.ZERO,0 if not closed else 16)
 	#draw_circle(Vector2.ZERO,2,Main.colors[9])
 	var text = "[enter] to go back to floor 1" if Main.main.saved_levels[LevelID.Floor1] and super_special_entry else "ENTER_HOVERTEXT"
 	if touching:

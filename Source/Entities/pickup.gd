@@ -6,7 +6,6 @@ var locked_in:bool=false
 var speed = 8
 var always_follow:bool = false
 var thrown = false
-var draw_offset = Vector2(0,0)
 var vel = Vector2.ZERO
 var target_destination:Vector2
 var starting_point:Vector2
@@ -28,12 +27,12 @@ func _init(item_scr:GDScript, pos:Vector2, alwaysfollow=false, throw:Vector2=Vec
 	always_follow = alwaysfollow
 	Utils.attach_collision_shape(self, Rect2(0,0,4,4), _on_body_entered,null)
 	position = pos
-	draw_offset = Vector2.ZERO
+	draw_offset = Vector2(-2,-2)
 	if thrown:
 		target_destination = throw + Vector2(-4,-4)
 		item.has_picked_up_before = true
 		vel = plr.facing
-		draw_offset = Vector2(0,-4)
+		draw_offset = Vector2(-2,-2)
 	pointlight.texture = preload("res://Graphics/Atlases/Misc/pointlight.png")
 	pointlight.texture_scale = 0.2
 	pointlight.energy = 0.05
@@ -51,25 +50,25 @@ func _process(delta: float) -> void:
 	if thrown and position.distance_to(target_destination) >= 1:
 		arc += delta * arc_mult
 		speed = 160 * arc_mult
-		draw_offset.y = -sin(position.distance_to(starting_point) * PI / starting_point.distance_to(target_destination)) * arc * arc_height - 2
+		draw_offset.y = (-sin(position.distance_to(starting_point) * PI / starting_point.distance_to(target_destination)) * arc * arc_height) - 2
 		position = position.move_toward(target_destination,delta * speed)
 		queue_redraw()
 	else:
 		if not landed:
 			landed = true
 			on_land()
-		draw_offset.y = 0
+		draw_offset.y = -2
 		thrown = false
 		vel = Vector2.ZERO
 		if Main.main.resources.is_inventory_full():
 			speed = 0
 			locked_in = false
 			return
-		if (plr.Center.distance_to(position) <= 16 or locked_in) and (not Main.main.resources.is_inventory_full() or always_follow):
+		if (plr.position.distance_to(position) <= 16 or locked_in) and (not Main.main.resources.is_inventory_full() or always_follow):
 			locked_in = true
-			position += position.direction_to(plr.Center) * delta * speed
+			position += position.direction_to(plr.position) * delta * speed
 			speed = min(128,speed + 2)
-		if plr.Center.distance_to(position) <= 4:
+		if plr.position.distance_to(position) <= 4:
 			pickup()
 		queue_redraw()
 	super._process(delta)
@@ -77,7 +76,8 @@ func _process(delta: float) -> void:
 
 var index = 16
 func _draw() -> void:
-	draw_ellipse(Vector2(4,8),4,2,Main.colors[0] * 0.4)
+	super()
+	draw_ellipse(Vector2(4,4),4,2,Main.colors[0] * 0.4)
 	Main.spr(Main.ItemAtlas,self,draw_offset,item.spr_index)
 
 func pickup():
@@ -86,6 +86,7 @@ func pickup():
 	pass
 
 func on_land():
+	@warning_ignore("unused_variable")
 	var pckup = PickupLandEvent.new(self)
 
 func _on_body_entered(body: Node2D) -> void:

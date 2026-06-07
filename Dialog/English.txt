@@ -110,12 +110,12 @@ TERMINAL_HELP_SPECIAL=
  
 ¬8summon¬¬ - ¬6helper function for summoning a boss¬¬
  
-¬8fiddle commands are currently not implemented!
-¬5[only one fiddle command can be used per run]
-¬6fiddle -h - ¬8set hp to 1¬¬,¬A gain 1 eeple for every 5 hp lost
-¬6fiddle -g - ¬8remove all items on ground¬¬, gain 2 eeples for every item lost
-¬6fiddle -a - ¬Achange a held artifact into a random artifact¬¬.
-¬6fiddle -b - ¬8increase peril by 50¬¬. gain a remixer.
+#¬8fiddle commands are currently not implemented!
+#¬5[only one fiddle command can be used per run]
+#¬6fiddle -h - ¬8set hp to 1¬¬,¬A gain 1 eeple for every 5 hp lost
+#¬6fiddle -g - ¬8remove all items on ground¬¬, gain 2 eeples for every item lost
+#¬6fiddle -a - ¬Achange a held artifact into a random artifact¬¬.
+#¬6fiddle -b - ¬8increase peril by 50¬¬. gain a remixer.
 
 TERMINAL_BOSS_SUMMON_FAIL=¬8returned no entry from table "bosses"
 
@@ -160,46 +160,70 @@ dungeon access terminal
 # ITEMS
 
 ITEM_METAL=Metal
-ITEM_DESC_METAL=Sturdy material for building things.
+ITEM_DESC_METAL=sturdy material for building things.
 ITEM_WIRES=Wires
-ITEM_DESC_WIRES=Slightly Chewed...
+ITEM_DESC_WIRES=slightly chewed...
 ITEM_BATTERY=Battery
-ITEM_DESC_BATTERY=All melded into one singular being.
+ITEM_DESC_BATTERY=all melded into one singular being.
 ITEM_BIGEEPLEBAG=Big Bag of Eeples
 ITEM_DESC_BIGEEPLEBAG=add_money(randi_range(10,15))
+ITEM_SIMPLEDESC_BIGEEPLEBAG=Use to gain some Eeples.
 ITEM_REDBERRIES=Red Berries
 ITEM_DESC_REDBERRIES=plr.heal(15)
+ITEM_SIMPLEDESC_REDBERRIES=A Refreshing snack.
 
 ITEM_MULTIGRAINWAFFLE=Multi-Grain Waffle
 ITEM_DESC_MULTIGRAINWAFFLE=
 (Passive):
 if event is ConsumeEvent:
 event.player.heal(10)
+ITEM_SIMPLEDESC_MULTIGRAINWAFFLE=
+Eating edible things heals for 10 Heatlh.
 
 ITEM_SPOREMOTHER=Spore Mother
 ITEM_DESC_SPOREMOTHER=
 (Passive):
 if event is DamageEvent:
 for i in range(30): Spore.new()
+ITEM_SIMPLEDESC_SPOREMOTHER=
+Spawn Spores around you when you are Damaged.
 
 ITEM_PRAIRIEKINGGUN=Prairie King's Gun
 ITEM_DESC_PRAIRIEKINGGUN=
 (Passive):
 item_usedelay *= 0.9
+ITEM_SIMPLEDESC_PRAIRIEKINGGUN=
+Faster item Use Speed.
 
 ITEM_SCREAMINGVOIDAXE=Axe of the Screaming Void
 ITEM_DESC_SCREAMINGVOIDAXE=
 (Passive):
-damage *= lerp(3,0.6,distance_percent)
+crit_chance = lerp(0.2,0.0,distance_percent)
+if randf_range(0,1) <= crit_chance:
+	event.damage *= 3
+ITEM_SIMPLEDESC_SCREAMINGVOIDAXE=
+Attacks that Dont Go Far
+have a Chance to deal 3x Damage.
 
 ITEM_TOMEOFTHEHILLS=Tome of the Hiils
 ITEM_DESC_TOMEOFTHEHILLS=
 (Passive):
-if event is UpdateEvent:
-for proj in level.get_projectiles():
-	if timer > 0.3:
-		proj.damage += 1
-		timer = 0
+if event is HymnPlayEvent:
+	event.next_hymn_delay -= 4
+ITEM_SIMPLEDESC_TOMEOFTHEHILLS=
+Hymns play faster.
+tiiiiime skip!
+
+ITEM_UNDEADCHISEL=Undead Chisel
+ITEM_DESC_UNDEADCHISEL=
+(Passive):
+if event is DamageEvent:
+	if target is Enemy and event.source is Projectile:
+		if randi() % 100 < 4:
+			drop_item_somewhere(target.position,scraps.pick_random())
+ITEM_DESC_UNDEADCHISEL=
+Damaging enemies has a chance
+to Spawn Scrap on them.
 
 
 # DISCS and ARCHANGELS

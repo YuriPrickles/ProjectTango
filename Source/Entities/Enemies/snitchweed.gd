@@ -4,9 +4,10 @@ var asleep:bool = true
 var force_awake:bool = false
 func _init(pos) -> void:
 	name_file = "res://Source/Names/snitchweed.txt"
-	super._init(pos, Rect2(-2,2,6,4))
+	super._init(pos, Rect2(4,6,6,4))
+	draw_offset = Vector2(0,0)
 	var detection_range:Area2D = Area2D.new()
-	Utils.attach_round_collision_shape(detection_range,16,on_detect,Vector2(4,5))
+	Utils.attach_round_collision_shape(detection_range,16,on_detect,Vector2(0,0))
 	detection_range.connect("body_exited",leave_detect)
 	add_child(detection_range)
 
@@ -14,6 +15,7 @@ func _process(delta: float) -> void:
 	super._process(delta)
 
 func _draw() -> void:
+	super()
 	Main.spr(Main.GameAtlas,self,Vector2.ZERO,35 if asleep else 51)
 
 

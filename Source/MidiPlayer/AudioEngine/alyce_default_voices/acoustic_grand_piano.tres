@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://iw0ws26adt8l"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://Source/MidiPlayer/AudioEngine/voice.gd" id="1_vtmjo"]
+
+[resource]
+script = ExtResource("1_vtmjo")
+voice_name = "Acoustic Grand Piano"
+waveform = 2
+attack = 0.003
+decay = 0.3
+sustain = 0.2
+release = 0.35
+filter_cutoff = 15000.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

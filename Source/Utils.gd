@@ -33,7 +33,7 @@ static func attach_collision_shape(thing:CollisionObject2D,size:Rect2,on_touch=n
 	var colmask = CollisionShape2D.new()
 	var shape = RectangleShape2D.new()
 	shape.size = size.size
-	colmask.position = size.size + size.position
+	colmask.position = size.position
 	colmask.shape = shape
 	if thing is Area2D:
 		if on_touch != null and not thing.is_connected("body_entered",on_touch):
@@ -79,8 +79,10 @@ static func attach_round_collision_shape(thing:CollisionObject2D,radius:float,on
 		thing.connect("body_entered",on_touch)
 	thing.add_child(colmask.duplicate())
 
+
+
 static func blink(value1,value2,blinkdelay):
-	return value1 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else value2
+	return value1 if (Engine.get_frames_drawn() % int(blinkdelay)) > blinkdelay / 2 else value2
 
 static func syntaxificate(string):
 	var new_desc = string
@@ -125,3 +127,6 @@ static func syntaxificate(string):
 					new_desc = new_desc.insert(start + saved_length, num_color_string)
 					saved_length += num_color_string.length() - res_str.length()
 	return new_desc
+
+static func maybe() -> bool:
+	return randi() % 2 == 0

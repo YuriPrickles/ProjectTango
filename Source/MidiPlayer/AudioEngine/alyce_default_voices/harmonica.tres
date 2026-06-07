@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://bbx7k37p08kvt"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "Harmonica"
+waveform = 3
+attack = 0.003
+decay = 0.05
+sustain = 0.7
+release = 0.08
+filter_cutoff = 14000.0
+filter_resonance = 0.1
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

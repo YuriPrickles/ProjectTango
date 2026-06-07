@@ -1,20 +1,13 @@
 class_name DecorObject
-extends StaticBody2D
+extends Entity
 
-var spr_dict:Dictionary[int,Vector2]
-var offset:Vector2 = Vector2.ZERO
 var index_offset:int = 0
 var collider:Rect2
-var y_sort_offset:int = 0
-func _init(col:Rect2) -> void:
-	Utils.attach_collision_shape(self,col)
+func _init(pos, col:Rect2,_solid=true) -> void:
+	super(pos, col,_solid)
 
 func _process(delta: float) -> void:
-	var plr:Player = Main.main.get_player()
-	if plr.position.y > position.y + y_sort_offset:
-		z_index = Main.Depths.BelowPlayer
-	else:
-		z_index = Main.Depths.AbovePlayer
+	super(delta)
 
 
 func draw_from_dict(spr_dic:Dictionary[int, Vector2], draw_offset:Vector2, spr_index_offset:int):

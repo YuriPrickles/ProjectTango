@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://byohr1wi7rcl2"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://Source/MidiPlayer/AudioEngine/voice.gd" id="1_p4lfp"]
+
+[resource]
+script = ExtResource("1_p4lfp")
+voice_name = "Acoustic Bass"
+waveform = 2
+attack = 0.005
+decay = 0.12
+sustain = 0.2
+filter_cutoff = 6000.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

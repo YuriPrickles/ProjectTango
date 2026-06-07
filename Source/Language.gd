@@ -20,8 +20,8 @@ static func from_txt(path:String)->Language:
 			if regex_dialogkey.search(line) or line == "END_OF_DIALOG_FILE":
 				var split_line := line.split("=",true,1)
 				if any_dialogue_key:
-					print("dialog key: %s"%str(any_dialogue_key))
-					print("dialog array: %s"%str(dialogue_array))
+					#print("dialog key: %s"%str(any_dialogue_key))
+					#print("dialog array: %s"%str(dialogue_array))
 					language.dialog[any_dialogue_key.trim_suffix("=")] = dialogue_array.duplicate()
 					dialogue_array.clear()
 					if line == "END_OF_DIALOG_FILE":

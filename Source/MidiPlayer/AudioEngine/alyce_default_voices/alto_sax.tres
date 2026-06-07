@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://cmsq5waht54ob"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "Alto Sax"
+waveform = 3
+attack = 0.008
+decay = 0.15
+sustain = 0.8
+release = 0.12
+filter_cutoff = 10000.0
+filter_resonance = 0.2
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

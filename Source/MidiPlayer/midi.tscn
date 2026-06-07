@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://o0hxh0fwlkfe"]
+
+[ext_resource type="Script" uid="uid://dutcdj0nt2ggo" path="res://Source/MidiPlayer/midi.gd" id="1_rkg43"]
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://Source/MidiPlayer/AudioEngine/voice.gd" id="2_fkqq6"]
+[ext_resource type="Resource" uid="uid://dwkhclrkqvdtt" path="res://Source/MidiPlayer/AudioEngine/voices/pvz2_celesta.tres" id="3_fkqq6"]
+[ext_resource type="Script" uid="uid://b75y7ublldct7" path="res://Source/MidiPlayer/AudioEngine/midi_track.gd" id="3_yyvmb"]
+
+[sub_resource type="Resource" id="Resource_fkqq6"]
+script = ExtResource("2_fkqq6")
+waveform = 2
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"
+
+[sub_resource type="Resource" id="Resource_yyvmb"]
+script = ExtResource("2_fkqq6")
+waveform = 4
+volume = 0.4
+decay = 0.4
+sustain = 0.1
+release = 0.4
+filter_cutoff = 4000.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"
+
+[sub_resource type="Resource" id="Resource_wvv02"]
+script = ExtResource("3_yyvmb")
+midi_file = "res://Audio/Midis/MAINMENU_MIDI.mid"
+track_name = "MAINMENU_MIDI"
+channel_voices = Dictionary[String, ExtResource("2_fkqq6")]({
+"0": ExtResource("3_fkqq6"),
+"1": SubResource("Resource_fkqq6"),
+"9": SubResource("Resource_yyvmb")
+})
+metadata/_custom_type_script = "uid://b75y7ublldct7"
+
+[node name="Midi" type="Node2D" unique_id=980081289]
+script = ExtResource("1_rkg43")
+midi_track = SubResource("Resource_wvv02")

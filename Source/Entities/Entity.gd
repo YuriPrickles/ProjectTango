@@ -6,6 +6,7 @@ var height: float
 var offset: Vector2:
 	get: return offset
 	set(value): offset = value
+var draw_offset:Vector2 = Vector2.ZERO
 var Center:
 	get: return position + (Vector2(width,height) / 2)
 var int_position: Vector2i:
@@ -33,7 +34,7 @@ func _init(pos,collision:Rect2,_solid=false) -> void:
 		Utils.attach_collision_shape(static_body,collision,on_touch_thing,on_untouch_thing)
 	Utils.attach_collision_shape(self,collision,on_touch_thing,on_untouch_thing)
 	position = pos
-	offset = collision.size
+	draw_offset = -collision.size
 	queue_redraw()
 
 func _process(delta: float) -> void:
@@ -51,3 +52,6 @@ func on_untouch_thing(body):
 func draw_from_dict(spr_dict:Dictionary[int, Vector2], draw_offset:Vector2, spr_index_offset:int):
 	for index in spr_dict.keys():
 		Main.spr(Main.GameAtlas,self,(draw_offset) + (spr_dict.get(index)) * (Main.SPR_SIZE),spr_index_offset + index)
+
+func _draw() -> void:
+	draw_set_transform(draw_offset)

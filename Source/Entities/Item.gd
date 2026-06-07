@@ -1,11 +1,13 @@
 class_name Item
 extends Resource
+static var scraps: Array[Script] = [Metal,Wires,Battery]
 static var artifacts_floor1 = [
 	ScreamingVoidAxe,
 	SporeMother,
 	PrairieKingGun,
 	MultiGrainWaffle,
-	TomeOfTheHills
+	TomeOfTheHills,
+	UndeadChisel
 	]
 enum Value{
 	Junk = 5,
@@ -39,6 +41,7 @@ var passive_effect:Effect = null
 var item_damage = 0
 var item_usedelay:float = 0
 var item_timer:float = 0
+var item_auto = true
 
 func get_proper_item_name(): return Main.main_lang.get_dialog(item_name)
 func _init() -> void:
@@ -63,7 +66,7 @@ func _process(delta: float) -> void:
 	if weapon_type == WeaponType.Unusable:
 		return
 	if item_timer > 0 and item_usedelay != 0:
-		item_timer = clamp(item_timer - delta,0,item_usedelay)
+		item_timer = max(item_timer - delta,0)
 
 func on_use() -> bool:
 	var plr:Player = Main.main.get_player()

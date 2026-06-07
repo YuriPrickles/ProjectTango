@@ -24,14 +24,15 @@ func _init(pos,collision:Rect2) -> void:
 func _ready() -> void:
 	pass
 
-func hurt(value:int,source):
-	if iframe_timer > 0 or value == 0: return
+func hurt(value:int,source,iframe_override=IFRAMES):
+	if iframe_timer > 0 or value == 0: return false
 	var devent = DamageEvent.new(value,self,source)
-	iframe_timer = IFRAMES
+	iframe_timer = iframe_override
 	print("%s hurt for %s damage" % [dmg_source_name,devent.damage])
 	Health -= devent.damage
 	if Health <= 0:
 		vanquish()
+	return true
 
 var stunned:bool:
 	get: return stun_time > 0
@@ -48,7 +49,7 @@ func _process(delta: float) -> void:
 	else:
 		modulate = Main.colors[7] if floori(iframe_timer * 100.0) % 4 == 0 and iframe_timer < IFRAMES else Main.colors[8]
 	if iframe_timer > 0:
-		iframe_timer = clampf(iframe_timer - delta,0,IFRAMES)
+		iframe_timer = max(iframe_timer - delta,0)
 	negative_speed_mod = 0
 	positive_speed_mod = 0
 	var mevent:MoveEvent = MoveEvent.new(0,self)
@@ -64,4 +65,5 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
+	draw_set_transform(draw_offset)
 	pass

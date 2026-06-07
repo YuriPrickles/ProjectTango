@@ -19,6 +19,7 @@ func get_projectiles()->Array:return projectiles.get_children()
 @onready var walls:TileMapLayer = $Walls
 @onready var floor: TileMapLayer = $Floor
 
+var terminal_pos:Vector2
 var dungeon_layout:Splitter
 var player:Player
 var artifact_positions:Array[Vector2]
@@ -49,7 +50,13 @@ func drop_item(item:GDScript, amount:int=1):
 		items.add_child(Pickup.new(item, randpos))
 		
 func drop_on_player(item:GDScript, amount:int=1):
-	items.add_child(Pickup.new(item, player.position))
+	for i in range(amount):
+		items.add_child(Pickup.new(item, player.position))
+
+
+func drop_item_somewhere(pos:Vector2, item:GDScript, amount:int=1):
+	for i in range(amount):
+		items.add_child(Pickup.new(item, pos))
 
 func get_compass_vector():
 	return player.position.direction_to(artifact_positions[0]) * 5

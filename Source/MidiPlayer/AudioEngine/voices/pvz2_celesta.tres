@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://dwkhclrkqvdtt"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://Source/MidiPlayer/AudioEngine/voice.gd" id="1_axmgb"]
+
+[sub_resource type="Resource" id="Resource_axmgb"]
+script = ExtResource("1_axmgb")
+volume = 0.0
+frequency_mult = 20.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"
+
+[sub_resource type="Resource" id="Resource_5vq1x"]
+script = ExtResource("1_axmgb")
+volume = 0.0
+frequency_mult = 3.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"
+
+[resource]
+script = ExtResource("1_axmgb")
+voice_name = "PVZ2_Celesta"
+volume = 0.7
+modulation = Array[ExtResource("1_axmgb")]([SubResource("Resource_axmgb"), SubResource("Resource_5vq1x")])
+filter_cutoff = 6000.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

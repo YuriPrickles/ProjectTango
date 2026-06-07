@@ -8,7 +8,7 @@ var chasing = false
 var facing = Vector2(0,0)
 func _init(pos) -> void:
 	name_file = "res://Source/Names/gastropoke.txt"
-	super._init(pos,Rect2(-12,-4,12,4))
+	super._init(pos,Rect2(0,0,12,4))
 	spr_dict={
 		36:Vector2(0,0),
 		37:Vector2(1,0),
@@ -17,7 +17,7 @@ func _init(pos) -> void:
 	}
 	Health = 30
 	MaxHealth = 30
-	offset = Vector2(-8,-14)
+	draw_offset = Vector2(-8,-14)
 	navigator = NavigationAgent2D.new()
 	navigator.radius = 64
 	#navigator.debug_enabled = true
@@ -26,10 +26,10 @@ func _init(pos) -> void:
 	navigator.target_desired_distance = 0.0
 	add_child(navigator)
 	var detection_range:Area2D = Area2D.new()
-	Utils.attach_round_collision_shape(detection_range,32,on_detect,Vector2(-2,0))
+	Utils.attach_round_collision_shape(detection_range,32,on_detect,Vector2(0,0))
 	
 	var leave_range:Area2D = Area2D.new()
-	Utils.attach_round_collision_shape(leave_range,128,null,Vector2(-2,0))
+	Utils.attach_round_collision_shape(leave_range,128,null,Vector2(0,0))
 	leave_range.connect("body_exited",leave_detect)
 	
 	add_child(detection_range)
@@ -54,7 +54,6 @@ func _physics_process(delta):
 		facing = Vector2(0,1) * sign(final_vel.y)
 		queue_redraw()
 	if chasing:
-		print(name)
 		position += delta * final_vel * ((snail_speed * (1 + float(Main.main.get_peril())/Main.MAX_PRL)) * final_speed_mod)
 
 func on_touch_thing(body):
@@ -71,6 +70,7 @@ func leave_detect(body: Node2D) -> void:
 		chasing = false
 		queue_redraw()
 func _draw() -> void:
+	super()
 	var spr_index_offset = 0
 	match facing:
 		Vector2.LEFT:
@@ -81,6 +81,6 @@ func _draw() -> void:
 			spr_index_offset = 4
 		Vector2.UP:
 			spr_index_offset = 6
-	draw_from_dict(spr_dict,Vector2(-8,-14),spr_index_offset)
+	draw_from_dict(spr_dict,Vector2.ZERO,spr_index_offset)
 	if chasing:
 		Main.draw_text(self,"!", Vector2(0,-20),Main.colors[8],Main.colors[0],false,true)

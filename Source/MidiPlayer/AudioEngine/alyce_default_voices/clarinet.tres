@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Voice" format=3 uid="uid://Q3fuyIcXW1"]
+
+[ext_resource type="Script" uid="uid://bij53rdoa3uvi" path="res://midi/voice.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+voice_name = "Clarinet"
+waveform = 2
+volume = 1.0
+attack = 0.015
+decay = 0.15
+sustain = 0.75
+release = 0.15
+filter_cutoff = 12000.0
+filter_resonance = 0.0
+metadata/_custom_type_script = "uid://bij53rdoa3uvi"

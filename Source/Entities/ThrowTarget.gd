@@ -17,6 +17,7 @@ func _process(delta: float) -> void:
 	var target_move = Input.get_vector("left", "right", "up", "down") * (2 if not plr.sneaking else 0.5)
 	position += target_move
 func _input(event: InputEvent) -> void:
+	throw_pos = position + Vector2(4,4)
 	if event.is_action_pressed("cancel"):
 		plr.throwmode = false
 		queue_free()
@@ -26,12 +27,12 @@ func _input(event: InputEvent) -> void:
 
 func begin_throw(pos):
 	if prepare_to_remove: return
-	if pos.distance_to(plr.Center) < 16:
-		pos = plr.Center + (plr.facing * 32)
+	if pos.distance_to(plr.position) < 16:
+		pos = plr.position + (plr.facing * 32) + plr.size /2
 	var item = Main.main.resources.get_selected_item()
 	if item: item.on_throw()
 	Main.main.resources.remove_inv_item()
-	var pickup = Pickup.new_pickup(item_to_summon.get_script(),plr.Center,false,pos)
+	var pickup = Pickup.new_pickup(item_to_summon.get_script(),plr.position,false,pos)
 	Main.main.current_level.items.add_child(pickup)
 	prepare_to_remove = true
 	hide()

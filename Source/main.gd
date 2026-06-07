@@ -79,6 +79,7 @@ const MAX_PRL = 100
 static var main_lang:Language
 
 func _ready() -> void:
+	#add_child(preload("res://Source/MidiPlayer/midi.tscn").instantiate())
 	main_lang = Language.from_txt("res://Dialog/English.txt")
 	main = self
 	game_state = GameState.MAINMENU
@@ -192,7 +193,7 @@ func get_peril_block():
 	return resources.peril_block
 
 func _process(delta: float) -> void:
-	if current_level:
+	if current_level and not get_tree().paused:
 		UpdateEvent.new(delta)
 		for item:Item in resources.inventory:
 			if item:

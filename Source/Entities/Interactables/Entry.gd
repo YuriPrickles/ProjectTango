@@ -18,6 +18,8 @@ func _init(pos:Vector2,dest:int,special:bool = false) -> void:
 
 func _input(event: InputEvent) -> void:
 	if touching and event.is_action_pressed("accept") and not starting_to_close:
+		if Main.main.options.get_option(Options.OptionNames.AUTOSAVE_ENTRY)==true:
+			Main.main.terminal.save_game()
 		starting_to_close = true
 		Main.game_state = Main.GameState.RESULTS
 		var plr:Player = Main.main.get_player()

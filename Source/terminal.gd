@@ -110,6 +110,7 @@ func load_game() -> bool:
 		if not load_result:
 			if SaveLoad.check_save_exists():
 				echo("TERMINAL_LOAD_FUCKEDUP")
+				echo("TERMINAL_YN")
 				yn_mode = true
 				var result = await y_n_result
 				if not result:
@@ -142,6 +143,7 @@ func reset():
 	if SaveLoad.check_save_exists():
 		echo()
 		echo("TERMINAL_RESET_ASK")
+		echo("TERMINAL_YN")
 		echo()
 		yn_mode = true
 		state = TerminalState.YN
@@ -159,6 +161,7 @@ func _input(event: InputEvent) -> void:
 	z_index = Main.Depths.Terminal
 	if event is InputEventKey and not event.is_released() and not disable_input and visible:
 		any_input.emit()
+		event = event as InputEventKey
 		if state == TerminalState.JustUnpaused:
 			state = TerminalState.Normal
 			return
@@ -174,7 +177,7 @@ func _input(event: InputEvent) -> void:
 			current_line += " "
 		elif state != TerminalState.NoType:
 			for k:String in Main.fontmap:
-				if event.keycode == (OS.find_keycode_from_string(k)):
+				if char(event.unicode) == k:
 					current_line += k
 					return
 func _process(delta: float) -> void:
@@ -241,9 +244,33 @@ func parse_command():
 					nexthymn()
 				"reloadlang":
 					reload_lang()
+				"options":
+					display_options()
+				"options -s": boolean_option(Options.OptionNames.SIMPLE_DESC)
+				"options -a": boolean_option(Options.OptionNames.AUTOSAVE_ENTRY)
+				"options -e": boolean_option(Options.OptionNames.AUTOSAVE_EXIT)
 				_:
 					echo("¬8unrecognized command \"%s\"." % current_line)
 	current_line = ""
+
+func display_options():
+	echo("TERMINAL_OPTIONS_DISPLAY")
+	echo()
+	for i in range(Options.OptionNames.size()):
+		echo("TERMINAL_OPTIONS_%s" % i,str("¬8",Main.main.options.option_list.get(i)))
+
+func boolean_option(option_index):
+	echo()
+	echo("TERMINAL_BOOL_OPTION", str("¬8",Main.main_lang.get_dialog(Options.OptionNames.find_key(option_index))))
+	echo("TERMINAL_YN")
+	echo()
+	yn_mode = true
+	state = TerminalState.YN
+	var result = await y_n_result
+	state = TerminalState.Normal
+	Main.main.options.option_list[option_index] = result
+	SaveLoad.save_options()
+	echo("TERMINAL_BOOL_OPTION_SET_%s" % str(result).to_upper())
 
 func reload_lang():
 	Main.main_lang = Language.from_txt("res://Dialog/English.txt")
@@ -253,12 +280,14 @@ func test_dialog():
 	Main.main.say("TEST_DIALOG", Vector2(30,30),Vector2(24,10))
 	pass
 
-func echo(string=" "):
+func echo(string=" ",extra_string:String=""):
 	var echostring = Main.main_lang.get_dialog(string)
 	if echostring is Array:
 		for line in echostring:
-			echo(line)
+			echo(line,extra_string)
 		return
+	elif not extra_string.is_empty():
+		echostring += extra_string
 	terminal_arr.append(echostring)
 
 func _draw() -> void:

@@ -9,4 +9,4 @@ func _init() -> void:
 
 func on_play(was_destroyed) -> void:
 	super.on_play(was_destroyed)
-	Main.disc_manager.cut_queue_hymn(MatchLastPatron.new())
+	Main.main.disc_manager.cut_queue_hymn(MatchLastPatron.new())

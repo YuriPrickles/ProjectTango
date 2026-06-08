@@ -33,14 +33,17 @@ func spawn_player():
 		if i >= dungeon_layout.rooms.size() / 2:
 			later_rooms.append(dungeon_layout.rooms[i])
 	var dat_room:Branch = later_rooms.pick_random()
-	while dat_room.size.x <= 10 or dat_room.size.y <= 10:
+	var retries = 200
+	while retries > 0 and (dat_room.size.x <= 10 or dat_room.size.y <= 10):
 		dat_room = later_rooms.pick_random()
+		retries -= 1
 	dat_pos = dat_room.get_center() * 8
 	terminal_pos = dat_pos
 	plr.position = player_pos
 	other_things.add_child(Exit.new(exit_pos))
 	other_things.add_child(DAT.new(dat_pos))
 	add_child(plr)
+	spawn_scrap(4)
 	return plr
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -22,13 +22,14 @@ to return to gameplay, press [esc] again.
 enter '¬Atutorial¬¬' for some short instructions
 enter '¬Ahelp¬¬' for a list of commands
 enter '¬Akeys¬¬' for a list of controls
+enter '¬Aoptions¬¬' for a list of instructions
 
 
 TERMINAL_KEYS=
 --------CONTROLS LIST--------
 ¬6WASD¬¬ - ¬6move
 ¬6tab¬¬ - ¬6open/close inventory
-¬6esc¬¬ - ¬6cancel / close menus
+¬6esc¬¬ - ¬6cancel / close menus / open terminal
 ¬6enter¬¬ - ¬6use held item / interact
 ¬6ctrl¬¬ - ¬6hold to sneak
 ¬6shift¬¬ - ¬6hold to run
@@ -36,7 +37,6 @@ TERMINAL_KEYS=
 ¬6q/e¬¬ - ¬6move prev/next in inventory
 ¬6arrow keys¬¬ - ¬6move in inventory
 ¬6shift + k¬¬ - ¬6skip hymn
-
 
 TERMINAL_HELP_1=
 --------COMMAND LIST--------
@@ -49,12 +49,14 @@ TERMINAL_HELP_1=
 ¬6save¬¬ - ¬6save game. only outside of a run
 ¬6giveup¬¬ - ¬8kill yourself¬6 during a run
 ¬6reset¬¬ - ¬8reset your save file¬¬
+¬6options¬¬ - ¬6 view and change options
 
 
 TERMINAL_HELP_2=
 --------DEBUG COMMAND LIST--------
 ¬6nexthymn - plays the next hymn
 ¬6reloadlang - reloads the current language
+¬6[t,testdialog] - test dialog box
 
 
 TERMINAL_TUTORIAL=
@@ -80,29 +82,46 @@ TERMINAL_PLAY_FAIL=
 TERMINAL_SAVE_ERROR=¬8something went wrong while saving.
 TERMINAL_SAVE_SUCCESS=¬Asuccessfully saved!
 TERMINAL_SAVE_FAIL=¬8cannot save inside a run
-
+TERMINAL_YN=[ y / n ]
 TERMINAL_LOAD_FUCKEDUP=
 ¬6save file ¬8might be broken/corrupt¬6. load it anyway?
 ¬8(it is not recommended to run it.)
-[ y / n ]
+
 
 TERMINAL_LOAD_NEW=¬6creating save file...
 TERMINAL_LOAD_SUCCESS=¬6save file loaded
 TERMINAL_LOAD_FAIL=¬8cannot load inside a run
-
 
 TERMINAL_PAUSEINPUT=press any key to continue...
 
 TERMINAL_RESET_ASK=
 ¬6are you ¬8really sure¬6 you want to ¬8reset?¬6
 ¬6this action is ¬8irreversible¬6.
-[ y / n ]
 
-TERMINAL_RESET_DONE=¬6we have erased it.
+TERMINAL_RESET_DONE=¬6we have erased it. 
 TERMINAL_RESET_CANCEL=¬6your save file lives another day.
 TERMINAL_RESET_EMPTY=¬8there is nothing to reset.
 
 TERMINAL_CLOSE_FAIL=¬8no other gameplay loaded¬¬
+
+TERMINAL_BOOL_OPTION=
+set new value for 
+
+TERMINAL_BOOL_OPTION_SET_TRUE=option set to ¬8true
+TERMINAL_BOOL_OPTION_SET_FALSE=option set to ¬8false
+
+TERMINAL_OPTIONS_DISPLAY=
+-----------------¬Aoptions list¬¬-----------------
+use the command in gray to change the options
+----------------------------------------------
+TERMINAL_OPTIONS_0=(¬5options -s¬¬) simpler descriptions: 
+TERMINAL_OPTIONS_1=(¬5options -a¬¬) autosave before entering dungeon: 
+TERMINAL_OPTIONS_2=(¬5options -e¬¬) autosave after dungeon exit: 
+
+## TERMINAL OPTIONS
+SIMPLE_DESC=Simpler Item/Hymn Descriptions
+AUTOSAVE_ENTRY=Autosave on Dungeon Entry
+AUTOSAVE_EXIT=Autosave on Dungeon Exit
 
 TERMINAL_HELP_SPECIAL=
 --------DUNGEON TERMINAL COMMAND LIST--------
@@ -120,7 +139,8 @@ TERMINAL_HELP_SPECIAL=
 TERMINAL_BOSS_SUMMON_FAIL=¬8returned no entry from table "bosses"
 
 # MISC UI STUFF
-
+SKIP_HELP=[Shift + K] to skip
+SKIP_HELP_ALT=Unskippable
 GAME_OVER_A=game over
 GAME_OVER_B=recovery successful
 GAME_OVER_C=press [enter] to return
@@ -160,17 +180,30 @@ dungeon access terminal
 # ITEMS
 
 ITEM_METAL=Metal
-ITEM_DESC_METAL=sturdy material for building things.
+ITEM_DESC_METAL=hardness = 2
+ITEM_SIMPLEDESC_METAL=
+sturdy material for building things.
+not really something to keep.
 ITEM_WIRES=Wires
-ITEM_DESC_WIRES=slightly chewed...
+ITEM_DESC_WIRES=chewedness = 0.12
+ITEM_SIMPLEDESC_WIRES=
+slightly chewed...
+not really something to keep.
 ITEM_BATTERY=Battery
-ITEM_DESC_BATTERY=all melded into one singular being.
+ITEM_DESC_BATTERY=edibility = 0.02
+ITEM_SIMPLEDESC_BATTERY=
+a pack of surprisingly fresh batteries.
+not really something to keep.
 ITEM_BIGEEPLEBAG=Big Bag of Eeples
 ITEM_DESC_BIGEEPLEBAG=add_money(randi_range(10,15))
-ITEM_SIMPLEDESC_BIGEEPLEBAG=Use to gain some Eeples.
+ITEM_SIMPLEDESC_BIGEEPLEBAG=
+Use to gain some Eeples.
+its sell value comes from the cloth,
+so selling it is not a good idea.
 ITEM_REDBERRIES=Red Berries
 ITEM_DESC_REDBERRIES=plr.heal(15)
-ITEM_SIMPLEDESC_REDBERRIES=A Refreshing snack.
+ITEM_SIMPLEDESC_REDBERRIES=
+A Healthy snack.
 
 ITEM_MULTIGRAINWAFFLE=Multi-Grain Waffle
 ITEM_DESC_MULTIGRAINWAFFLE=
@@ -178,6 +211,8 @@ ITEM_DESC_MULTIGRAINWAFFLE=
 if event is ConsumeEvent:
 event.player.heal(10)
 ITEM_SIMPLEDESC_MULTIGRAINWAFFLE=
+(Active): boomerang waffles.
+(Passive):
 Eating edible things heals for 10 Heatlh.
 
 ITEM_SPOREMOTHER=Spore Mother
@@ -186,6 +221,8 @@ ITEM_DESC_SPOREMOTHER=
 if event is DamageEvent:
 for i in range(30): Spore.new()
 ITEM_SIMPLEDESC_SPOREMOTHER=
+(Active): a cone of spores that Ignore Enemy Iframes.
+(Passive):
 Spawn Spores around you when you are Damaged.
 
 ITEM_PRAIRIEKINGGUN=Prairie King's Gun
@@ -193,6 +230,8 @@ ITEM_DESC_PRAIRIEKINGGUN=
 (Passive):
 item_usedelay *= 0.9
 ITEM_SIMPLEDESC_PRAIRIEKINGGUN=
+(Active): Gun.
+(Passive):
 Faster item Use Speed.
 
 ITEM_SCREAMINGVOIDAXE=Axe of the Screaming Void
@@ -202,6 +241,8 @@ crit_chance = lerp(0.2,0.0,distance_percent)
 if randf_range(0,1) <= crit_chance:
 	event.damage *= 3
 ITEM_SIMPLEDESC_SCREAMINGVOIDAXE=
+(Active): A mid-range blast.
+(Passive):
 Attacks that Dont Go Far
 have a Chance to deal 3x Damage.
 
@@ -211,6 +252,8 @@ ITEM_DESC_TOMEOFTHEHILLS=
 if event is HymnPlayEvent:
 	event.next_hymn_delay -= 4
 ITEM_SIMPLEDESC_TOMEOFTHEHILLS=
+(Active): A slow homing ball.
+(Passive):
 Hymns play faster.
 tiiiiime skip!
 
@@ -222,6 +265,8 @@ if event is DamageEvent:
 		if randi() % 100 < 4:
 			drop_item_somewhere(target.position,scraps.pick_random())
 ITEM_DESC_UNDEADCHISEL=
+(Active): A 3-hit melee attack. does not auto-attack.
+(Passive):
 Damaging enemies has a chance
 to Spawn Scrap on them.
 
@@ -230,17 +275,17 @@ to Spawn Scrap on them.
 
 ARCHANGEL=Archangel
 
-CHLANKE=Chlanke
+CHLANKE=¬8Chlanke¬¬
 # Name comes from "clank", reference to Decked Out 1/2,
 # and also from the clanking of metal armor
 
-EUCELEPH=Euceleph
+EUCELEPH=¬BEuceleph¬¬
 # Name comes from Eucalyptus trees I'm not really sure why
 
-MIRRARA=Mirrara
+MIRRARA=¬AMirrara¬¬
 # Name comes from mirrors, reflections showing the truth
 
-GAMMON=Gammon
+GAMMON=¬CGammon¬¬
 # Name is a reference to Lenna's Inception and Cassette Beasts
 # Gammon/Mammon is a greedy chairman in LI
 # Mammon is a boss in CB
@@ -469,7 +514,8 @@ DISC_DESC_THESHERIFFSGAZE=
 if event is PerilGainEvent:
 	add_money(2)
 DISC_SIMPLEDESC_THESHERIFFSGAZE=
-Until the next hymn is played, gain 2 Eeples for each time Peril is generated.
+Until the next hymn is played,
+gain 2 Eeples for each time Peril is generated.
 
 DISC_GAMMONSMERRYBALLAD=Gammon's Merry Ballad
 DISC_DESC_GAMMONSMERRYBALLAD=
@@ -488,8 +534,8 @@ for item:Item in resources.inventory:
 	add_peril(3 * (1 if item.value != Value.Artifact else 2))
 	spawn_scrap(7)
 DISC_SIMPLEDESC_PRAYERTOGAMMON=
-Gain Eeples equal to half the combined sell value of your inventory.
-Gain 3 Peril for each item affected, doubled if it's an artifact.
+Gain Eeples equal to half the combined Sell Value of your Inventory.
+Gain 3 Peril for each item affected, doubled if it's an Artifact.
 
 DISC_RECKLESSCHARGE=Reckless Charge
 DISC_DESC_RECKLESSCHARGE=
@@ -498,7 +544,8 @@ if event is DamageEvent and event.player_hurt:
 	if total_damage >= 10:
 		lvl.drop_item(BigEepleBag,3); lvl.spawn_scrap(8)
 DISC_SIMPLEDESC_RECKLESSCHARGE=
-Drop 3 Big Bags of Eeples and 8 Scrap if you lose at least 10 Health in 4 seconds.
+Drop 3 Big Bags of Eeples and 8 Scrap
+if you lose at least 10 Health in 4 seconds.
 
 ################## DIALOGUE! ########################
 
@@ -515,9 +562,30 @@ Greetings, Princess Squallita. There is a high demand on wires today.
 Selling these to some real freaks at the Giggle Gang. They're making those electrocution nets that use exposed copper wiring.
 I think this technically makes me an arms dealer now.
 
+DOLORES_SHOP_DEMAND_WIRES_2=
+Greetings, Princess Squallita. There is a high demand on wires today.
+The kids at Fledgling Nest Elementary are using them for scrapbooks.
+Of course, I immediately saw that as an opportunity to raise my prices.
+
 DOLORES_SHOP_DEMAND_BATTERIES_1=
 Greetings, Princess Squallita. There is a high demand on batteries today.
 They're thinking about attempting to make Battery Bites a thing again.
 Personally, I don't see it doing as well as it did last decade.
+
+DOLORES_SHOP_DEMAND_BATTERIES_2=
+Greetings, Princess Squallita. There is a high demand on batteries today.
+Honestly, I'm the one that needs it this time.
+I'm working on something and I just ran out of Batteries. Simple as that.
+
+SUSAN_RANDOM_1=
+Heyyyyy girlypop!
+So, here's something I found out about the CD player in the dungeon.
+There's this thing that happens where the stuff in a CD deteriorates for some reason.
+That usually happens over like, decades of the CD existing.
+But the CD player in the dungeon accelerates it by like, a lot.
+So sometimes even ¬Ajust after playing¬¬ a part of the CD, the thing it played gets ¬Alost forever¬¬.
+
+SUSAN_RANDOM_2=
+
 
 END_OF_DIALOG_FILE

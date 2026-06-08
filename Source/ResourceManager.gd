@@ -41,9 +41,9 @@ func new_run_refresh():
 			var rarity = rarity_weights.get(weight)
 			if rarity_weights.get(weight) == Disc.Rarity.Rare and randi() % 100 < 3:
 				rarity = Disc.Rarity.Scrumptious
-			var disc = Main.disc_manager.get_of_rarity(rarity)
+			var disc = Main.main.disc_manager.get_of_rarity(rarity)
 			if not disc:
-				Main.disc_manager.get_of_rarity(Disc.Rarity.Common)
+				Main.main.disc_manager.get_of_rarity(Disc.Rarity.Common)
 			disc_shop.append(disc)
 
 func initialize_inventory():

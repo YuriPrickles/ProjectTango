@@ -57,11 +57,12 @@ var loaded_fullscreen:Node = null
 var current_level:Level
 var saved_levels:Array[Level]
 var resources:ResourceManager
-static var disc_manager:DiscManager
+var disc_manager:DiscManager
 var run_gui:RunGUI
 var inventory_open:bool
 var killed_by:String="The Nameless"
 var terminal:Terminal=load("res://Source/terminal.tscn").instantiate()
+var options:Options
 
 static var game_state:int = GameState.MAINMENU
 enum GameState {
@@ -78,10 +79,13 @@ const MAX_PRL = 100
 
 static var main_lang:Language
 
+func _init() -> void:
+	main = self
 func _ready() -> void:
 	#add_child(preload("res://Source/MidiPlayer/midi.tscn").instantiate())
 	main_lang = Language.from_txt("res://Dialog/English.txt")
-	main = self
+	if not SaveLoad.load_options():
+		options = Options.new()
 	game_state = GameState.MAINMENU
 	FontAtlasTexture = preload("res://Graphics/Atlases/Fonts/font.png")
 	ItemAtlasTexture = preload("res://Graphics/Atlases/Gameplay/item_atlas.png")
@@ -209,10 +213,11 @@ func _input(event: InputEvent) -> void:
 		if not terminal.visible:
 			terminal.special_commands = false
 		#run_gui.visible = !terminal.visible
-	if event.is_action_pressed("DEBUG_ADD_PRL"):
-		add_peril(1)
-	if event.is_action_pressed("DEBUG_DEL_PRL"):
-		add_peril(-1)
+	#if not terminal.is_overlay:
+		#if event.is_action_pressed("DEBUG_ADD_PRL"):
+			#add_peril(1)
+		#if event.is_action_pressed("DEBUG_DEL_PRL"):
+			#add_peril(-1)
 ##Usually you'll want to put Vector2(width,height)/-2 as the offset.
 ##Just fuck around with the offset if you need to, you can do this
 static func spr(atlas:Atlas,item:CanvasItem, offset:Vector2,index:int,color:Color=Main.colors[7],scale:Vector2=Vector2(1,1)):

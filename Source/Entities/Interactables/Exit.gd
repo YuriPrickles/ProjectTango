@@ -22,7 +22,7 @@ func _process(delta: float) -> void:
 	pointlight.texture_scale = 0.1 + (sin(Engine.get_frames_drawn() * 0.05) * 0.01 )
 func _input(event: InputEvent) -> void:
 	if touching and event.is_action_pressed("accept") and not starting_to_close:
-		Main.disc_manager.stop_cd_player()
+		Main.main.disc_manager.stop_cd_player()
 		starting_to_close = true
 		var plr:Player = Main.main.get_player()
 		plr.position = position + Vector2(0,0)

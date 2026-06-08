@@ -73,6 +73,8 @@ func _input(event: InputEvent) -> void:
 		Main.main.load_level(LevelID.Above)
 		queue_free()
 		Main.main.reset_run()
+		if Main.main.options.get_option(Options.OptionNames.AUTOSAVE_EXIT)==true:
+			Main.main.terminal.save_game()
 		Main.escaped = false
 		Main.game_over = false
 

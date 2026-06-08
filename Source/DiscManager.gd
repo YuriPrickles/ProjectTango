@@ -1,36 +1,39 @@
 class_name DiscManager
 extends Resource
 static var disc_list:Dictionary[int,Disc]={
-	DiscID.UNREADABLE: UNREADABLE.new(),
-	DiscID.OurLife: OurLife.new(),
-	DiscID.OurGuardian: OurGuardian.new(),
-	DiscID.OurTruth: OurTruth.new(),
-	DiscID.OurBounty: OurBounty.new(),
-	DiscID.Protect: Protect.new(),
-	DiscID.Regrowth: Regrowth.new(),
-	DiscID.Search: Search.new(),
-	DiscID.Heist: Heist.new(),
-	DiscID.DivineDoctor: DivineDoctor.new(),
-	DiscID.Sacrifice: Sacrifice.new(),
-	DiscID.BlessOurSouls: BlessOurSouls.new(),
-	DiscID.PrayerToChlanke: PrayerToChlanke.new(),
-	DiscID.SilentSavior: SilentSavior.new(),
-	DiscID.TheHarvest: TheHarvest.new(),
-	DiscID.NewCreation: NewCreation.new(),
-	DiscID.ChildrenOfTheTree: ChildrenOfTheTree.new(),
-	DiscID.PrayerToEuceleph: PrayerToEuceleph.new(),
-	DiscID.BlessingOfLife: BlessingOfLife.new(),
-	DiscID.PrayerToMirrara: PrayerToMirrara.new(),
-	DiscID.TruthSeeker: TruthSeeker.new(),
-	DiscID.UnyieldingJustice: UnyieldingJustice.new(),
-	DiscID.Serenity: Serenity.new(),
-	DiscID.Eavesdropper: Eavesdropper.new(),
-	DiscID.TheBoyWhoBrokeDoors: TheBoyWhoBrokeDoors.new(),
-	DiscID.TheSheriffsGaze: TheSheriffsGaze.new(),
-	DiscID.GammonsMerryBallad: GammonsMerryBallad.new(),
-	DiscID.PrayerToGammon: PrayerToGammon.new(),
-	DiscID.RecklessCharge: RecklessCharge.new(),
 }
+func _init() -> void:
+	disc_list={
+		DiscID.UNREADABLE: UNREADABLE.new(),
+		DiscID.OurLife: OurLife.new(),
+		DiscID.OurGuardian: OurGuardian.new(),
+		DiscID.OurTruth: OurTruth.new(),
+		DiscID.OurBounty: OurBounty.new(),
+		DiscID.Protect: Protect.new(),
+		DiscID.Regrowth: Regrowth.new(),
+		DiscID.Search: Search.new(),
+		DiscID.Heist: Heist.new(),
+		DiscID.DivineDoctor: DivineDoctor.new(),
+		DiscID.Sacrifice: Sacrifice.new(),
+		DiscID.BlessOurSouls: BlessOurSouls.new(),
+		DiscID.PrayerToChlanke: PrayerToChlanke.new(),
+		DiscID.SilentSavior: SilentSavior.new(),
+		DiscID.TheHarvest: TheHarvest.new(),
+		DiscID.NewCreation: NewCreation.new(),
+		DiscID.ChildrenOfTheTree: ChildrenOfTheTree.new(),
+		DiscID.PrayerToEuceleph: PrayerToEuceleph.new(),
+		DiscID.BlessingOfLife: BlessingOfLife.new(),
+		DiscID.PrayerToMirrara: PrayerToMirrara.new(),
+		DiscID.TruthSeeker: TruthSeeker.new(),
+		DiscID.UnyieldingJustice: UnyieldingJustice.new(),
+		DiscID.Serenity: Serenity.new(),
+		DiscID.Eavesdropper: Eavesdropper.new(),
+		DiscID.TheBoyWhoBrokeDoors: TheBoyWhoBrokeDoors.new(),
+		DiscID.TheSheriffsGaze: TheSheriffsGaze.new(),
+		DiscID.GammonsMerryBallad: GammonsMerryBallad.new(),
+		DiscID.PrayerToGammon: PrayerToGammon.new(),
+		DiscID.RecklessCharge: RecklessCharge.new(),
+	}
 func get_random_disc() -> Disc:
 	return disc_list.get(randi() % (disc_list.size() - 1))
 func get_of_rarity(rarity:Disc.Rarity) -> Disc:
@@ -79,10 +82,13 @@ func add_hymn_to_buffer():
 				temporary_cd.erase(hymn)
 
 func load_disc():
-	temporary_cd = cd.duplicate_deep()
+	temporary_cd = cd.duplicate()
 func unload_disc():
 	for hymn:Disc in destroyed_hymns.keys():
+		print(destroyed_hymns.get(hymn,0))
+		print(cd.get(hymn,0))
 		cd[hymn] = cd.get(hymn,0) - destroyed_hymns.get(hymn,0)
+		print(cd.get(hymn,0))
 		if cd.get(hymn,0) <= 0:
 			cd.erase(hymn)
 	temporary_cd.clear()

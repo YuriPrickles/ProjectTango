@@ -98,8 +98,10 @@ func _draw() -> void:
 			var name_pos = backpack_pos+inv_grid_offset + Vector2(0,-12 + extra_offset)
 			var desc_pos = backpack_pos+inv_grid_offset + Vector2(0,-6 + extra_offset) 
 			var name_arr = [Main.main_lang.get_dialog("HELD_ITEM"),item.get_proper_item_name()]
+			
 			Main.draw_text(self,"¬6%s¬¬ %s" % name_arr,name_pos,Main.colors[item.value],Main.colors[0])
-			if Main.main.inventory_open: Main.draw_text(self,item.item_desc,desc_pos,Main.colors[6],Main.colors[0], true)
+			if Main.main.inventory_open:
+				Main.draw_text(self,item.item_desc,desc_pos,Main.colors[6],Main.colors[0], true)
 		#endregion
 		
 		#region Playerhealth
@@ -168,13 +170,20 @@ class InfoHUD:
 			Main.draw_text(self,inst_text,infohud_pos + Vector2(0,-6))
 			Main.draw_text(self, "UP_NEXT", upnext_pos + Vector2(0,-6),Main.colors[7])
 		draw_rect(Rect2(upnext_pos,Vector2(88,48)),Main.colors[1],true)
+		var added_dialog_key = ""
+		if Main.main.disc_manager.hymn_buffer.size() < 0 and Main.main.disc_manager.hymn_buffer[0] and Main.main.disc_manager.hymn_buffer[0] is UNREADABLE:
+			added_dialog_key = "_ALT"
 		for i in range(5):
 			draw_rect(Rect2(upnext_pos + Vector2(1,1 + (i * 8)),Vector2(86,6)),Main.colors[0])
-			if not Main.disc_manager.hymn_buffer.size() <= i and Main.disc_manager.hymn_buffer[i]:
-				var disc_name = Main.disc_manager.hymn_buffer[i].disc_name
-				var color:Color = Main.colors[7] if Main.disc_manager.hymn_buffer[i] else Main.colors[Utils.blink(12,14,7)]
+			if not Main.main.disc_manager.hymn_buffer.size() <= i and Main.main.disc_manager.hymn_buffer[i]:
+				
+				if i == 0:
+					var disc_time_percent = Main.main.disc_manager.cd_player_timer.time_left / Main.main.disc_manager.HYMN_DELAY
+					draw_rect(Rect2(upnext_pos + Vector2(1,1 + (i * 8)),Vector2(0 + (86*disc_time_percent),6)),Main.colors[2])
+				var disc_name = Main.main.disc_manager.hymn_buffer[i].disc_name
+				var color:Color = Main.colors[7] if Main.main.disc_manager.hymn_buffer[i] else Main.colors[Utils.blink(12,14,7)]
 				Main.draw_text(self, disc_name, upnext_pos + Vector2(1, 1 + i * 8),color)
-		Main.draw_text(self, "[Shift + K] to skip", upnext_pos + Vector2(0,42),Main.colors[7])
+		Main.draw_text(self, "SKIP_HELP" + added_dialog_key, upnext_pos + Vector2(0,42),Main.colors[7])
 		#CDTRACKLABEL
 		var cd_track_label_pos:Vector2 = infohud_pos + Vector2(0,16)
 		draw_rect(Rect2(cd_track_label_pos + Vector2(1,1),Vector2(38,6)),Main.colors[0])

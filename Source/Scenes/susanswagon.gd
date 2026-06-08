@@ -48,7 +48,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("accept") and disc_shop[selected_disc]:
 		if Main.main.resources.money >= disc_shop[selected_disc].cost:
 			Main.main.resources.spend_money(disc_shop[selected_disc].cost)
-			Main.disc_manager.add_cd_to_storage(disc_shop[selected_disc])
+			Main.main.disc_manager.add_cd_to_storage(disc_shop[selected_disc])
 			disc_shop[selected_disc] = null
 		
 
@@ -72,8 +72,7 @@ class DiscTextbox:
 	var current_disc:Disc
 	func _draw() -> void:
 		if current_disc:
-			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name],Vector2(16,136),Main.colors[7])
-			
+			Main.draw_text(self,"¬%x[%s]¬¬ %s (%s)" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name,current_disc.get_patron()],Vector2(16,136),Main.colors[7])
 			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 6),Main.colors[6],Color.TRANSPARENT,true)
 class StupidRectangle:
 	extends Node2D

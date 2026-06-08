@@ -5,6 +5,7 @@ const base_path = "user://savefile.tres"
 const options_path = "user://options.tres"
 
 static var savefile = Savefile.new()
+static var options = Options.new()
 
 static func kill_save():
 	DirAccess.remove_absolute(base_path)
@@ -28,4 +29,17 @@ static func load_game() -> bool:
 		Main.main.resources.money = savefile.resource_manager.money
 		Main.main.disc_manager.stored_discs = savefile.disc_manager.stored_discs
 		Main.main.disc_manager.cd = savefile.disc_manager.cd
+	return true
+
+static func save_options():
+	options = Main.main.options.duplicate()
+	return ResourceSaver.save(options,options_path,ResourceLoader.CACHE_MODE_IGNORE)
+
+static func load_options() -> bool:
+	if not ResourceLoader.exists(options_path):
+		return false
+	else:
+		options = ResourceLoader.load(options_path)
+		if not options: return false
+		Main.main.options = options.duplicate()
 	return true

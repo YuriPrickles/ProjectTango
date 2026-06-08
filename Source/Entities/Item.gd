@@ -32,7 +32,13 @@ var has_picked_up_before = false
 var spr_index:int = 16
 var value:Value = Value.Normal
 var item_name:String = "Nothing"
-var item_desc = "null"
+var item_desc:String:
+	get:
+		var desc_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
+		var key = "ITEM_DESC_" if Main.main.options.get_option(Options.OptionNames.SIMPLE_DESC) == false else "ITEM_SIMPLEDESC_"
+		assert(key)
+		assert(desc_key)
+		return (key + desc_key)
 
 var sell_value:int = 1
 var custom_pickup:Script = null
@@ -46,9 +52,7 @@ var item_auto = true
 func get_proper_item_name(): return Main.main_lang.get_dialog(item_name)
 func _init() -> void:
 	var name_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
-	var desc_key:String = str(get_script().get_global_name()).to_upper().replace(" ","_")
 	item_name = ("ITEM_%s" % name_key)
-	item_desc = ("ITEM_DESC_%s" % desc_key)
 
 ##Called when an item is picked up as a Pickup.
 func on_pickup():

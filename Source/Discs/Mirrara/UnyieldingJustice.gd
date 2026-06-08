@@ -10,5 +10,5 @@ func _init() -> void:
 func on_play(was_destroyed) -> void:
 	super.on_play(was_destroyed)
 	for i in range(2):
-		if Main.disc_manager.hymn_buffer[i]:
-			Main.disc_manager.hymn_buffer[i].replayable = true
+		if Main.main.disc_manager.hymn_buffer[i]:
+			Main.main.disc_manager.hymn_buffer[i].replayable = true

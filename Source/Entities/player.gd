@@ -115,7 +115,7 @@ func _input(event: InputEvent) -> void:
 			prevent_holding_atk = not item.item_auto
 			item.on_use()
 	if event.is_action_pressed("skip_hymn") and Main.main.inventory_open:
-		Main.disc_manager.skip_next()
+		Main.main.disc_manager.skip_next()
 	if not throwmode:
 		if (event.is_action_pressed("inv_left") or event.is_action_pressed("inv_right")):
 			var input = Input.get_axis("inv_left","inv_right")

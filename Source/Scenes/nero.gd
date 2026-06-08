@@ -20,8 +20,8 @@ var per_page_storage:Array[Array]
 var per_page_cd:Array[Array]
 var selected_disc:int = 0
 var texture:Texture2D = preload("res://Graphics/Fullscreens/nero_bg.png")
-var stored_discs_ref:Dictionary[Disc,int] = Main.disc_manager.stored_discs
-var cd_ref:Dictionary[Disc,int] = Main.disc_manager.cd
+var stored_discs_ref:Dictionary[Disc,int] = Main.main.disc_manager.stored_discs
+var cd_ref:Dictionary[Disc,int] = Main.main.disc_manager.cd
 var tab_contents:Array[Array]
 func _ready() -> void:
 	z_index = Main.Depths.Fullscreens
@@ -97,17 +97,17 @@ func _input(event: InputEvent) -> void:
 	var true_selected = selected_disc + page[tab] * MAX_PER_PAGE
 	if event.is_action_pressed("accept"):
 		if tab == 0 and disc_array[true_selected]:
-			if Main.disc_manager.get_cd_total() < DiscManager.MAX_HYMNS and Main.disc_manager.stored_discs.get(disc_array[selected_disc],0) != 0 and Main.disc_manager.cd.get(disc_array[selected_disc],0) < disc_array[selected_disc].max_stack:
-				Main.disc_manager.burn_to_cd(disc_array[true_selected],1)
-				Main.disc_manager.stored_discs[disc_array[true_selected]] -= 1
-				if Main.disc_manager.stored_discs.get(disc_array[true_selected],0) == 0:
-					Main.disc_manager.stored_discs.erase(disc_array[true_selected])
+			if Main.main.disc_manager.get_cd_total() < DiscManager.MAX_HYMNS and Main.main.disc_manager.stored_discs.get(disc_array[selected_disc],0) != 0 and Main.main.disc_manager.cd.get(disc_array[selected_disc],0) < disc_array[selected_disc].max_stack:
+				Main.main.disc_manager.burn_to_cd(disc_array[true_selected],1)
+				Main.main.disc_manager.stored_discs[disc_array[true_selected]] -= 1
+				if Main.main.disc_manager.stored_discs.get(disc_array[true_selected],0) == 0:
+					Main.main.disc_manager.stored_discs.erase(disc_array[true_selected])
 					disc_array.pop_at(true_selected)
 		if tab == 1 and cd_array[true_selected]:
-			if Main.disc_manager.cd.get(cd_array[true_selected],0) != 0:
-				Main.disc_manager.cd[cd_array[true_selected]] -= 1
-				if Main.disc_manager.cd.get(cd_array[true_selected],0) == 0:
-					Main.disc_manager.cd.erase(cd_array[true_selected])
+			if Main.main.disc_manager.cd.get(cd_array[true_selected],0) != 0:
+				Main.main.disc_manager.cd[cd_array[true_selected]] -= 1
+				if Main.main.disc_manager.cd.get(cd_array[true_selected],0) == 0:
+					Main.main.disc_manager.cd.erase(cd_array[true_selected])
 					cd_array.pop_at(true_selected)
 	if selected_disc >= tab_contents[tab].size(): selected_disc = tab_contents[tab].size() - 1
 	if selected_disc < 0: selected_disc = 0
@@ -123,7 +123,7 @@ func _draw() -> void:
 	texture.draw_rect_region(get_canvas_item(),Rect2(6,16 + selected_disc * 8,8,8),Rect2(0,0,8,8))
 	if not disc_array.is_empty():
 		if disc_array.size() < selected_disc:
-			if Main.disc_manager.get_cd_total() >= Main.disc_manager.MAX_HYMNS or (tab==0 and selected_disc > -1 and not cd_ref.is_empty() and cd_ref.get(disc_array[selected_disc],0) + 1 > disc_array[selected_disc].max_stack):
+			if Main.main.disc_manager.get_cd_total() >= Main.main.disc_manager.MAX_HYMNS or (tab==0 and selected_disc > -1 and not cd_ref.is_empty() and cd_ref.get(disc_array[selected_disc],0) + 1 > disc_array[selected_disc].max_stack):
 				texture.draw_rect_region(get_canvas_item(),Rect2(128,96,40,24),Rect2(168,96,40,24))
 
 	if tab == 0:
@@ -134,7 +134,7 @@ func _draw() -> void:
 		
 	Main.spr(Main.GameAtlas,self,Vector2(8,0),28)
 	Main.draw_text(self,str(Main.main.resources.money),Vector2(16,0))
-	Main.draw_text(self,str(Main.disc_manager.get_cd_total()),Vector2(98,106))
+	Main.draw_text(self,str(Main.main.disc_manager.get_cd_total()),Vector2(98,106))
 	Main.draw_text(self,str(DiscManager.MAX_HYMNS),Vector2(111,106))
 	Main.draw_text(self,str("page %s of %s" % [page[0]+1,8]),Vector2(48,106),Main.colors[7],Main.colors[16],false,true)
 	Main.draw_text(self,str("page %s of %s" % [page[1]+1,8]),Vector2(124,90),Main.colors[7],Main.colors[16],false,true)
@@ -158,7 +158,7 @@ class DiscTextbox:
 	var current_disc:Disc
 	func _draw() -> void:
 		if current_disc:
-			Main.draw_text(self,"¬%x[%s]¬¬ %s" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name],Vector2(16,136))
+			Main.draw_text(self,"¬%x[%s]¬¬ %s (%s)" % [current_disc.get_rarity_color(),current_disc.get_rarity(),current_disc.disc_name, current_disc.get_patron()],Vector2(16,136))
 			Main.draw_text(self,"%s" % current_disc.disc_desc,Vector2(16,136 + 6),Main.colors[7],Main.colors[16],true)
 			return
 		Main.draw_text(self,"no hymn selected",Vector2(16,136))

@@ -9,5 +9,5 @@ func _init() -> void:
 
 func on_play(was_destroyed) -> void:
 	for i in range(2):
-		Main.disc_manager.skip_next()
+		Main.main.disc_manager.skip_next()
 	Main.main.add_peril_block(10)

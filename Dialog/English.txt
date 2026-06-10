@@ -24,32 +24,35 @@ enter '¬Ahelp¬¬' for a list of commands
 enter '¬Akeys¬¬' for a list of controls
 enter '¬Aoptions¬¬' for a list of instructions
 
+SAVE_EXISTS=save exists, last modified: 
+NO_SAVE=no save exists
 
 TERMINAL_KEYS=
 --------CONTROLS LIST--------
-¬6WASD¬¬ - ¬6move
-¬6tab¬¬ - ¬6open/close inventory
-¬6esc¬¬ - ¬6cancel / close menus / open terminal
-¬6enter¬¬ - ¬6use held item / interact
-¬6ctrl¬¬ - ¬6hold to sneak
-¬6shift¬¬ - ¬6hold to run
-¬6t¬¬ - ¬6throw item
-¬6q/e¬¬ - ¬6move prev/next in inventory
-¬6arrow keys¬¬ - ¬6move in inventory
-¬6shift + k¬¬ - ¬6skip hymn
+¬7WASD¬¬       - ¬6move
+¬7tab¬¬        - ¬6open/close inventory
+¬7esc¬¬        - ¬6cancel / close menus / open terminal
+¬7enter¬¬      - ¬6use held item / interact
+¬7ctrl¬¬       - ¬6hold to sneak
+¬7shift¬¬      - ¬6hold to run
+¬7t¬¬          - ¬6throw item
+¬7q/e¬¬        - ¬6move prev/next in inventory
+¬7arrow keys¬¬ - ¬6move in inventory
+¬7shift + k¬¬  - ¬6skip hymn
+¬7space¬¬      - ¬6talk to people, when possible.
 
 TERMINAL_HELP_1=
 --------COMMAND LIST--------
-¬6help - ¬6display this menu
-¬6tutorial - ¬6short instructions
-¬6keys - ¬6display controls list
-¬6clear¬¬ - ¬6clear the terminal
-¬6exit¬¬ - ¬6exit game. ¬8doesnt save!!¬¬
-¬6play¬¬ - ¬6enter the game. automatically loads the current save.
-¬6save¬¬ - ¬6save game. only outside of a run
-¬6giveup¬¬ - ¬8kill yourself¬6 during a run
-¬6reset¬¬ - ¬8reset your save file¬¬
-¬6options¬¬ - ¬6 view and change options
+¬7help¬¬      - ¬6display this menu
+¬7tutorial¬¬  - ¬6short instructions
+¬7keys¬¬      - ¬6display controls list
+¬7clear¬¬     - ¬6clear the terminal
+¬7exit¬¬      - ¬6exit game. ¬8doesnt save!!¬¬
+¬7play¬¬      - ¬6enter the game. automatically loads the current save.
+¬7save¬¬      - ¬6save game. only outside of a run
+¬7giveup¬¬    - ¬8kill yourself¬6 during a run
+¬7reset¬¬     - ¬8reset your save file¬¬
+¬7options¬¬   - ¬6view and change options
 
 
 TERMINAL_HELP_2=
@@ -78,10 +81,12 @@ TERMINAL_NEXTHYMN_FAIL=
 TERMINAL_PLAY_FAIL=
 ¬8there is nowhere further to go.
 
+TERMINAL_EXIT_ERROR=
+¬8cannot exit program during a run
 
 TERMINAL_SAVE_ERROR=¬8something went wrong while saving.
 TERMINAL_SAVE_SUCCESS=¬Asuccessfully saved!
-TERMINAL_SAVE_FAIL=¬8cannot save inside a run
+TERMINAL_SAVE_FAIL=¬8cannot save during a run
 TERMINAL_YN=[ y / n ]
 TERMINAL_LOAD_FUCKEDUP=
 ¬6save file ¬8might be broken/corrupt¬6. load it anyway?
@@ -117,6 +122,7 @@ use the command in gray to change the options
 TERMINAL_OPTIONS_0=(¬5options -s¬¬) simpler descriptions: 
 TERMINAL_OPTIONS_1=(¬5options -a¬¬) autosave before entering dungeon: 
 TERMINAL_OPTIONS_2=(¬5options -e¬¬) autosave after dungeon exit: 
+TERMINAL_OPTIONS_3=(¬5options -f¬¬) fullscreen: 
 
 ## TERMINAL OPTIONS
 SIMPLE_DESC=Simpler Item/Hymn Descriptions
@@ -204,6 +210,13 @@ ITEM_REDBERRIES=Red Berries
 ITEM_DESC_REDBERRIES=plr.heal(15)
 ITEM_SIMPLEDESC_REDBERRIES=
 A Healthy snack.
+ITEM_TROPHY1=Overgrown Trophy
+ITEM_DESC_TROPHY1=
+print("Congratulations on defeating Verdano Canopio!")
+print("After your escape, you will have completed the demo.")
+ITEM_SIMPLEDESC_TROPHY1=
+congratulations on defeating Verdano Canopio!
+After Your Escape, you will have Completed The Demo.
 
 ITEM_MULTIGRAINWAFFLE=Multi-Grain Waffle
 ITEM_DESC_MULTIGRAINWAFFLE=
@@ -264,8 +277,8 @@ if event is DamageEvent:
 	if target is Enemy and event.source is Projectile:
 		if randi() % 100 < 4:
 			drop_item_somewhere(target.position,scraps.pick_random())
-ITEM_DESC_UNDEADCHISEL=
-(Active): A 3-hit melee attack. does not auto-attack.
+ITEM_SIMPLEDESC_UNDEADCHISEL=
+(Active): A 3-hit melee combo. does not auto-attack.
 (Passive):
 Damaging enemies has a chance
 to Spawn Scrap on them.
@@ -549,6 +562,33 @@ if you lose at least 10 Health in 4 seconds.
 
 ################## DIALOGUE! ########################
 
+GIT_SAVESCUM_1=
+Well met, small princess.
+You escaped death, undetected even by archangel maya squall.
+I cannot allow that.
+The laws of time are not for you to warp.
+Until this situation is rectified, I will continue to haunt you.
+Further violations will result in direct action taken.
+
+GIT_SAVESCUM_2=
+And so we return here.
+your actions are causing conflicts in the timeline.
+i cannot keep giving you passes - you'll have to face consequences.
+the energy from these conflicts shall be added unto you.
+if you wish to resolve this, do not circumvent your deaths.
+you return anyways, don't you?
+
+GIT_SAVESCUM_3=
+Please don't keep doing this.
+When you mess with time, it has to take from somewhere else.
+Sector CLST nearly had its time flow disrupted...
+but i decided to redirect it to you.
+the speed of your cd players might be slower.
+
+GIT_SAVESCUM_ONWARDS=
+I do not have much more to do.
+Just remember: you can end this whenever you want.
+
 DOLORES_SHOP_DEMAND_METAL_1=
 Greetings, Princess Squallita. There is a high demand on metal today.
 Doesn't really matter what kind, the Vesselmasters just want their boats made.
@@ -586,6 +626,6 @@ But the CD player in the dungeon accelerates it by like, a lot.
 So sometimes even ¬Ajust after playing¬¬ a part of the CD, the thing it played gets ¬Alost forever¬¬.
 
 SUSAN_RANDOM_2=
-
+Oh my gosh. You won't believe what happened today.
 
 END_OF_DIALOG_FILE

@@ -4,8 +4,8 @@ extends Projectile
 var color:Color = Main.colors[2]
 
 func _init(p_owner:Entity,pos:Vector2,_velocity:Vector2,_damage:int) -> void:
+	super._init(p_owner,pos, Rect2(0,0,3,3),_velocity,false,_damage,1,0.3)
 	iframes_on_hit = 0
-	super._init(p_owner,pos, Rect2(0,0,3,3),_velocity,false,_damage,-1,4)
 
 func handle_hitcount():
 	pass

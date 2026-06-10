@@ -4,6 +4,7 @@ class_name Above
 func _ready() -> void:
 	id = LevelID.Above
 func _process(delta: float) -> void:
+	super(delta)
 	queue_redraw()
 	if !spawned:
 		player = spawn_player()
@@ -22,6 +23,8 @@ func spawn_player():
 	other_things.add_child(HymnShop.new(wagon_pos))
 	other_things.add_child(NeroFire.new(nero_pos))
 	add_child(plr)
+	plr.point_light_2d.enabled = false
+	setup_finished.emit()
 	return plr
 
 func spawn_enemies(): pass

@@ -1,6 +1,9 @@
 extends Node2D
 class_name Level
 
+func _init() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+signal setup_finished
 @onready var event_bus: EventBus = EventBus.new()
 
 @onready var items = $Items
@@ -19,6 +22,7 @@ func get_projectiles()->Array:return projectiles.get_children()
 @onready var walls:TileMapLayer = $Walls
 @onready var floor: TileMapLayer = $Floor
 
+var has_done_setup:bool = false
 var terminal_pos:Vector2
 var dungeon_layout:Splitter
 var player:Player
@@ -27,8 +31,12 @@ var id = LevelID.None
 var padding = Vector4i(0,0,1,1)
 
 var spawned = false
-
 func _process(delta:float) -> void:
+	if not has_done_setup:
+		await setup_finished
+		has_done_setup = true
+	if process_mode == Node.PROCESS_MODE_ALWAYS:
+		process_mode = Node.PROCESS_MODE_PAUSABLE
 	if player: move_child(player,items.get_index() - 1)
 	event_bus.tick_down(delta)
 

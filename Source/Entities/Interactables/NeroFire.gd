@@ -26,4 +26,4 @@ func _draw() -> void:
 	var sprite = Utils.blink(75,76,blinkdelay)
 	Main.spr(Main.GameAtlas,self,-draw_offset - Vector2(0,7),sprite)
 	if touching:
-		Main.draw_text(self, "NERO_HOVERTEXT", Vector2(0,-40),Main.colors[7],Main.colors[0],false,true)
+		Main.draw_text(self, "NERO_HOVERTEXT", Vector2(0,-40) - draw_offset,Main.colors[7],Main.colors[0],false,true)

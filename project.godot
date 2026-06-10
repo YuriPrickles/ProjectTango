@@ -13,9 +13,10 @@ config_version=5
 config/name="ProjectTango"
 run/main_scene="uid://dfh1jf8jx4gye"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-boot_splash/show_image=false
+boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/use_filter=false
-config/icon="res://icon.svg"
+boot_splash/image="uid://blwj7akypoeci"
+config/icon="uid://blwj7akypoeci"
 
 [audio]
 
@@ -30,9 +31,14 @@ gdscript/warnings/integer_division=0
 
 window/size/viewport_width=320
 window/size/viewport_height=180
-window/size/mode=2
+window/size/sharp_corners=true
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
+
+[gui]
+
+timers/icon="uid://u7ujdp0nrqkj"
+timers/image="uid://u7ujdp0nrqkj"
 
 [input]
 

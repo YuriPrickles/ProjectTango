@@ -65,7 +65,7 @@ func _process(delta: float) -> void:
 	super._process(delta)
 	var plr:Player = Main.main.get_player()
 	var lvl = Main.main.get_level()
-	attack_timer += delta
+	attack_timer += delta * (1 + max(0, 0.2 - (2.0 * Main.main.perilcent)))
 	if old_facing != facing and not switching:
 		switching = true
 	if current_attack == Attacks.Rush:
@@ -153,7 +153,7 @@ var hitcount = 0
 const hits_for_twigpile = 4
 const base_hits_for_rootskip = 6
 func hurt(value:int,source,iframe_override=IFRAMES):
-	if not super(value,source): return false
+	if not super(value,source,iframe_override): return false
 	if current_attack != Attacks.Rooting:
 		hitcount += 1
 		if hitcount > hits_for_twigpile:
@@ -169,8 +169,13 @@ func hurt(value:int,source,iframe_override=IFRAMES):
 			counter = 0
 			current_attack = Attacks.Idle
 			attack_timer = 0
-			
-		
+
+func vanquish():
+	super()
+	var lvl = Main.main.get_level()
+	lvl.drop_item_somewhere(position,Trophy1)
+
+
 func _physics_process(delta):
 	if navigator.is_navigation_finished():
 		return
@@ -225,19 +230,20 @@ func _draw() -> void:
 		Main.spr(Main.GameAtlas,self, extra_offset + (offset) + (body_dict.get(index)) * (Main.SPR_SIZE),spr_index_offset + index,Main.colors[7],flipXval)
 	var head_spr_index_offset = 0 if not switching else 3
 	var bobbing_offset = Vector2(0,sin(Engine.get_frames_drawn() * 0.1) + 1)
+	var plr = Main.main.get_player()
 	if current_attack == Attacks.Rooting:
 		if counter >= 1:
 			head_pos_offset.y =  8
 		else:
 			head_pos_offset.y = lerp(0,8,attack_timer/weed_grow_delay)
 	elif current_attack == Attacks.Rush:
+		draw_line(position,plr.position,Main.colors[2])
 		if counter >= 1:
 			head_pos_offset.y =  8
 		else:
 			head_pos_offset.y = lerp(0,8,attack_timer/rush_delay)
 	var finaL_pos = offset + bobbing_offset + head_pos_offset
 	draw_from_dict(head_dict,finaL_pos,head_spr_index_offset)
-	var plr = Main.main.get_player()
 	if not switching:
 		var eyes = [Vector2(4,-9),Vector2(-4,-11),Vector2(12,-11)]
 		for eye in eyes:

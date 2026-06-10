@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="Disc" format=3 uid="uid://biriolg7gfx8q"]
-
-[ext_resource type="Script" uid="uid://dljik2wfxrk8j" path="res://Source/Entities/CD.gd" id="1_rw7hg"]
-
-[resource]
-script = ExtResource("1_rw7hg")
-metadata/_custom_type_script = "uid://dljik2wfxrk8j"

@@ -11,6 +11,7 @@ static var BoardFontTexture:Texture2D = preload("res://Graphics/Atlases/Fonts/bo
 var FONTCHAR_SIZE = Vector2(8,16)
 var fontmap = "c1234567890"
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	z_index = Main.Depths.Fullscreens
 	dolores_sprite = DoloresSprite.new()
 	sellbox = SellBox.new()
@@ -28,7 +29,7 @@ func _input(event: InputEvent) -> void:
 	if Main.game_state != Main.GameState.CUTSCENE and event.is_action_pressed("special"):
 		var dialog:String = "DOLORES_SHOP_DEMAND_"
 		var max_index = 0
-		var rand_variant = (randi() % 1) + 1
+		var rand_variant = (randi() % 2) + 1
 		var current_max_sellval = 0
 		for i in range(Main.main.resources.scrap_sells.size()):
 			if Main.main.resources.scrap_sells[i] > current_max_sellval:
@@ -37,7 +38,7 @@ func _input(event: InputEvent) -> void:
 		match max_index:
 			0: dialog += "METAL_%s" % rand_variant
 			1: dialog += "WIRES_%s" % rand_variant
-			2: dialog += "BATTERIES%s" % rand_variant
+			2: dialog += "BATTERIES_%s" % rand_variant
 		Main.main.say(dialog,box_rect.position + Vector2(8,8),(Vector2((304-16)/4,(48-16)/6)))
 	if Main.game_state == Main.GameState.CUTSCENE:
 		return

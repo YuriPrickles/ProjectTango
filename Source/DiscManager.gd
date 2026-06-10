@@ -93,6 +93,7 @@ func unload_disc():
 			cd.erase(hymn)
 	temporary_cd.clear()
 	destroyed_hymns.clear()
+	hymn_buffer.clear()
 
 ##By default searches a random disc to queue next.[br]
 ##Honestly, not that useful. Please always add a DiscCondition.

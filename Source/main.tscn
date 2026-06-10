@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dfh1jf8jx4gye"]
 
 [ext_resource type="Script" uid="uid://cs5qcsnold252" path="res://Source/main.gd" id="1_kvypo"]
-[ext_resource type="PackedScene" uid="uid://dqw8kxy2sart" path="res://Source/Entities/transitioner.tscn" id="2_p7x2e"]
 
 [node name="Main" type="Node" unique_id=1891540210]
 process_mode = 3
@@ -17,4 +16,5 @@ layer = 2
 process_mode = 3
 layer = 3
 
-[node name="Transitioner" parent="." unique_id=817232785 instance=ExtResource("2_p7x2e")]
+[node name="DrawnTextCanvas" type="CanvasLayer" parent="." unique_id=311079529]
+follow_viewport_enabled = true

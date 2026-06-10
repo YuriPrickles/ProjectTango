@@ -30,4 +30,14 @@ func _draw() -> void:
 	super()
 	draw_from_dict(spr_dict,Vector2.ZERO,0)
 	if touching:
-		Main.draw_text(self, "COMPUTER_HOVERTEXT", Vector2(0,-24),Main.colors[7],Main.colors[0],false,true)
+		Main.main.drawn_text_layer.request_draw_text(
+			Main.DrawnTextLayer.TextRequest.new(
+				"COMPUTER_HOVERTEXT",
+				position + Vector2(0,-24),
+				Main.colors[7],
+				Main.colors[0],
+				false,
+				true)
+			)
+	else:
+		Main.main.drawn_text_layer.queue_redraw()

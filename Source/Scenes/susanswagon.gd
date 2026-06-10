@@ -13,8 +13,9 @@ var disc_shop:Array[Disc]
 var selected_disc:int = 0
 var texture:Texture2D = preload("res://Graphics/Fullscreens/hymnwagon_bg.png")
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	z_index = Main.Depths.Fullscreens
-	susan_sprite = SusanSprite.new()
+	susan_sprite = SusanSprite.new(texture)
 	disc_textbox = DiscTextbox.new()
 	var rect = StupidRectangle.new()
 	disc_shop = Main.main.resources.disc_shop
@@ -29,7 +30,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	queue_redraw()
-	susan_sprite.queue_redraw()
 
 func _input(event: InputEvent) -> void:
 	if Main.game_state != Main.GameState.CUTSCENE and event.is_action_pressed("special"):
@@ -59,6 +59,7 @@ func _draw() -> void:
 	texture.draw_rect_region(get_canvas_item(),Rect2(6,16 + selected_disc * 8,8,8),Rect2(0,0,8,8))
 	Main.spr(Main.GameAtlas,self,Vector2(8,0),28)
 	Main.draw_text(self,str(Main.main.resources.money),Vector2(16,0))
+	if disc_shop[selected_disc]: Main.draw_text(self,str("cost: $",disc_shop[selected_disc].cost),Vector2(104,120))
 	var blinkdelay = 12
 	var color = (11 if (Engine.get_frames_drawn() % blinkdelay) > blinkdelay / 2 else 10)
 	for i in range(disc_shop.size()):
@@ -84,17 +85,14 @@ class StupidRectangle:
 	
 class SusanSprite:
 	extends Node2D
-	var susan_rect:Rect2 = Rect2(168,24,104,104)
-	var texture:Texture2D = preload("res://Graphics/Fullscreens/hymnwagon_bg.png")
-	var noise:NoiseTexture2D = NoiseTexture2D.new()
+	var susan_rect:Rect2 = Rect2(168,24,136,104)
+	var texture:Texture2D = null
+	func _init(tex) -> void:
+		texture = tex
+		pass
 	func _ready() -> void:
 		z_index = 99
 		z_as_relative = false
-		var noise_noise = FastNoiseLite.new()
-		noise_noise.frequency = 1
-		noise_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-		noise.noise = noise_noise
-	var offset_y_strength = 0.02
 	func _draw() -> void:
-		var offset_y = sin(Engine.get_process_frames() * offset_y_strength)
-		texture.draw_rect_region(get_canvas_item(),Rect2(168,24 + offset_y + 3,104,104),susan_rect)
+		var offset_y = 3
+		texture.draw_rect_region(get_canvas_item(),Rect2(168,24 + offset_y + 3,136,104),susan_rect)

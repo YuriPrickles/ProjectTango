@@ -3,6 +3,7 @@ extends Node2D
 var string_array=[]
 var started_cutscene = false
 var allow_input = false
+var detect_savescum = true
 
 func _ready() -> void:
 	pass
@@ -46,6 +47,8 @@ func cutscene():
 	string_array.append("GAME_OVER_C")
 	allow_input = true
 
+
+
 func _input(event: InputEvent) -> void:
 	if allow_input and event.is_action_pressed("accept"):
 		queue_free()
@@ -53,6 +56,8 @@ func _input(event: InputEvent) -> void:
 		Main.main.load_level(LevelID.Above)
 		Main.game_over = false
 		Main.escaped = false
+		detect_savescum = false
+		Main.main.terminal.save_game()
 
 func _draw() -> void:
 	draw_rect(Rect2(0,0,320,180),Main.colors[0])

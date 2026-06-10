@@ -44,4 +44,4 @@ func _draw() -> void:
 	#draw_circle(Vector2.ZERO,2,Main.colors[9])
 	var text = "[enter] to go back to floor 1" if Main.main.saved_levels[LevelID.Floor1] and super_special_entry else "ENTER_HOVERTEXT"
 	if touching:
-		Main.draw_text(self, text, Vector2(0,-16),Main.colors[7],Main.colors[0],false,true)
+		Main.draw_text(self, text, Vector2(0,-16) - draw_offset,Main.colors[7],Main.colors[0],false,true)

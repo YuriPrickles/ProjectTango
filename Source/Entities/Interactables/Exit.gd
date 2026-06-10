@@ -51,4 +51,14 @@ func _draw() -> void:
 	draw_from_dict(spr_dict,Vector2.ZERO,0 if not closed else 16)
 	#draw_circle(Vector2.ZERO,2,Main.colors[9])
 	if touching:
-		Main.draw_text(self, "EXIT_HOVERTEXT", Vector2(0,-16),Main.colors[7],Main.colors[0],false,true)
+		Main.main.drawn_text_layer.request_draw_text(
+			Main.DrawnTextLayer.TextRequest.new(
+				"EXIT_HOVERTEXT",
+				position + Vector2(0,-16),
+				Main.colors[7],
+				Main.colors[0],
+				false,
+				true)
+			)
+	else:
+		Main.main.drawn_text_layer.queue_redraw()

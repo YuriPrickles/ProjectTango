@@ -177,7 +177,7 @@ class InfoHUD:
 			draw_rect(Rect2(upnext_pos + Vector2(1,1 + (i * 8)),Vector2(86,6)),Main.colors[0])
 			if not Main.main.disc_manager.hymn_buffer.size() <= i and Main.main.disc_manager.hymn_buffer[i]:
 				
-				if i == 0:
+				if i == 0 and Main.main.disc_manager.cd_player_timer:
 					var disc_time_percent = Main.main.disc_manager.cd_player_timer.time_left / Main.main.disc_manager.HYMN_DELAY
 					draw_rect(Rect2(upnext_pos + Vector2(1,1 + (i * 8)),Vector2(0 + (86*disc_time_percent),6)),Main.colors[2])
 				var disc_name = Main.main.disc_manager.hymn_buffer[i].disc_name

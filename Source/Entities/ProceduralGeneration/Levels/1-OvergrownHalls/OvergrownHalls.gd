@@ -2,7 +2,6 @@ extends Level
 class_name OvergrownHalls
 
 
-
 func _ready() -> void:
 	id = LevelID.Floor1
 	dungeon_layout = preload("res://Source/Entities/ProceduralGeneration/Levels/1-OvergrownHalls/Floor1Splitter.tscn").instantiate()
@@ -44,6 +43,7 @@ func spawn_player():
 	other_things.add_child(DAT.new(dat_pos))
 	add_child(plr)
 	spawn_scrap(4)
+	setup_finished.emit()
 	return plr
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -155,8 +155,6 @@ class TreeDecor:
 	func _process(delta: float) -> void:
 		super(delta)
 		var plr:Player = Main.main.get_player()
-		if plr.position.distance_to(position) <= 400:
-			queue_redraw()
 		opacity = min(100 ,max(3,60 + (plr.position.distance_to(position)) - 80)) * 0.01
 	class TreeTrunk:
 		extends Node2D
@@ -184,7 +182,7 @@ class TreeDecor:
 		func _process(delta: float) -> void:
 			if Engine.get_frames_drawn() % 18 == 0:
 				var plr:Player = Main.main.get_player()
-				if plr.position.distance_to(position) <= 400:
+				if tree_base.position.distance_to(plr.position) <= 200:
 					queue_redraw()
 				modulate.a = tree_base.opacity
 		func _draw() -> void:

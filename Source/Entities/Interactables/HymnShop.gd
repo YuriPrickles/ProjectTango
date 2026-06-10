@@ -33,4 +33,4 @@ func _draw() -> void:
 	super()
 	draw_from_dict(spr_dict,Vector2.ZERO,0)
 	if touching:
-		Main.draw_text(self, "SUSAN_HOVERTEXT", Vector2(0,-24),Main.colors[7],Main.colors[0],false,true)
+		Main.draw_text(self, "SUSAN_HOVERTEXT", Vector2(0,-24) - draw_offset,Main.colors[7],Main.colors[0],false,true)

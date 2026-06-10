@@ -1,6 +1,7 @@
 class_name DialogBox
 extends Node2D
 
+signal dialog_done
 signal advance_dialog
 var dialog_array:Array[String]=["hey gem, got any more pickles?"]
 var current_string:String
@@ -65,7 +66,6 @@ func _process(delta: float) -> void:
 					temp_phrase = ""
 				temp_phrase += word
 				word = ""
-		print(word_arr)
 		var index = 0
 		display_array.resize(word_arr.size())
 		display_array.fill("")
@@ -83,6 +83,7 @@ func _process(delta: float) -> void:
 		dialog_index += 1
 		if dialog_index >= dialog_index_max:
 			await get_tree().create_timer(0.1).timeout
+			dialog_done.emit()
 			queue_free()
 			Main.game_state = prev_state
 	queue_redraw()

@@ -42,7 +42,14 @@ func _ready() -> void:
 	state = TerminalState.Normal
 	echo("TERMINAL_STARTUP")
 	echo()
-
+	if SaveLoad.check_save_exists():
+		echo("SAVE_EXISTS", str(get_local_datetime(FileAccess.get_modified_time(SaveLoad.base_path))))
+	else:
+		echo("NO_SAVE")
+static func get_local_datetime(unix_time: int) -> String:
+	var bias: int = Time.get_time_zone_from_system().bias
+	var t := unix_time + bias * 60
+	return Time.get_datetime_string_from_unix_time(t, true)
 func clear():
 	terminal_arr.clear()
 	echo()
@@ -83,10 +90,25 @@ func nexthymn():
 	else:
 		echo("TERMINAL_NEXTHYMN_FAIL")
 
+func garble(length:int):
+	var string:String=""
+	for i in range(length):
+		string += Main.fontmap[randi() % Main.fontmap.length() - 1]
+	return string
+
 func play():
 	if not is_overlay and Main.game_state == Main.GameState.MAINMENU:
 		is_overlay = true
 		if await load_game():
+			if Main.main.savescummed:
+				state = TerminalState.NoType
+				var text_size = 150
+				while text_size > -80:
+					echo(garble(text_size))
+					await get_tree().create_timer(0.02).timeout
+					text_size -= 3
+				state = TerminalState.JustUnpaused
+				Main.main.change_fullscreen(Git.new(),false)
 			Main.main.reset_run()
 			Main.main.load_level(LevelID.Above)
 			hide()
@@ -136,6 +158,12 @@ func pause():
 
 func exit():
 	disable_input = true
+	if Main.main.game_state == Main.GameState.IN_RUN:
+		echo("TERMINAL_EXIT_ERROR")
+		disable_input = false
+		return
+	await Main.main.screenwipe.screen_wipe_in()
+	await get_tree().create_timer(0.5).timeout
 	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
 	get_tree().quit()
 
@@ -162,21 +190,22 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and not event.is_released() and not disable_input and visible:
 		any_input.emit()
 		event = event as InputEventKey
+		event.alt_pressed = false
+		event.shift_pressed = false
+		event.meta_pressed = false
+		event.ctrl_pressed = false
 		if state == TerminalState.JustUnpaused:
 			state = TerminalState.Normal
 			return
 		if event.keycode == KEY_BACKSPACE and current_line.length() > 0:
 			current_line = current_line.erase(current_line.length() - 1)
 			return
-		elif event.keycode == KEY_ESCAPE:
-			if not is_overlay:
-				echo("TERMINAL_CLOSE_FAIL")
-		elif event.keycode == KEY_ENTER:
-			parse_command()
-		elif event.keycode == KEY_SPACE:
-			current_line += " "
-		elif state != TerminalState.NoType:
+		elif event.keycode == KEY_ESCAPE and not is_overlay: echo("TERMINAL_CLOSE_FAIL")
+		elif event.keycode == KEY_ENTER: parse_command()
+		elif event.keycode == KEY_SPACE: current_line += " "
+		elif state != TerminalState.NoType and event.unicode != 0:
 			for k:String in Main.fontmap:
+				
 				if char(event.unicode) == k:
 					current_line += k
 					return
@@ -249,6 +278,10 @@ func parse_command():
 				"options -s": boolean_option(Options.OptionNames.SIMPLE_DESC)
 				"options -a": boolean_option(Options.OptionNames.AUTOSAVE_ENTRY)
 				"options -e": boolean_option(Options.OptionNames.AUTOSAVE_EXIT)
+				"options -f":
+					current_line = ""
+					await boolean_option(Options.OptionNames.FULLSCREEN)
+					Main.main.change_windowsize()
 				_:
 					echo("¬8unrecognized command \"%s\"." % current_line)
 	current_line = ""
@@ -271,6 +304,7 @@ func boolean_option(option_index):
 	Main.main.options.option_list[option_index] = result
 	SaveLoad.save_options()
 	echo("TERMINAL_BOOL_OPTION_SET_%s" % str(result).to_upper())
+	return result
 
 func reload_lang():
 	Main.main_lang = Language.from_txt("res://Dialog/English.txt")

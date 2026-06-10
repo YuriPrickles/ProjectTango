@@ -24,6 +24,14 @@ var stored_discs_ref:Dictionary[Disc,int] = Main.main.disc_manager.stored_discs
 var cd_ref:Dictionary[Disc,int] = Main.main.disc_manager.cd
 var tab_contents:Array[Array]
 func _ready() -> void:
+	for i in range(5):
+		flame_circ_arr.append_array([
+		FlameCircle.new(24),
+		FlameCircle.new(16),
+		FlameCircle.new(8),
+		FlameCircle.new(12),
+		FlameCircle.new(20),
+		FlameCircle.new(4),])
 	z_index = Main.Depths.Fullscreens
 	cd_spr = CDSprite.new()
 	disc_textbox = DiscTextbox.new()
@@ -34,7 +42,6 @@ func _ready() -> void:
 	add_child(rect)
 	add_child(cd_spr)
 	add_child(disc_textbox)
-	queue_redraw()
 	disc_textbox.current_disc = disc_array[0] if not disc_array.is_empty() else null
 	disc_textbox.queue_redraw()
 	per_page_storage.resize(8)
@@ -44,6 +51,8 @@ func _ready() -> void:
 	tab_contents.resize(2)
 	tab_contents[0] = disc_array
 	tab_contents[1] = cd_array
+	queue_redraw()
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 
 var gather_index=[0,0]
 func _process(delta: float) -> void:
@@ -115,8 +124,43 @@ func _input(event: InputEvent) -> void:
 	disc_textbox.queue_redraw()
 		
 
+class FlameCircle:
+	var size:float
+	var offset:Vector2
+	func _init(s:float,o:Vector2=Vector2.ZERO) -> void:
+		size = s
+		offset = o
+var flame_circ_arr:Array[FlameCircle]=[]
 func _draw() -> void:
-	texture.draw_rect_region(get_canvas_item(),Rect2(208,64,64,64),nero_rect)
+	var base_circle_size = 24 + ((sin(Engine.get_frames_drawn() * 0.03 )) * 2)
+	var base_nero_pos = Vector2(240,80+base_circle_size/2)
+	var nero_pos_sineless = Vector2(240,96)
+	for pos in [Vector2.ZERO,Vector2(12,16),Vector2(-12,16)]:
+		draw_circle(pos + base_nero_pos,base_circle_size,Main.colors[9])
+	for flame in flame_circ_arr:
+		var sine = ((sin(Engine.get_frames_drawn() * 0.03 * flame.size / 8)) * flame.size / 8)
+		var true_size = max(0,flame.size + sine - flame.offset.y / (flame.size/4))
+		draw_circle(base_nero_pos - flame.offset + Vector2(0,0), true_size,Main.colors[9])
+		flame.offset.y += (flame.size/4) * 0.8
+		flame.offset.x += (true_size/16) * -sign(flame.offset.x)
+		if true_size <= 0:
+			flame.offset.y = randi_range(-24,24)
+			flame.offset.x = randi_range(-24,24)
+			
+	for pos in [Vector2.ZERO,Vector2(8,16),Vector2(-8,16)]:
+		draw_circle(pos + base_nero_pos,base_circle_size * 0.8 + ((sin(Engine.get_frames_drawn() * 0.05 )) * 2),Main.colors[10])
+	for flame in flame_circ_arr:
+		var sine = ((sin(Engine.get_frames_drawn() * 0.03 * flame.size / 8)) * flame.size / 16)
+		var true_size = max(0,flame.size + sine - flame.offset.y / (flame.size/5))
+		draw_circle(base_nero_pos - flame.offset + Vector2(0,0), true_size,Main.colors[10])
+	var base_log_pos:Vector2 = nero_pos_sineless + Vector2(0,24)
+	draw_line(base_log_pos, base_log_pos + Vector2(-64,16),Main.colors[2],12)
+	draw_line(base_log_pos, base_log_pos + Vector2(64,16),Main.colors[2],12)
+	draw_line(base_log_pos, base_log_pos + Vector2(-48,24),Main.colors[4],12)
+	draw_line(base_log_pos, base_log_pos + Vector2(48,24),Main.colors[4],12)
+	draw_line(base_log_pos, base_log_pos + Vector2(-16,32),Main.colors[2],12)
+	draw_line(base_log_pos, base_log_pos + Vector2(16,32),Main.colors[2],12)
+	texture.draw_rect_region(get_canvas_item(),Rect2(208,28+base_circle_size,64,64),nero_rect)
 	texture.draw_rect_region(get_canvas_item(),board_rect,board_rect)
 	texture.draw_rect_region(get_canvas_item(),speaker_rect,speaker_rect)
 	texture.draw_rect_region(get_canvas_item(),box_rect,box_rect)
@@ -176,11 +220,22 @@ class CDSprite:
 	var texture:Texture2D = preload("res://Graphics/Fullscreens/nero_bg.png")
 	func _ready() -> void:
 		position = Vector2(208 + 32,16 + 32)
-		z_index = 99
+		z_index = 100
 		z_as_relative = false
 	var offset_y_strength = 0.1
+	var wait_for_back = false
 	func _draw() -> void:
 		rotation += deg_to_rad(1)
 		var offset_y = 1 * sin((Engine.get_process_frames()) * offset_y_strength )
 		global_position.y = position.y + offset_y
+		z_index = 98
+		if not wait_for_back:
+			if sin((Engine.get_process_frames() * 0.01)) * 32 <= -31.0:
+				wait_for_back = true
+		elif wait_for_back:
+			z_index = 100
+			if sin((Engine.get_process_frames() * 0.01)) * 32 >= 31.0:
+				wait_for_back = false
+		global_scale.x = sin((Engine.get_process_frames() * 0.02))
+		global_position.x = 240 + sin((Engine.get_process_frames() * 0.01)) * 32
 		texture.draw_rect_region(get_canvas_item(),Rect2(-32,-32 + 0,64,64),cd_rect)

@@ -4,7 +4,7 @@ var delay:float
 func _init(st:int,dly:float) -> void:
 	effect_name = "Hymn Delay"
 	icon_atlas = Main.GameAtlas
-	icon_index = 116
+	icon_index = 170
 	reduce_on_hymn = true
 	delay = dly
 	super._init(st)

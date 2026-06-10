@@ -4,7 +4,7 @@ extends Node
 @onready var _2DLayer = $"2DLayer"
 @onready var other_ui: CanvasLayer = $OtherUI
 @onready var dialog_layer: CanvasLayer = $DialogLayer
-@onready var transitioner: Node2D = $Transitioner
+@onready var drawn_text_canvas: CanvasLayer = $DrawnTextCanvas
 
 enum Depths{
 	Level = 0,
@@ -14,6 +14,7 @@ enum Depths{
 	AbovePlayer = 4,
 	Fullscreens = 100,
 	Terminal = 200,
+	Transitioner = 300,
 }
 const colors:Array[Color] = [
 	Color("000000"),
@@ -79,6 +80,33 @@ const MAX_PRL = 100
 
 static var main_lang:Language
 
+var drawn_text_layer:DrawnTextLayer = DrawnTextLayer.new()
+class DrawnTextLayer:
+	extends Node2D
+	class TextRequest:
+		var text = ""
+		var position:Vector2 = Vector2.ZERO
+		var color:Color = Main.colors[7]
+		var bg_color:Color = Main.colors[0]
+		var syntaxificate:bool = false
+		var centered:bool = false
+		func _init(_text,_position,_color,_bg_color,_syntaxificate,_centered):
+			text = _text
+			position = _position
+			color = _color
+			bg_color = _bg_color
+			syntaxificate = _syntaxificate
+			centered = _centered
+	var text_req_array:Array[TextRequest]
+	func request_draw_text(request:TextRequest):
+		text_req_array.append(request)
+		queue_redraw()
+	
+	func _draw() -> void:
+		if text_req_array and not text_req_array.is_empty():
+			for req in text_req_array:
+				Main.draw_text(self,req.text,req.position,req.color,req.bg_color,req.syntaxificate,req.centered)
+			text_req_array.clear()
 func _init() -> void:
 	main = self
 func _ready() -> void:
@@ -96,15 +124,38 @@ func _ready() -> void:
 	resources = ResourceManager.new()
 	if disc_manager: disc_manager.queue_free()
 	disc_manager = DiscManager.new()
+	drawn_text_canvas.add_child(drawn_text_layer)
 	other_ui.add_child(terminal)
+	other_ui.add_child(screenwipe)
+	change_windowsize()
+	handle_savescum_aftermath()
 	#load_level(LevelID.Above)
 	print("thing initialized")
 
-func change_fullscreen(scene):
+func change_windowsize():
+	if options.get_option(Options.OptionNames.FULLSCREEN) == true:
+		get_tree().root.mode = Window.MODE_FULLSCREEN
+	else:
+		get_tree().root.mode = Window.MODE_WINDOWED
+		get_tree().root.size = Vector2i(1280,720)
+		get_tree().root.position = (DisplayServer.screen_get_size() - get_tree().root.size) / 2
+
+var screenwipe = Transitioner.new()
+func change_fullscreen(scene,wipe:bool=true):
 	loaded_fullscreen = scene
+	if wipe:
+		await screenwipe.screen_wipe_in()
+		other_ui.add_child(loaded_fullscreen)
+		await screenwipe.screen_wipe_out()
+		return
 	other_ui.add_child(loaded_fullscreen)
 
-func remove_fullscreen():
+func remove_fullscreen(wipe=true):
+	if wipe:
+		await screenwipe.screen_wipe_in()
+		loaded_fullscreen.queue_free()
+		await screenwipe.screen_wipe_out()
+		return
 	loaded_fullscreen.queue_free()
 
 func starter_disc():
@@ -119,6 +170,8 @@ func new_save_file():
 	resources = ResourceManager.new()
 	resources.initialize_inventory()
 
+
+
 func reset_run(died:bool=false):
 	get_tree().paused = false
 	game_state = GameState.OUT_OF_RUN
@@ -126,6 +179,7 @@ func reset_run(died:bool=false):
 	saved_levels = [null,null,null,null]
 	resources.new_run_refresh()
 	if died:
+		Main.main.absolve_savescumming()
 		resources.initialize_inventory()
 
 func save_level():
@@ -133,11 +187,17 @@ func save_level():
 		saved_levels[current_level.id] = current_level
 
 func load_level(id:int):
+	await screenwipe.screen_wipe_in()
 	run_gui =  preload("res://Source/Entities/run_gui.tscn").instantiate()
 	add_child(run_gui)
 	if id != LevelID.Above:
 		RunGUI.draw_me = true
 		disc_manager.start_cd_player()
+		if savescummed:
+			if options.savescum_amount >= 2:
+				add_peril(25)
+			if options.savescum_amount >= 3:
+				current_level.event_bus.register_effect(CS_GitsPlayDelay.new(99))
 	if saved_levels[id]:
 		print("Saved level found for Floor %s" % str(id + 1))
 		current_level = saved_levels[id]
@@ -153,6 +213,8 @@ func load_level(id:int):
 	game_state = GameState.OUT_OF_RUN if id == LevelID.Above else GameState.IN_RUN
 	current_level = level_to_load.instantiate()
 	_2DLayer.add_child(current_level)
+	await current_level.setup_finished
+	Main.main.screenwipe.screen_wipe_out()
 
 func trigger_game_over():
 	game_state = GameState.RESULTS
@@ -180,6 +242,9 @@ func get_player() -> Player:
 func get_level() -> Level:
 	return current_level
 
+var perilcent:float:
+	get:
+		return get_peril() / MAX_PRL
 func add_peril(value:int):
 	var perilevent = PerilGainEvent.new(value)
 	if perilevent.peril <= 0:
@@ -203,9 +268,26 @@ func _process(delta: float) -> void:
 			if item:
 				item._process(delta)
 
+var savescummed = false
+func handle_savescum_aftermath():
+	if Main.main.options.record_savescum:
+		Main.main.options.total_savescums += 1
+		Main.main.options.savescum_amount += 1
+		Main.main.options.record_savescum = false
+		SaveLoad.save_options()
+		savescummed = true
+
+func absolve_savescumming():
+	Main.main.options.savescum_amount = 0
+	Main.main.options.record_savescum = false
+	SaveLoad.save_options()
+	savescummed = false
+	
+
 func toggle_terminal():
-	terminal.visible = !terminal.visible
-	get_tree().paused = terminal.visible
+	if not screenwipe.wiping:
+		terminal.visible = !terminal.visible
+		get_tree().paused = terminal.visible
 
 func _input(event: InputEvent) -> void:
 	if not loaded_fullscreen and terminal.is_overlay and event.is_action_pressed("cancel") and game_state != GameState.RESULTS:
@@ -226,6 +308,13 @@ static func spr(atlas:Atlas,item:CanvasItem, offset:Vector2,index:int,color:Colo
 func text_popup(pos,text,c1=Main.colors[7],c2=Main.colors[8],target=null):
 	var popup = TextPopup.new(pos + Vector2(0,-16),text,c1,c2,target)
 	current_level.other_things.add_child(popup)
+	
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		var savescum_conditions:bool = (game_state == GameState.IN_RUN or (game_state == GameState.RESULTS and game_over))
+		Main.main.options.record_savescum = savescum_conditions
+		SaveLoad.save_options()
+		get_tree().quit()
 
 static func pal():
 	pass
@@ -329,4 +418,6 @@ func say(dialog_key:String,pos:Vector2,size:Vector2,color:Color=Main.colors[0]):
 		dialog_entry.append(acquired_dialog)
 	else:
 		dialog_entry.append_array(acquired_dialog)
-	dialog_layer.add_child(DialogBox.new(dialog_entry,pos,size,color))
+	var box = DialogBox.new(dialog_entry,pos,size,color)
+	dialog_layer.add_child(box)
+	await box.dialog_done

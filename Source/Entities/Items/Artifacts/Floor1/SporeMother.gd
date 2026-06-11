@@ -42,5 +42,5 @@ class Passive_SporeMother:
 					null,
 					plr.position - plr.size/2,
 					(plr.facing * (7 + randf_range(-3,3))).rotated(deg_to_rad(randf_range(-360,360))),
-					plr.get_damage(event.damage * 0.8)
+					1
 					).lifetime = 15

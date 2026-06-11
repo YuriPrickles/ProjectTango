@@ -57,6 +57,13 @@ func _init() -> void:
 ##Called when an item is picked up as a Pickup.
 func on_pickup():
 	if not has_picked_up_before and value == Value.Artifact:
+		var lvl = Main.main.get_level()
+		var room_list:Array[Branch]
+		for i in range(30,50):
+			room_list.append(lvl.dungeon_layout.rooms[i])
+		var room:Branch = room_list.pick_random()
+		
+		lvl.enemies.add_child(Verdano.new(room.get_center()))
 		Main.main.add_peril(15)
 	Main.main.resources.try_place_inventory(self.get_script())
 	if Main.main.resources.get_selected_item():

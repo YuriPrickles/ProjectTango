@@ -21,6 +21,7 @@ func get_projectiles()->Array:return projectiles.get_children()
 
 @onready var walls:TileMapLayer = $Walls
 @onready var floor: TileMapLayer = $Floor
+@onready var decor: TileMapLayer = $Decor
 
 var has_done_setup:bool = false
 var terminal_pos:Vector2
@@ -55,7 +56,7 @@ func drop_item(item:GDScript, amount:int=1):
 		var randpos = (room.get_center() + Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2) * dungeon_layout.tile_size
 		if not Splitter.is_inside_padding(randpos.x,randpos.y,room,padding):
 			return
-		items.add_child(Pickup.new(item, randpos))
+		items.add_child.call_deferred(Pickup.new(item, randpos))
 		
 func drop_on_player(item:GDScript, amount:int=1):
 	for i in range(amount):

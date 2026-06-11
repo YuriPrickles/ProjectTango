@@ -34,15 +34,15 @@ func _init(pos) -> void:
 	navigator.path_desired_distance = 4.0
 	navigator.target_desired_distance = 0.0
 	add_child(navigator)
-	var detection_range:Area2D = Area2D.new()
-	Utils.attach_round_collision_shape(detection_range,128,on_detect,Vector2(0,0))
+	#var detection_range:Area2D = Area2D.new()
+	#Utils.attach_round_collision_shape(detection_range,128,on_detect,Vector2(0,0))
+	#
+	#var leave_range:Area2D = Area2D.new()
+	#Utils.attach_round_collision_shape(leave_range,128,null,Vector2(0,0))
+	#leave_range.connect("body_exited",leave_detect)
 	
-	var leave_range:Area2D = Area2D.new()
-	Utils.attach_round_collision_shape(leave_range,128,null,Vector2(0,0))
-	leave_range.connect("body_exited",leave_detect)
-	
-	add_child(detection_range)
-	add_child(leave_range)
+	#add_child(detection_range)
+	#add_child(leave_range)
 
 var head_switch_delay = 0
 const head_switch_delay_MAX = 0.3
@@ -65,7 +65,7 @@ func _process(delta: float) -> void:
 	super._process(delta)
 	var plr:Player = Main.main.get_player()
 	var lvl = Main.main.get_level()
-	attack_timer += delta * (1 + max(0, 0.2 - (2.0 * Main.main.perilcent)))
+	
 	if old_facing != facing and not switching:
 		switching = true
 	if current_attack == Attacks.Rush:
@@ -75,12 +75,23 @@ func _process(delta: float) -> void:
 		if head_switch_delay >= head_switch_delay_MAX:
 			head_switch_delay = 0
 			switching = false
-	if moving and (plr and plr.position.distance_to(position) < 640):
+	if moving:
 		set_movement_target(plr.position)
 		kb_dir = position.direction_to(plr.position)
+	if (plr and plr.position.distance_to(position) < 128) or (current_attack == Attacks.Rush or current_attack == Attacks.PoisonOrb):
+		attack_timer += delta * (1 + max(0, 0.2 - (2.0 * Main.main.perilcent)))
+	
 	match current_attack:
 		Attacks.Idle:
 			moving = true
+			if (plr and plr.position.distance_to(position) >= 200):
+				snail_speed = 40
+			#elif attack_timer < 4 and plr.position.distance_to(position) < 200 and plr.position.distance_to(position) > 80:
+				#snail_speed = 60
+			else:
+				snail_speed = 20
+			
+			#snail_speed = lerp(80,20, max(1.0,position.distance_to(plr.position) + 128/128))
 			if attack_timer > 7:
 				current_attack = Attacks.PoisonOrb if Utils.maybe() else Attacks.Rush
 				moving = false
@@ -117,6 +128,8 @@ func _process(delta: float) -> void:
 					attack_timer = 0
 		Attacks.Rooting:
 			moving = false
+			if plr.position.distance_to(position) > 80:
+				attack_timer += delta * 3
 			if counter == 0 and attack_timer > weed_grow_delay:
 				hitcount = 0
 				for i in range(3):
@@ -188,7 +201,7 @@ func _physics_process(delta):
 		facing = Vector2(1,0) * sign(final_vel.x)
 	if abs(final_vel.x) <= abs(final_vel.y) and facing != Vector2(0,1) * sign(final_vel.y):
 		facing = Vector2(0,1) * sign(final_vel.y)
-	if chasing and moving:
+	if moving:
 		position += delta * final_vel * (snail_speed * (1 + float(Main.main.get_peril())/Main.MAX_PRL))
 
 func shoot_orb(target:Vector2, shoot_speed:float=0.5, rot:float=0):
@@ -202,12 +215,6 @@ func on_touch_thing(body):
 	if body is Player:
 		body.knockback(kb_dir, 200)
 		body.hurt(20,self)
-func on_detect(body: Node2D) -> void:
-	if body is Player:
-		chasing = true
-func leave_detect(body: Node2D) -> void:
-	if body is Player:
-		chasing = false
 
 func _draw() -> void:
 	super()
@@ -231,13 +238,14 @@ func _draw() -> void:
 	var head_spr_index_offset = 0 if not switching else 3
 	var bobbing_offset = Vector2(0,sin(Engine.get_frames_drawn() * 0.1) + 1)
 	var plr = Main.main.get_player()
+	Main.draw_text(self,str(int(plr.position.distance_to(position))),Vector2(0,-32))
 	if current_attack == Attacks.Rooting:
 		if counter >= 1:
 			head_pos_offset.y =  8
 		else:
 			head_pos_offset.y = lerp(0,8,attack_timer/weed_grow_delay)
 	elif current_attack == Attacks.Rush:
-		draw_line(position,plr.position,Main.colors[2])
+		draw_line(Vector2.ZERO,position-plr.position,Main.colors[2])
 		if counter >= 1:
 			head_pos_offset.y =  8
 		else:

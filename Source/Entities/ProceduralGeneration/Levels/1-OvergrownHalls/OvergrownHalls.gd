@@ -40,7 +40,7 @@ func spawn_player():
 	terminal_pos = dat_pos
 	plr.position = player_pos
 	other_things.add_child(Exit.new(exit_pos))
-	other_things.add_child(DAT.new(dat_pos))
+	#other_things.add_child(DAT.new(dat_pos))
 	add_child(plr)
 	spawn_scrap(4)
 	setup_finished.emit()
@@ -103,11 +103,11 @@ func spawn_scrap(amount:int) -> void:
 			return
 		match randi_range(0,2):
 			0:
-				items.add_child(Pickup.new(Metal, randpos))
+				items.add_child.call_deferred(Pickup.new(Metal, randpos))
 			1:
-				items.add_child(Pickup.new(Wires, randpos))
+				items.add_child.call_deferred(Pickup.new(Wires, randpos))
 			2:
-				items.add_child(Pickup.new(Battery, randpos))
+				items.add_child.call_deferred(Pickup.new(Battery, randpos))
 
 
 
@@ -151,10 +151,12 @@ class TreeDecor:
 		spr_dict[chosen_spr + 16] = Vector2(0,0)
 		add_child(TreeTrunk.new(self))
 		add_child(TreeLeaves.new(self))
+		queue_redraw()
 	var opacity:float
 	func _process(delta: float) -> void:
-		super(delta)
 		var plr:Player = Main.main.get_player()
+		if plr.position.distance_to(position) > 200: return
+		super(delta)
 		opacity = min(100 ,max(3,60 + (plr.position.distance_to(position)) - 80)) * 0.01
 	class TreeTrunk:
 		extends Node2D
@@ -162,11 +164,12 @@ class TreeDecor:
 		func _init(tree:TreeDecor):
 			tree_base = tree
 		func _process(delta: float) -> void:
-			if Engine.get_frames_drawn() % 18 == 0:
-				var plr:Player = Main.main.get_player()
-				if plr.position.distance_to(position) <= 400:
+			var plr:Player = Main.main.get_player()
+			if plr.position.distance_to(tree_base.position) <= 200:
+				if Engine.get_frames_drawn() % 18 == 0:
 					queue_redraw()
-				modulate.a = tree_base.opacity * 15
+					modulate.a = tree_base.opacity * 15
+			else: return
 		func _draw() -> void:
 			for index in tree_base.spr_dict.keys():
 				if tree_base.top_sprites.has(index):
@@ -179,12 +182,12 @@ class TreeDecor:
 		var tree_base:TreeDecor
 		func _init(tree:TreeDecor):
 			tree_base = tree
-		func _process(delta: float) -> void:
-			if Engine.get_frames_drawn() % 18 == 0:
-				var plr:Player = Main.main.get_player()
-				if tree_base.position.distance_to(plr.position) <= 200:
+		func _process(delta: float) -> void:#
+			var plr:Player = Main.main.get_player()
+			if tree_base.position.distance_to(plr.position) <= 200:
+				if Engine.get_frames_drawn() % 18 == 0:
 					queue_redraw()
-				modulate.a = tree_base.opacity
+					modulate.a = tree_base.opacity
 		func _draw() -> void:
 			for j in range(3):
 				for i in range(5):

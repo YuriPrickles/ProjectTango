@@ -36,11 +36,13 @@ func _init(pos) -> void:
 	add_child(leave_range)
 
 func _process(delta: float) -> void:
-	super._process(delta)
 	var plr:Player = Main.main.get_player()
 	if plr and plr.position.distance_to(position) < 128:
 		set_movement_target(plr.position)
 		kb_dir = position.direction_to(plr.position)
+	else:
+		return
+	super._process(delta)
 func _physics_process(delta):
 	if navigator.is_navigation_finished():
 		return

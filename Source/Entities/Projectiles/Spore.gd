@@ -7,9 +7,6 @@ func _init(p_owner:Entity,pos:Vector2,_velocity:Vector2,_damage:int) -> void:
 	super._init(p_owner,pos, Rect2(0,0,3,3),_velocity,false,_damage,1,0.3)
 	iframes_on_hit = 0
 
-func handle_hitcount():
-	pass
-
 func _process(delta: float) -> void:
 	velocity *= 0.8
 	super._process(delta)

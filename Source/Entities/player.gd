@@ -66,7 +66,7 @@ var final_speed_mod = 0
 func _physics_process(delta: float) -> void:
 	snap_pos = Vector2(int(position.x) % 8 * 8,int(position.y) % 8 * 8)
 	#camera.rotation = get_angle_to(position + direction)
-	camera.zoom = Vector2(1,1) if not Main.main.debugmode else Vector2(0.125,0.125)
+	camera.zoom = Vector2(1,1) if not Main.main.debugmode else Vector2(0.25,0.25)
 	direction = Input.get_vector("left", "right", "up", "down")
 	sneaking = Input.is_action_pressed("sneak")
 	running = Input.is_action_pressed("run") and current_stamina > 0

@@ -12,6 +12,18 @@ script = ExtResource("1_2y2gb")
 z_as_relative = false
 tile_set = ExtResource("2_2y2gb")
 
+[node name="Decor" type="TileMapLayer" parent="." unique_id=1588576419]
+z_as_relative = false
+tile_set = ExtResource("2_2y2gb")
+
+[node name="Decor" type="TileMapLayer" parent="Decor" unique_id=620369713]
+z_as_relative = false
+tile_set = ExtResource("2_2y2gb")
+
+[node name="Decor" type="TileMapLayer" parent="Decor/Decor" unique_id=1634364296]
+z_as_relative = false
+tile_set = ExtResource("2_2y2gb")
+
 [node name="Walls" type="TileMapLayer" parent="." unique_id=280689227]
 z_as_relative = false
 tile_set = ExtResource("2_2y2gb")

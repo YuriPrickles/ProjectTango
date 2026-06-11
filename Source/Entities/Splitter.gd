@@ -2,6 +2,7 @@ extends Node2D
 class_name Splitter
 var root_node: Branch
 var tile_size: int = 8
+var decor: TileMapLayer
 var walls:TileMapLayer
 var floor:TileMapLayer
 var paths: Array = []

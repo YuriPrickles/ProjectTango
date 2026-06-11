@@ -32,14 +32,16 @@ func _init(pos,room_ass) -> void:
 	damage_flash_self_only = true
 
 func _process(delta: float) -> void:
+	var plr:Player = Main.main.get_player()
+	if plr.position.distance_to(position) <= 320:
+		queue_redraw()
+	else:
+		return
 	super._process(delta)
 	if ripe:
 		poison_rect.queue_redraw()
 	elif not ripe and Main.main.get_peril() >= peril_affection_thresholds[0]:
 		ripe = true
-	var plr:Player = Main.main.get_player()
-	if plr.position.distance_to(position) <= 320:
-		queue_redraw()
 	if Main.main.get_current_room() == room_assigned:
 		if not ripe:
 			shoot_delay -= delta

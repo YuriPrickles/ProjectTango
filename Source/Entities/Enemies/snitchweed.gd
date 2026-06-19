@@ -50,6 +50,7 @@ func awoken_coroutine(source_pos:Vector2):
 	await get_tree().create_timer(0.1).timeout
 	asleep = false
 	queue_redraw()
+	if not is_inside_tree(): return
 	await get_tree().create_timer(1 * (1 + (0.03 * Main.main.resources.peril))).timeout
 	force_awake = false
 	asleep = true

@@ -210,6 +210,8 @@ func load_level(id:int):
 			level_to_load = preload("res://Source/Entities/ProceduralGeneration/Levels/0-Above/Above.tscn")
 		LevelID.Floor1:
 			level_to_load = preload("res://Source/Entities/ProceduralGeneration/Levels/1-OvergrownHalls/OvergrownHalls.tscn")
+		LevelID.Floor2:
+			level_to_load = preload("res://Source/Entities/ProceduralGeneration/Levels/2-DoomedDesert/DoomedDesert.tscn")
 	game_state = GameState.OUT_OF_RUN if id == LevelID.Above else GameState.IN_RUN
 	current_level = level_to_load.instantiate()
 	_2DLayer.add_child(current_level)

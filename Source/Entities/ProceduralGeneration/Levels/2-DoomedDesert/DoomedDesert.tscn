@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dei4glpx5p7jp"]
+
+[ext_resource type="PackedScene" uid="uid://dtvwjoeaguaik" path="res://Source/Entities/level.tscn" id="1_sxyem"]
+[ext_resource type="Script" uid="uid://b051b3kryr1r1" path="res://Source/Entities/ProceduralGeneration/Levels/2-DoomedDesert/DoomedDesert.gd" id="2_bp45q"]
+
+[node name="Level" unique_id=2088028645 instance=ExtResource("1_sxyem")]
+script = ExtResource("2_bp45q")
+
+[node name="CanvasModulate" parent="." index="3" unique_id=686143727]
+color = Color(0.19681302, 0.1712017, 0.22426304, 1)

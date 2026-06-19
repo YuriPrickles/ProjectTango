@@ -5,6 +5,3 @@
 
 [node name="Level" unique_id=2088028645 instance=ExtResource("1_kco88")]
 script = ExtResource("1_qdtcm")
-
-[node name="CanvasModulate" parent="." index="3" unique_id=686143727]
-color = Color(0.19681302, 0.1712017, 0.22426304, 1)

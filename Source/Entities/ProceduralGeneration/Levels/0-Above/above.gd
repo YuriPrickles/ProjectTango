@@ -18,7 +18,7 @@ func spawn_player():
 	var wagon_pos:Vector2i = Vector2i(248,40)
 	var nero_pos:Vector2i = Vector2i(240,96)
 	plr.position = player_pos
-	other_things.add_child(Entry.new(entry_pos,LevelID.Floor1,true))
+	other_things.add_child(Entry.new(entry_pos,LevelID.Floor2,true))
 	other_things.add_child(ScrapShop.new(shop_pos))
 	other_things.add_child(HymnShop.new(wagon_pos))
 	other_things.add_child(NeroFire.new(nero_pos))

@@ -78,11 +78,11 @@ func on_touch_thing(body):
 	ending_pos = position
 	if body is TileMapLayer:
 		handle_wall_col()
-	if not hostile and body is Enemy:
+	elif not hostile and body is Enemy:
 		handle_enemy_col()
 		body.hurt(damage,self,iframes_on_hit)
 		handle_hitcount()
-	if hostile and body is Player:
+	elif hostile and body is Player:
 		handle_player_col()
 		if proj_owner:
 			body.hurt(damage,proj_owner)

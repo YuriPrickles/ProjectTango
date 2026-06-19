@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cre0egjr12lkg"]
 
-[ext_resource type="Script" uid="uid://deghagjsa7q4n" path="res://Source/Entities/Splitter.gd" id="1_7nhnc"]
+[ext_resource type="Script" uid="uid://deghagjsa7q4n" path="res://Source/Entities/ProceduralGeneration/Splitter.gd" id="1_7nhnc"]
 
 [node name="Splitter" type="Node2D" unique_id=410778698]
 script = ExtResource("1_7nhnc")

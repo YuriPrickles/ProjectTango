@@ -57,11 +57,10 @@ func drop_item(item:GDScript, amount:int=1):
 		if not Splitter.is_inside_padding(randpos.x,randpos.y,room,padding):
 			return
 		items.add_child.call_deferred(Pickup.new(item, randpos))
-		
+
 func drop_on_player(item:GDScript, amount:int=1):
 	for i in range(amount):
 		items.add_child(Pickup.new(item, player.position))
-
 
 func drop_item_somewhere(pos:Vector2, item:GDScript, amount:int=1):
 	for i in range(amount):

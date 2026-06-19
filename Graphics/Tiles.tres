@@ -178,6 +178,9 @@ polygon = PackedVector2Array(-1, -1, 1, -1, 1, 4, -1, 4)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_fjljt"]
 polygon = PackedVector2Array(-1, 1, 1, 1, 1, -4, -1, -4)
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_mufpa"]
+polygon = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_kn0mq"]
 polygon = PackedVector2Array(-4, -4, -2, -4, -2, 4, -4, 4)
 
@@ -617,7 +620,7 @@ texture_region_size = Vector2i(8, 8)
 2:25/0 = 0
 2:25/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_b8io7")
 2:24/0 = 0
-2:24/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_tl0ou")
+2:24/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_mufpa")
 2:24/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
 1:24/0 = 0
 1:24/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_tl0ou")
@@ -676,5 +679,11 @@ terrain_set_0/terrain_0/name = "Floor1"
 terrain_set_0/terrain_0/color = Color(0.7215789, 0, 0.2352519, 1)
 terrain_set_0/terrain_1/name = "Floor2"
 terrain_set_0/terrain_1/color = Color(0.40124363, 0.34701997, 0.86185926, 1)
+terrain_set_0/terrain_2/name = "Floor3"
+terrain_set_0/terrain_2/color = Color(0, 0.50429434, 0.77314794, 1)
+terrain_set_0/terrain_3/name = "Floor4"
+terrain_set_0/terrain_3/color = Color(1.7808378e-06, 0.53991705, 0.379057, 1)
+terrain_set_0/terrain_4/name = "Floor5"
+terrain_set_0/terrain_4/color = Color(1, 1, 1, 1)
 navigation_layer_0/layers = 1
 sources/1 = SubResource("TileSetAtlasSource_ugt0v")

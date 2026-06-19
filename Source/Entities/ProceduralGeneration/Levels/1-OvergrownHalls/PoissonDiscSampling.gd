@@ -1,6 +1,5 @@
-#https://github.com/udit/poisson-disc-sampling
 class_name PoissonDiscSampling
-
+#https://github.com/udit/poisson-disc-sampling
 
 enum ShapeType {CIRCLE, POLYGON}
 static var shape_info: Dictionary

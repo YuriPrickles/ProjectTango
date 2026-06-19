@@ -59,7 +59,7 @@ func on_pickup():
 	if not has_picked_up_before and value == Value.Artifact:
 		var lvl = Main.main.get_level()
 		var room_list:Array[Branch]
-		for i in range(30,50):
+		for i in range(lvl.dungeon_layout.rooms.size() * 0.2,lvl.dungeon_layout.rooms.size() * 0.35):
 			room_list.append(lvl.dungeon_layout.rooms[i])
 		var room:Branch = room_list.pick_random()
 		

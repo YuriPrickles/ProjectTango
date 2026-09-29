@@ -41,7 +41,7 @@ func _process(delta:float) -> void:
 	if player: move_child(player,items.get_index() - 1)
 	event_bus.tick_down(delta)
 
-func spawn_player() -> void:
+func spawn_player():
 	var plr = Main.main.get_player()
 	if plr:
 		move_child(plr,items.get_index() - 1)

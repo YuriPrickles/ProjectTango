@@ -56,12 +56,31 @@ func _process(delta: float) -> void:
 		spawn_treasures()
 		spawned = true
 
-func spawn_enemies(): pass
+func spawn_enemies():
+	for room:Branch in dungeon_layout.rooms:
+		if dungeon_layout.rooms.find(room) < 15: continue
+		var base_snitchweed_chance = 20
+		var initial_pos = room.get_center()+ Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2
+
+		if randi_range(0,100) <= base_snitchweed_chance:
+			for i in range(randi_range(4,6)):
+				var direction_array=[1,-1,0]
+				#for k in range(randi_range(1,3)):
+				for j in range(0,2):
+					var shuffled_dir=direction_array.duplicate()
+					shuffled_dir.shuffle()
+					var randpos = (initial_pos + Vector2i(shuffled_dir[j],shuffled_dir[(j + randi_range(0,2))%3]) * i) * dungeon_layout.tile_size
+					for t:Trap in traps.get_children():
+						if t is Cactus and t.int_position == randpos:
+							continue
+					if dungeon_layout.solid_cells.has(randpos / dungeon_layout.tile_size):
+						continue
+					traps.add_child(Cactus.new(randpos))
 func spawn_scrap(amount:int) -> void:
 	for i in range(amount):
 		var room:Branch = dungeon_layout.rooms.pick_random()
 		var randpos = (room.get_center() + Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2) * dungeon_layout.tile_size
-		while not Splitter.is_inside_padding(randpos.x,randpos.y,room,padding):
+		while dungeon_layout.solid_cells.has(randpos) and not Splitter.is_inside_padding(randpos.x,randpos.y,room,padding):
 			randpos = (room.get_center() + Vector2i(randi_range(-room.size.x,room.size.x),randi_range(-room.size.y,room.size.y)) / 2) * dungeon_layout.tile_size
 		match randi_range(0,2):
 			0:
